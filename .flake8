@@ -1,0 +1,4 @@
+[flake8]
+application-package-names = ["h2o_discovery"]
+import-order-style = "appnexus"
+max-line-length = 88

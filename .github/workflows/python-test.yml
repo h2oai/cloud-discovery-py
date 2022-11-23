@@ -1,0 +1,52 @@
+name: Python Test
+on:
+  workflow_call:
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        id: setup-python
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry
+          key: ${{ runner.os }}-poetry-test-${{ steps.setup-python.outputs.python-version }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-test-${{ steps.setup-python.outputs.python-version }}-
+            ${{ runner.os }}-poetry-test-
+            ${{ runner.os }}-poetry
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-test-${{ steps.setup-python.outputs.python-version }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-pip-test-${{ steps.setup-python.outputs.python-version }}-
+            ${{ runner.os }}-pip-test-
+            ${{ runner.os }}-pip
+
+      - name: Install nox
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry==1.2.2
+
+          poetry export --format=requirements.txt --dev --without-hashes \
+          | pip install --constraint=/dev/stdin nox nox-poetry
+
+      - name: Run Tests in Python ${{ matrix.python-version }}
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+        run: |
+          nox -s tests -p ${PYTHON_VERSION%-*} -- -v
