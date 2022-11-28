@@ -1,4 +1,4 @@
-from h2o_discovery import config
+from h2o_discovery import discover
 
 
 def test_find_uri_environment_param():
@@ -6,7 +6,7 @@ def test_find_uri_environment_param():
     environment = "https://test.h2o.ai"
 
     # When
-    uri = config.discover_uri(environment=environment)
+    uri = discover.discover_uri(environment=environment)
 
     # Then
     assert uri == "https://test.h2o.ai/.ai.h2o.cloud.discovery"
@@ -17,7 +17,7 @@ def test_find_uri_discovery_param():
     discovery = "http://test-service.domain:1234"
 
     # When
-    uri = config.discover_uri(discovery=discovery)
+    uri = discover.discover_uri(discovery_address=discovery)
 
     # Then
     assert uri == "http://test-service.domain:1234"
@@ -28,7 +28,7 @@ def test_find_uri_environment_env_var(monkeypatch):
     monkeypatch.setenv("H2O_CLOUD_ENVIRONMENT", "https://test.h2o.ai")
 
     # When
-    uri = config.discover_uri()
+    uri = discover.discover_uri()
 
     # Then
     assert uri == "https://test.h2o.ai/.ai.h2o.cloud.discovery"
@@ -39,7 +39,7 @@ def test_find_uri_discovery_env_var(monkeypatch):
     monkeypatch.setenv("H2O_CLOUD_DISCOVERY", "http://test-service.domain:1234")
 
     # When
-    uri = config.discover_uri()
+    uri = discover.discover_uri()
 
     # Then
     assert uri == "http://test-service.domain:1234"
@@ -51,7 +51,7 @@ def test_find_uri_both_env_var_discovery_takes_precedence(monkeypatch):
     monkeypatch.setenv("H2O_CLOUD_DISCOVERY", "http://test-service.domain:1234")
 
     # When
-    uri = config.discover_uri()
+    uri = discover.discover_uri()
 
     # Then
     assert uri == "http://test-service.domain:1234"
@@ -63,7 +63,7 @@ def test_find_uri_environment_param_takes_precedence(monkeypatch):
     environment = "https://test-param.h2o.ai"
 
     # When
-    uri = config.discover_uri(environment=environment)
+    uri = discover.discover_uri(environment=environment)
 
     # Then
     assert uri == "https://test-param.h2o.ai/.ai.h2o.cloud.discovery"
@@ -75,7 +75,7 @@ def test_find_uri_discovery_param_takes_precedence(monkeypatch):
     discovery = "http://test-param.domain:1234"
 
     # When
-    uri = config.discover_uri(discovery=discovery)
+    uri = discover.discover_uri(discovery_address=discovery)
 
     # Then
     assert uri == "http://test-param.domain:1234"
@@ -89,7 +89,7 @@ def test_find_uri_environment_param_takes_precedence_over_discovery_env_var(
     environment = "https://test-param.h2o.ai"
 
     # When
-    uri = config.discover_uri(environment=environment)
+    uri = discover.discover_uri(environment=environment)
 
     # Then
     assert uri == "https://test-param.h2o.ai/.ai.h2o.cloud.discovery"

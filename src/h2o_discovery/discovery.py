@@ -2,14 +2,8 @@ import types
 from typing import Optional
 from typing import Mapping
 
-from h2o_discovery import config
 from h2o_discovery import client
 from h2o_discovery import model
-
-
-def New(environment: Optional[str] = None, discovery: Optional[str] = None):
-    uri = config.discover_uri(environment, discovery)
-    return Discovery(client=client.New(uri))
 
 
 class Discovery:
@@ -38,7 +32,7 @@ class Discovery:
             self._clients = self._get_client_map()
         return self._clients
 
-    def reload(self):
+    def load(self):
         self._environment = None
         self._services = None
         self._clients = None
@@ -60,7 +54,6 @@ class Discovery:
         return types.MappingProxyType(out)
 
 
-_CLIENTS_COLLECTION_PREFIX = "clients/"
 _SERVICES_COLLECTION_PREFIX = "services/"
 
 
@@ -68,6 +61,9 @@ def _service_key(name: str) -> str:
     if name.startswith(_SERVICES_COLLECTION_PREFIX):
         return name[len(_SERVICES_COLLECTION_PREFIX) :]
     raise ValueError(f"invalid service name: {name}")
+
+
+_CLIENTS_COLLECTION_PREFIX = "clients/"
 
 
 def _client_key(name: str) -> str:

@@ -4,19 +4,24 @@ from typing import Optional
 _WELL_KNOWN_PATH = ".ai.h2o.cloud.discovery"
 
 
-def discover_uri(environment: Optional[str] = None, discovery: Optional[str] = None) -> str:
-    if discovery is not None and environment is not None:
+def discover_uri(
+    environment: Optional[str] = None, discovery_address: Optional[str] = None
+) -> str:
+    """Uses passed parameters and environment variables to get the uri of the discovery
+    service.
+    """
+    if discovery_address is not None and environment is not None:
         raise ValueError("cannot specify both discovery and environment")
 
-    if discovery is not None:
-        return discovery
+    if discovery_address is not None:
+        return discovery_address
 
     if environment is not None:
         return _discover_uri_from_environment(environment)
 
-    discovery = os.environ.get("H2O_CLOUD_DISCOVERY")
-    if discovery is not None:
-        return discovery
+    discovery_address = os.environ.get("H2O_CLOUD_DISCOVERY")
+    if discovery_address is not None:
+        return discovery_address
 
     environment = os.environ.get("H2O_CLOUD_ENVIRONMENT")
     if environment is not None:
