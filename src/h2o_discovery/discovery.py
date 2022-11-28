@@ -8,7 +8,7 @@ from h2o_discovery import model
 
 
 def New(environment: Optional[str] = None, discovery: Optional[str] = None):
-    uri = config.FindURI(environment, discovery)
+    uri = config.discover_uri(environment, discovery)
     return Discovery(client=client.New(uri))
 
 
