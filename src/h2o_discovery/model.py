@@ -1,5 +1,6 @@
 import dataclasses
 from typing import Mapping
+from typing import Optional
 
 
 @dataclasses.dataclass(frozen=True)
@@ -16,19 +17,30 @@ class Service:
     # Version of the service. Can be the version of the API or the version of
     # the service. Clients can utilize this information change their behavior
     # in accessing the service or downloading the correct client version.
-    version: str
+    version: Optional[str]
 
     # OAuth 2.0 Scope required to access the service. Clients request the
     # access token with this scope in order to access the service. If the scop
     # is not defined, clients should use h2o_cloud_platform_scope.
-    oauth2_scope: str
+    oauth2_scope: Optional[str]
 
     # Requirement Specifier (PEP 508) for the Python client that can be used
     # for accessing the service.
     # Any string that can be `pip install`ed.
     #
     # Example: my-client==0.1.0
-    python_client: str
+    python_client: Optional[str]
+
+    @classmethod
+    def from_json(cls, json: Mapping[str, str]) -> "Service":
+        return cls(
+            name=json["name"],
+            display_name=json["displayName"],
+            uri=json["uri"],
+            version=json.get("version"),
+            oauth2_scope=json.get("oauth2Scope"),
+            python_client=json.get("pythonClient"),
+        )
 
 
 @dataclasses.dataclass(frozen=True)
@@ -43,6 +55,14 @@ class Client:
     # itself with the IDP.
     oauth2_client_id: str
 
+    @classmethod
+    def from_json(cls, d: Mapping[str, str]) -> "Client":
+        return cls(
+            name=d["name"],
+            display_name=d["displayName"],
+            oauth2_client_id=d["oauth2ClientId"],
+        )
+
 
 @dataclasses.dataclass(frozen=True)
 class Environment:
@@ -50,9 +70,10 @@ class Environment:
     issuer_url: str
     h2o_cloud_platform_oauth2_scope: str
 
-
-@dataclasses.dataclass(frozen=True)
-class Discovery:
-    services: Mapping[str, Service]
-    clients: Mapping[str, Client]
-    environment: Environment
+    @classmethod
+    def from_json(cls, d: Mapping[str, str]) -> "Environment":
+        return cls(
+            h2o_cloud_environment=d["h2oCloudEnvironment"],
+            issuer_url=d["issuerUrl"],
+            h2o_cloud_platform_oauth2_scope=d["h2oCloudPlatformOauth2Scope"],
+        )
