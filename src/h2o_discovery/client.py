@@ -13,7 +13,7 @@ class Client:
     async def get_environment(self) -> model.Environment:
         async with httpx.AsyncClient() as client:
             resp = await self._fetch_environment(client)
-            return model.Environment.from_json(resp.json())
+            return model.Environment.from_json(resp.json()["environment"])
 
     async def list_services(self) -> List[model.Service]:
         async with httpx.AsyncClient() as client:
@@ -67,7 +67,7 @@ class Client:
     ) -> httpx.Response:
         params = None
         if next_page_token is not None:
-            params = {"nextPageToken": next_page_token}
+            params = {"pageToken": next_page_token}
         resp = await client.get(uri, params=params)
         resp.raise_for_status()
         return resp

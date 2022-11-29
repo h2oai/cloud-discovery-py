@@ -5,6 +5,8 @@ from typing import Optional
 
 @dataclasses.dataclass(frozen=True)
 class Service:
+    """Internal representation of a registered service record."""
+
     # Name of the Service. For example: "services/my-service-name".
     name: str
 
@@ -46,6 +48,8 @@ class Service:
 
 @dataclasses.dataclass(frozen=True)
 class Client:
+    """Internal representation of a registered client record."""
+
     # Name of the Client. For example: "clients/h2o-public-client".
     name: str
 
@@ -68,6 +72,8 @@ class Client:
 
 @dataclasses.dataclass(frozen=True)
 class Environment:
+    """Internal representation of the environment."""
+
     h2o_cloud_environment: str
     issuer_url: str
     h2o_cloud_platform_oauth2_scope: str
