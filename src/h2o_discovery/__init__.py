@@ -6,6 +6,9 @@ from h2o_discovery import discovery
 from h2o_discovery._version import __version__  # noqa: F401
 
 
+Discovery = discovery.Discovery
+
+
 def New(
     environment: Optional[str] = None, discovery_address: Optional[str] = None
 ) -> discovery.Discovery:
