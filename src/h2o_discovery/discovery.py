@@ -15,41 +15,41 @@ class Discovery:
         self._clients: Optional[Mapping[str, model.Client]] = None
 
     @property
-    def environment(self) -> model.Environment:
+    async def environment(self) -> model.Environment:
         if self._environment is None:
-            self._environment = self._client.get_environment()
+            self._environment = await self._client.get_environment()
         return self._environment
 
     @property
-    def services(self) -> Mapping[str, model.Service]:
+    async def services(self) -> Mapping[str, model.Service]:
         if self._services is None:
-            self._services = self._get_service_map()
+            self._services = await self._get_service_map()
         return self._services
 
     @property
-    def clients(self) -> Mapping[str, model.Client]:
+    async def clients(self) -> Mapping[str, model.Client]:
         if self._clients is None:
-            self._clients = self._get_client_map()
+            self._clients = await self._get_client_map()
         return self._clients
 
-    def load(self):
+    async def load(self):
         self._environment = None
         self._services = None
         self._clients = None
 
-        _ = self.environment
-        _ = self.services
-        _ = self.clients
+        _ = await self.environment
+        _ = await self.services
+        _ = await self.clients
 
-    def _get_service_map(self) -> Mapping[str, model.Service]:
+    async def _get_service_map(self) -> Mapping[str, model.Service]:
         out = {}
-        for svc in self._client.list_services():
+        for svc in await self._client.list_services():
             out[_service_key(svc.name)] = svc
         return types.MappingProxyType(out)
 
-    def _get_client_map(self) -> Mapping[str, model.Client]:
+    async def _get_client_map(self) -> Mapping[str, model.Client]:
         out = {}
-        for cl in self._client.list_clients():
+        for cl in await self._client.list_clients():
             out[_client_key(cl.name)] = cl
         return types.MappingProxyType(out)
 
