@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-python@v4
         id: setup-python
         with:
-          python-version: "3.10"
+          python-version: ${{ matrix.python-version }}
 
       - name: Install pypa/build
         run: |
@@ -70,9 +70,9 @@ jobs:
       - name: Install nox
         run: |
           python -m pip install --upgrade pip
-          python -m pip install poetry==1.1.13
+          python -m pip install poetry==1.2.2
 
-          poetry export --format=requirements.txt --dev --without-hashes \
+          poetry export --format=constraints.txt --with dev --without-hashes \
           | pip install --constraint=/dev/stdin nox nox-poetry
 
       - name: Run Linters
