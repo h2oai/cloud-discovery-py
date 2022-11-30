@@ -42,7 +42,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install poetry==1.2.2
 
-          poetry export --format=requirements.txt --dev --without-hashes \
+          poetry export --format=constraints.txt --with dev --without-hashes \
           | pip install --constraint=/dev/stdin nox nox-poetry
 
       - name: Run Tests in Python ${{ matrix.python-version }}
