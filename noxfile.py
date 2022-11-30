@@ -9,7 +9,7 @@ def tests(session):
     session.run("pytest", *session.posargs)
 
 
-@nox.session()
+@nox_poetry.session
 def lint(session):
     session.install(".")
     session.install("black", "mypy")
