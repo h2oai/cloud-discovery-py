@@ -3,9 +3,10 @@ import nox_poetry
 
 
 @nox_poetry.session(python=["3.7", "3.8", "3.9", "3.10", "3.11"])
-def tests(session):
-    session.install("pytest")
-    session.poetry.session.install(".")
+@nox.parametrize("httpx_version_constraint", ["==0.16.*", "==0.21.*", "==0.22.*", "==0.23.*", ""])
+def tests(session, httpx_version_constraint):
+    session.install("pytest", "pytest-asyncio")
+    session.poetry.session.install(f"httpx{httpx_version_constraint}", "respx", ".")
     session.run("pytest", *session.posargs)
 
 
