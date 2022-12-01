@@ -74,8 +74,18 @@ class Client:
 class Environment:
     """Internal representation of the environment."""
 
+    # Identifier of the environment. For example: "https://cloud.h2o.ai".
+    # This is the base URL of the environment. Clients can use this to validate
+    # that they are talking to the correct environment.
     h2o_cloud_environment: str
+
+    # OpenID Connect issuer_url. This is where clients find the OpenID Connect discovery
+    # on the well-known endpoint.
     issuer_url: str
+
+    # OAuth 2.0 scope that clients should use to access the H2O Cloud Platform.
+    # This is the default scope that clients should use if the service does not
+    # define its own scope.
     h2o_cloud_platform_oauth2_scope: str
 
     @classmethod
