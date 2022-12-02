@@ -141,12 +141,14 @@ async def test_discovery_load():
     _ = await discovery.services
     _ = await discovery.environment
 
+    await discovery.load()
+
     # When
     clients = (await discovery.clients).values()
     services = (await discovery.services).values()
     environment = await discovery.environment
 
     # Then
-    assert list(clients) == [client_record]
-    assert list(services) == [service]
-    assert environment == environment
+    assert list(clients) == [new_client_record]
+    assert list(services) == [new_service]
+    assert environment == new_environment
