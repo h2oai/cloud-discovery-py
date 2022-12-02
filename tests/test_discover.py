@@ -111,9 +111,13 @@ def test_find_cannot_set_both_params():
 
 
 def test_find_cannot_determine_url():
+    # Given
+    environment = None
+    discovery = None
+
     # When
     with pytest.raises(LookupError) as excinfo:
-        discover.discover_uri()
+        discover.discover_uri(environment=environment, discovery_address=discovery)
 
     # Then
     assert "Cannot determine discovery URI" in str(excinfo.value)
