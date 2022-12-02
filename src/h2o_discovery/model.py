@@ -34,8 +34,8 @@ class Service:
     python_client: Optional[str]
 
     @classmethod
-    def from_json(cls, json: Mapping[str, str]) -> "Service":
-        """Create a Service from a JSON object."""
+    def from_json_dict(cls, json: Mapping[str, str]) -> "Service":
+        """Create a Service from a JSON dict returned by the server."""
         return cls(
             name=json["name"],
             display_name=json["displayName"],
@@ -61,7 +61,7 @@ class Client:
     oauth2_client_id: str
 
     @classmethod
-    def from_json(cls, json: Mapping[str, str]) -> "Client":
+    def from_json_dict(cls, json: Mapping[str, str]) -> "Client":
         """Create a Client from a JSON dict returned by the server."""
         return cls(
             name=json["name"],
@@ -89,7 +89,7 @@ class Environment:
     h2o_cloud_platform_oauth2_scope: str
 
     @classmethod
-    def from_json(cls, json: Mapping[str, str]) -> "Environment":
+    def from_json_dict(cls, json: Mapping[str, str]) -> "Environment":
         """Create an Environment from a JSON dict returned by the server."""
         return cls(
             h2o_cloud_environment=json["h2oCloudEnvironment"],
