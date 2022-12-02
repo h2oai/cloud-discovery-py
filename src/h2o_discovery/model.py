@@ -22,7 +22,7 @@ class Service:
     version: Optional[str]
 
     # OAuth 2.0 Scope required to access the service. Clients request the
-    # access token with this scope in order to access the service. If the scop
+    # access token with this scope in order to access the service. If the scope
     # is not defined, clients should use h2o_cloud_platform_scope.
     oauth2_scope: Optional[str]
 
@@ -34,8 +34,8 @@ class Service:
     python_client: Optional[str]
 
     @classmethod
-    def from_json(cls, json: Mapping[str, str]) -> "Service":
-        """Create a Service from a JSON object."""
+    def from_json_dict(cls, json: Mapping[str, str]) -> "Service":
+        """Create a Service from a JSON dict returned by the server."""
         return cls(
             name=json["name"],
             display_name=json["displayName"],
@@ -61,7 +61,7 @@ class Client:
     oauth2_client_id: str
 
     @classmethod
-    def from_json(cls, json: Mapping[str, str]) -> "Client":
+    def from_json_dict(cls, json: Mapping[str, str]) -> "Client":
         """Create a Client from a JSON dict returned by the server."""
         return cls(
             name=json["name"],
@@ -74,12 +74,22 @@ class Client:
 class Environment:
     """Internal representation of the environment."""
 
+    # Identifier of the environment. For example: "https://cloud.h2o.ai".
+    # This is the base URL of the environment. Clients can use this to validate
+    # that they are talking to the correct environment.
     h2o_cloud_environment: str
+
+    # OpenID Connect issuer_url. This is where clients find the OpenID Connect discovery
+    # on the well-known endpoint.
     issuer_url: str
+
+    # OAuth 2.0 scope that clients should use to access the H2O Cloud Platform.
+    # This is the default scope that clients should use if the service does not
+    # define its own scope.
     h2o_cloud_platform_oauth2_scope: str
 
     @classmethod
-    def from_json(cls, json: Mapping[str, str]) -> "Environment":
+    def from_json_dict(cls, json: Mapping[str, str]) -> "Environment":
         """Create an Environment from a JSON dict returned by the server."""
         return cls(
             h2o_cloud_environment=json["h2oCloudEnvironment"],

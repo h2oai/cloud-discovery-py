@@ -1,7 +1,7 @@
 from h2o_discovery import model
 
 
-def test_service_from_json():
+def test_service_from_json_dict():
     # Given
     json = {
         "name": "services/test-service",
@@ -13,7 +13,7 @@ def test_service_from_json():
     }
 
     # When
-    result = model.Service.from_json(json)
+    result = model.Service.from_json_dict(json)
 
     # Then
     assert result == model.Service(
@@ -26,7 +26,7 @@ def test_service_from_json():
     )
 
 
-def test_client_from_json():
+def test_client_from_json_dict():
     # Given
     json = {
         "name": "test-client",
@@ -35,7 +35,7 @@ def test_client_from_json():
     }
 
     # When
-    result = model.Client.from_json(json)
+    result = model.Client.from_json_dict(json)
 
     # Then
     assert result == model.Client(
@@ -45,7 +45,7 @@ def test_client_from_json():
     )
 
 
-def test_environment_from_json():
+def test_environment_from_json_dict():
     # Given
     json = {
         "h2oCloudEnvironment": "https://test.h2o.ai",
@@ -54,7 +54,7 @@ def test_environment_from_json():
     }
 
     # When
-    result = model.Environment.from_json(json)
+    result = model.Environment.from_json_dict(json)
 
     # Then
     assert result == model.Environment(
