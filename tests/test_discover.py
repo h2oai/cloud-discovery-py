@@ -14,6 +14,17 @@ def test_find_uri_environment_param():
     assert uri == "https://test.h2o.ai/.ai.h2o.cloud.discovery"
 
 
+def test_find_uri_environment_trailing_slash():
+    # Given
+    environment = "https://test.h2o.ai/"
+
+    # When
+    uri = discover.discover_uri(environment=environment)
+
+    # Then
+    assert uri == "https://test.h2o.ai/.ai.h2o.cloud.discovery"
+
+
 def test_find_uri_discovery_param():
     # Given
     discovery = "http://test-service.domain:1234"
