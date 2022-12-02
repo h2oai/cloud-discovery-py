@@ -22,7 +22,7 @@ class Service:
     version: Optional[str]
 
     # OAuth 2.0 Scope required to access the service. Clients request the
-    # access token with this scope in order to access the service. If the scop
+    # access token with this scope in order to access the service. If the scope
     # is not defined, clients should use h2o_cloud_platform_scope.
     oauth2_scope: Optional[str]
 
