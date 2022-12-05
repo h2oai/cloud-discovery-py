@@ -19,7 +19,7 @@ class Client:
         """Returns the information about the environment."""
         async with httpx.AsyncClient() as client:
             resp = await _fetch(client, self._uri + "/v1/environment")
-            return model.Environment.from_json(resp.json()["environment"])
+            return model.Environment.from_json_dict(resp.json()["environment"])
 
     async def list_services(self) -> List[model.Service]:
         """Returns the list of all registered services."""
@@ -28,7 +28,9 @@ class Client:
 
             pages = await _get_all_pages(client, self._uri + "/v1/services")
             for page in pages:
-                services.extend([model.Service.from_json(d) for d in page["services"]])
+                services.extend(
+                    [model.Service.from_json_dict(d) for d in page["services"]]
+                )
             return services
 
     async def list_clients(self) -> List[model.Client]:
@@ -38,7 +40,9 @@ class Client:
 
             pages = await _get_all_pages(client, self._uri + "/v1/clients")
             for page in pages:
-                clients.extend([model.Client.from_json(d) for d in page["clients"]])
+                clients.extend(
+                    [model.Client.from_json_dict(d) for d in page["clients"]]
+                )
             return clients
 
 

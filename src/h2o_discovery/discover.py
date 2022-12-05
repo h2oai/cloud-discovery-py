@@ -1,5 +1,6 @@
 import os
 from typing import Optional
+import urllib.parse
 
 _WELL_KNOWN_PATH = ".ai.h2o.cloud.discovery"
 
@@ -35,4 +36,4 @@ def discover_uri(
 
 
 def _discover_uri_from_environment(environment):
-    return f"{environment}/{_WELL_KNOWN_PATH}"
+    return urllib.parse.urljoin(environment, _WELL_KNOWN_PATH)
