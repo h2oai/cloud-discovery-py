@@ -24,7 +24,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.7"
-          cache: "pip"
 
       - name: Upgrade pip
         run: |
@@ -41,7 +40,7 @@ jobs:
       - name: Set Release Version
         run: |
           poetry version "${GITHUB_REF#refs/*/}"
-          echo "__version__ = \"${GITHUB_REF#refs/*/}\"" > ./src/h2o_authn/_version.py
+          echo "__version__ = \"${GITHUB_REF#refs/*/}\"" > ./src/h2o_discovery/_version.py
 
       - name: Build a binary wheel and a source tarball
         run: |
