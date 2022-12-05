@@ -44,13 +44,11 @@ TEST_SERVICE_ON_INTERNAL = model.Service(
 @pytest.mark.e2e
 @pytest.mark.asyncio
 async def test_services_on_public_endpoint(public_discovery_address):
-    # Given
-    discovery = h2o_discovery.New(discovery_address=public_discovery_address)
-
     # When
-    services = await discovery.services
+    discovery = await h2o_discovery.discover(discovery_address=public_discovery_address)
 
     # Then
+    services = discovery.services
     assert services["public-only-test-service"] == PUBLIC_ONLY_TEST_SERVICE
     assert services["test-service"] == TEST_SERVICE_ON_PUBLIC
     assert "internal-only-test-service" not in services
@@ -61,12 +59,14 @@ async def test_services_on_public_endpoint(public_discovery_address):
 @pytest.mark.asyncio
 async def test_services_on_internal_endpoint(internal_discovery_address):
     # Given
-    discovery = h2o_discovery.New(discovery_address=internal_discovery_address)
+    discovery = await h2o_discovery.discover(
+        discovery_address=internal_discovery_address
+    )
 
     # When
-    services = await discovery.services
 
     # Then
+    services = discovery.services
     assert services["public-only-test-service"] == PUBLIC_ONLY_TEST_SERVICE
     assert services["test-service"] == TEST_SERVICE_ON_INTERNAL
     assert services["internal-only-test-service"] == INTERNAL_ONLY_TEST_SERVICE
