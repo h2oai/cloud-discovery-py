@@ -2,6 +2,9 @@ import nox
 import nox_poetry
 
 
+nox.options.sessions = ["lint", "tests"]
+
+
 @nox_poetry.session(python=["3.7", "3.8", "3.9", "3.10", "3.11"])
 @nox.parametrize(
     "httpx_version_constraint", ["==0.16.*", "==0.21.*", "==0.22.*", "==0.23.*", ""]
@@ -26,3 +29,10 @@ def lint(session):
     session.run("black", "--check", ".")
     session.run("mypy", "src")
     session.run("flake8", "src", "tests")
+
+
+@nox_poetry.session()
+def e2e_tests(session):
+    session.install("pytest", "pytest-asyncio", "respx")
+    session.poetry.session.install(".")
+    session.run("pytest", "-m e2e", *session.posargs)
