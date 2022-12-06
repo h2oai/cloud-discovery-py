@@ -217,3 +217,31 @@ async def test_list_clients():
     assert not route.calls[0].request.url.query
     assert route.calls[1].request.url.query == b"pageToken=next-page-token-1"
     assert route.calls[2].request.url.query == b"pageToken=next-page-token-2"
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_list_services_can_handle_empty_response():
+    # Given
+    respx.get("https://test.example.com/v1/services").respond(json={})
+    cl = client.Client("https://test.example.com")
+
+    # When
+    services = await cl.list_services()
+
+    # Then
+    assert services == []
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_list_clients_can_handle_empty_response():
+    # Given
+    respx.get("https://test.example.com/v1/clients").respond(json={})
+    cl = client.Client("https://test.example.com")
+
+    # When
+    services = await cl.list_clients()
+
+    # Then
+    assert services == []
