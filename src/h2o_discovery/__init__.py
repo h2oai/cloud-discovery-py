@@ -7,9 +7,12 @@ from h2o_discovery import client
 from h2o_discovery._version import __version__  # noqa: F401
 
 
+Discovery = discovery.Discovery
+
+
 async def discover(
     environment: Optional[str] = None, discovery_address: Optional[str] = None
-) -> discovery.Discovery:
+) -> Discovery:
     """Obtains and returns a Discovery object from the discovery service.
 
     Both arguments are optional. If neither is provided, the environment variable
@@ -23,4 +26,4 @@ async def discover(
     """
     uri = lookup.determine_uri(environment, discovery_address)
     cl = client.Client(uri)
-    return await discovery.Discovery.load(cl)
+    return await Discovery.load(cl)
