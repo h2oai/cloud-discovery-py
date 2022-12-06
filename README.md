@@ -5,12 +5,61 @@
 
 H2O Cloud Discovery Client.
 
-## Project status
-
-Early development.
-
 ## Installation
 
 ```sh
 pip install h2o-cloud-discovery
+```
+
+## Usage
+
+Package provides single async function `h2o_discovery.discover()` that returns
+a discovery object that can be used to obtain the information the H2O Cloud
+environment, its services and clients.
+
+It accepts a `environment` argument that can be used to specify the H2O Cloud
+environment for which the discovery should be performed. It's handy when for
+local development.
+Alternatively, the `H2O_CLOUD_ENVIRONMENT` environment variable can be used.
+
+```python
+import h2o_discovery
+
+discovery = await h2o_discovery.discover()
+
+# Print the H2O Cloud environment that was discovered.
+print(discovery.environment.h2o_cloud_environment)
+
+# Connect to the my service.
+my_service_client = my_service.client(address=discovery.services["my-service"].uri)
+```
+
+## Examples
+
+### Example: Use with H2O.ai MLOps Python Client within the Wave App
+
+```python
+import h2o_authn
+import h2o_discovery
+import h2o_mlops_client as mlops
+from h2o_wave import Q, app, ui
+from h2o_wave import main
+
+@app("/")
+async def serve(q: Q):
+    discovery = await h2o_discovery.discover()
+
+    token_provider = h2o_authn.AsyncTokenProvider(
+        refresh_token=q.auth.refresh_token,
+        issuer_url=discovery.environment.issuer_url,
+        client_id=discovery.clients["platform"].oauth2_client_id,
+    )
+
+    mlops_client = mlops.Client(
+        gateway_url=discovery.services["mlops-api"].uri,
+        token_provider=token_provider,
+    )
+
+    ...
+
 ```
