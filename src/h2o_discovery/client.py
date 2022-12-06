@@ -29,7 +29,7 @@ class Client:
             pages = await _get_all_pages(client, self._uri + "/v1/services")
             for page in pages:
                 services.extend(
-                    [model.Service.from_json_dict(d) for d in page["services"]]
+                    [model.Service.from_json_dict(d) for d in page.get("services", [])]
                 )
             return services
 
@@ -41,7 +41,7 @@ class Client:
             pages = await _get_all_pages(client, self._uri + "/v1/clients")
             for page in pages:
                 clients.extend(
-                    [model.Client.from_json_dict(d) for d in page["clients"]]
+                    [model.Client.from_json_dict(d) for d in page.get("clients", [])]
                 )
             return clients
 
