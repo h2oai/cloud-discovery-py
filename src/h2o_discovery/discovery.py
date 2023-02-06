@@ -1,9 +1,11 @@
 import dataclasses
 import types
+from typing import Iterable
 from typing import Mapping
 
-from h2o_discovery import model
+from h2o_discovery import async_client
 from h2o_discovery import client
+from h2o_discovery import model
 
 
 @dataclasses.dataclass(frozen=True)
@@ -20,25 +22,34 @@ class Discovery:
     clients: Mapping[str, model.Client]
 
     @classmethod
-    async def load(cls, cl: client.Client) -> "Discovery":
+    async def load_async(cls, cl: async_client.AsyncClient) -> "Discovery":
         """Loads the discovery records from the Discovery Service."""
         environment = await cl.get_environment()
-        services = await _get_service_map(cl)
-        clients = await _get_client_map(cl)
+        services = _get_service_map(await cl.list_services())
+        clients = _get_client_map(await cl.list_clients())
+
+        return cls(environment=environment, services=services, clients=clients)
+
+    @classmethod
+    def load(cls, cl: client.Client) -> "Discovery":
+        """Loads the discovery records from the Discovery Service."""
+        environment = cl.get_environment()
+        services = _get_service_map(cl.list_services())
+        clients = _get_client_map(cl.list_clients())
 
         return cls(environment=environment, services=services, clients=clients)
 
 
-async def _get_service_map(cl: client.Client) -> Mapping[str, model.Service]:
+def _get_service_map(services: Iterable[model.Service]) -> Mapping[str, model.Service]:
     out = {}
-    for s in await cl.list_services():
+    for s in services:
         out[_service_key(s.name)] = s
     return types.MappingProxyType(out)
 
 
-async def _get_client_map(cl: client.Client) -> Mapping[str, model.Client]:
+def _get_client_map(clients: Iterable[model.Client]) -> Mapping[str, model.Client]:
     out = {}
-    for c in await cl.list_clients():
+    for c in clients:
         out[_client_key(c.name)] = c
     return types.MappingProxyType(out)
 

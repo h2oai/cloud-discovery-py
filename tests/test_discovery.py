@@ -33,7 +33,7 @@ async def test_discovery_environment(mock_client):
     mock_client.get_environment.return_value.set_result(environment)
 
     # When
-    discovery = await h2o_discovery.Discovery.load(mock_client)
+    discovery = await h2o_discovery.Discovery.load_async(mock_client)
 
     # Then
     assert discovery.environment == environment
@@ -55,7 +55,7 @@ async def test_discovery_services(mock_client):
     mock_client.list_services.return_value.set_result([service])
 
     # When
-    discovery = await h2o_discovery.Discovery.load(mock_client)
+    discovery = await h2o_discovery.Discovery.load_async(mock_client)
 
     # Then
     assert discovery.services["test-service"] == service
@@ -74,7 +74,7 @@ async def test_discovery_clients(mock_client):
     mock_client.list_clients.return_value.set_result([client_record])
 
     # When
-    discovery = await h2o_discovery.Discovery.load(mock_client)
+    discovery = await h2o_discovery.Discovery.load_async(mock_client)
 
     # Then
     assert discovery.clients["test-client"] == client_record

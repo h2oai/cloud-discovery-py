@@ -1,12 +1,14 @@
+import pytest
 import respx
 import httpx
 
-from h2o_discovery import client
+from h2o_discovery import async_client
 from h2o_discovery import model
 
 
 @respx.mock
-def test_get_environment():
+@pytest.mark.asyncio
+async def test_get_environment():
     # Given
     route = respx.get("https://test.example.com/v1/environment").respond(
         json={
@@ -17,10 +19,10 @@ def test_get_environment():
             }
         }
     )
-    cl = client.Client("https://test.example.com")
+    cl = async_client.AsyncClient("https://test.example.com")
 
     # When
-    env = cl.get_environment()
+    env = await cl.get_environment()
 
     # Then
     assert route.called
@@ -32,7 +34,8 @@ def test_get_environment():
 
 
 @respx.mock
-def test_list_services():
+@pytest.mark.asyncio
+async def test_list_services():
     # Given
     route = respx.get("https://test.example.com/v1/services")
     route.side_effect = [
@@ -84,10 +87,10 @@ def test_list_services():
         ),
     ]
 
-    cl = client.Client("https://test.example.com")
+    cl = async_client.AsyncClient("https://test.example.com")
 
     # When
-    services = cl.list_services()
+    services = await cl.list_services()
 
     # Then
     assert services == [
@@ -131,7 +134,8 @@ def test_list_services():
 
 
 @respx.mock
-def test_list_clients():
+@pytest.mark.asyncio
+async def test_list_clients():
     # Given
     route = respx.get("https://test.example.com/v1/clients")
     route.side_effect = [
@@ -180,10 +184,10 @@ def test_list_clients():
         ),
     ]
 
-    cl = client.Client("https://test.example.com")
+    cl = async_client.AsyncClient("https://test.example.com")
 
     # When
-    clients = cl.list_clients()
+    clients = await cl.list_clients()
 
     # Then
 
@@ -216,26 +220,28 @@ def test_list_clients():
 
 
 @respx.mock
-def test_list_services_can_handle_empty_response():
+@pytest.mark.asyncio
+async def test_list_services_can_handle_empty_response():
     # Given
     respx.get("https://test.example.com/v1/services").respond(json={})
-    cl = client.Client("https://test.example.com")
+    cl = async_client.AsyncClient("https://test.example.com")
 
     # When
-    services = cl.list_services()
+    services = await cl.list_services()
 
     # Then
     assert services == []
 
 
 @respx.mock
-def test_list_clients_can_handle_empty_response():
+@pytest.mark.asyncio
+async def test_list_clients_can_handle_empty_response():
     # Given
     respx.get("https://test.example.com/v1/clients").respond(json={})
-    cl = client.Client("https://test.example.com")
+    cl = async_client.AsyncClient("https://test.example.com")
 
     # When
-    services = cl.list_clients()
+    services = await cl.list_clients()
 
     # Then
     assert services == []

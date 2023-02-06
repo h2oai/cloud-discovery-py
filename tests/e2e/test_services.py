@@ -42,10 +42,9 @@ TEST_SERVICE_ON_INTERNAL = model.Service(
 
 
 @pytest.mark.e2e
-@pytest.mark.asyncio
-async def test_services_on_public_endpoint(public_discovery_address):
+def test_services_on_public_endpoint(public_discovery_address):
     # When
-    discovery = await h2o_discovery.discover(discovery_address=public_discovery_address)
+    discovery = h2o_discovery.discover(discovery_address=public_discovery_address)
 
     # Then
     services = discovery.services
@@ -57,13 +56,39 @@ async def test_services_on_public_endpoint(public_discovery_address):
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_services_on_internal_endpoint(internal_discovery_address):
-    # Given
-    discovery = await h2o_discovery.discover(
-        discovery_address=internal_discovery_address
+async def test_services_on_public_endpoint_async(public_discovery_address):
+    # When
+    discovery = await h2o_discovery.discover_async(
+        discovery_address=public_discovery_address
     )
 
+    # Then
+    services = discovery.services
+    assert services["public-only-test-service"] == PUBLIC_ONLY_TEST_SERVICE
+    assert services["test-service"] == TEST_SERVICE_ON_PUBLIC
+    assert "internal-only-test-service" not in services
+    assert INTERNAL_ONLY_TEST_SERVICE not in services.values()
+
+
+@pytest.mark.e2e
+def test_services_on_internal_endpoint(internal_discovery_address):
     # When
+    discovery = h2o_discovery.discover(discovery_address=internal_discovery_address)
+
+    # Then
+    services = discovery.services
+    assert services["public-only-test-service"] == PUBLIC_ONLY_TEST_SERVICE
+    assert services["test-service"] == TEST_SERVICE_ON_INTERNAL
+    assert services["internal-only-test-service"] == INTERNAL_ONLY_TEST_SERVICE
+
+
+@pytest.mark.e2e
+@pytest.mark.asyncio
+async def test_services_on_internal_endpoint_async(internal_discovery_address):
+    # When
+    discovery = await h2o_discovery.discover_async(
+        discovery_address=internal_discovery_address
+    )
 
     # Then
     services = discovery.services
