@@ -25,7 +25,7 @@ Alternatively, the `H2O_CLOUD_ENVIRONMENT` environment variable can be used.
 ```python
 import h2o_discovery
 
-discovery = await h2o_discovery.discover()
+discovery = await h2o_discovery.discover_async()
 
 # Print the H2O Cloud environment that was discovered.
 print(discovery.environment.h2o_cloud_environment)
@@ -47,7 +47,7 @@ from h2o_wave import main
 
 @app("/")
 async def serve(q: Q):
-    discovery = await h2o_discovery.discover()
+    discovery = await h2o_discovery.discover_async()
 
     token_provider = h2o_authn.AsyncTokenProvider(
         refresh_token=q.auth.refresh_token,

@@ -2,7 +2,7 @@ import pytest
 import respx
 import httpx
 
-from h2o_discovery import client
+from h2o_discovery import async_client
 from h2o_discovery import model
 
 
@@ -19,7 +19,7 @@ async def test_get_environment():
             }
         }
     )
-    cl = client.Client("https://test.example.com")
+    cl = async_client.AsyncClient("https://test.example.com")
 
     # When
     env = await cl.get_environment()
@@ -87,7 +87,7 @@ async def test_list_services():
         ),
     ]
 
-    cl = client.Client("https://test.example.com")
+    cl = async_client.AsyncClient("https://test.example.com")
 
     # When
     services = await cl.list_services()
@@ -184,7 +184,7 @@ async def test_list_clients():
         ),
     ]
 
-    cl = client.Client("https://test.example.com")
+    cl = async_client.AsyncClient("https://test.example.com")
 
     # When
     clients = await cl.list_clients()
@@ -224,7 +224,7 @@ async def test_list_clients():
 async def test_list_services_can_handle_empty_response():
     # Given
     respx.get("https://test.example.com/v1/services").respond(json={})
-    cl = client.Client("https://test.example.com")
+    cl = async_client.AsyncClient("https://test.example.com")
 
     # When
     services = await cl.list_services()
@@ -238,7 +238,7 @@ async def test_list_services_can_handle_empty_response():
 async def test_list_clients_can_handle_empty_response():
     # Given
     respx.get("https://test.example.com/v1/clients").respond(json={})
-    cl = client.Client("https://test.example.com")
+    cl = async_client.AsyncClient("https://test.example.com")
 
     # When
     services = await cl.list_clients()

@@ -43,9 +43,11 @@ TEST_SERVICE_ON_INTERNAL = model.Service(
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_services_on_public_endpoint(public_discovery_address):
+async def test_services_on_public_endpoint_async(public_discovery_address):
     # When
-    discovery = await h2o_discovery.discover(discovery_address=public_discovery_address)
+    discovery = await h2o_discovery.discover_async(
+        discovery_address=public_discovery_address
+    )
 
     # Then
     services = discovery.services
@@ -57,13 +59,11 @@ async def test_services_on_public_endpoint(public_discovery_address):
 
 @pytest.mark.e2e
 @pytest.mark.asyncio
-async def test_services_on_internal_endpoint(internal_discovery_address):
-    # Given
-    discovery = await h2o_discovery.discover(
+async def test_services_on_internal_endpoint_async(internal_discovery_address):
+    # When
+    discovery = await h2o_discovery.discover_async(
         discovery_address=internal_discovery_address
     )
-
-    # When
 
     # Then
     services = discovery.services

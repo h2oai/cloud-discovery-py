@@ -21,7 +21,7 @@ def mock_client():
 
 
 @pytest.mark.asyncio
-async def test_discovery_environment(mock_client):
+async def test_discovery_environment_async(mock_client):
     # Given
     environment = model.Environment(
         h2o_cloud_environment="https://test.example.com",
@@ -33,14 +33,14 @@ async def test_discovery_environment(mock_client):
     mock_client.get_environment.return_value.set_result(environment)
 
     # When
-    discovery = await h2o_discovery.Discovery.load(mock_client)
+    discovery = await h2o_discovery.Discovery.load_async(mock_client)
 
     # Then
     assert discovery.environment == environment
 
 
 @pytest.mark.asyncio
-async def test_discovery_services(mock_client):
+async def test_discovery_services_async(mock_client):
     # Given
     service = model.Service(
         name="services/test-service",
@@ -55,14 +55,14 @@ async def test_discovery_services(mock_client):
     mock_client.list_services.return_value.set_result([service])
 
     # When
-    discovery = await h2o_discovery.Discovery.load(mock_client)
+    discovery = await h2o_discovery.Discovery.load_async(mock_client)
 
     # Then
     assert discovery.services["test-service"] == service
 
 
 @pytest.mark.asyncio
-async def test_discovery_clients(mock_client):
+async def test_discovery_clients_async(mock_client):
     # Given
     client_record = model.Client(
         name="clients/test-client",
@@ -74,7 +74,7 @@ async def test_discovery_clients(mock_client):
     mock_client.list_clients.return_value.set_result([client_record])
 
     # When
-    discovery = await h2o_discovery.Discovery.load(mock_client)
+    discovery = await h2o_discovery.Discovery.load_async(mock_client)
 
     # Then
     assert discovery.clients["test-client"] == client_record
