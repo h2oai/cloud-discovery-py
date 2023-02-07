@@ -12,6 +12,15 @@ TEST_CLIENT = model.Client(
 
 
 @pytest.mark.e2e
+def test_clients(discovery_address):
+    # When
+    discovery = h2o_discovery.discover(discovery_address=discovery_address)
+
+    # Then
+    assert discovery.clients["test-client"] == TEST_CLIENT
+
+
+@pytest.mark.e2e
 @pytest.mark.asyncio
 async def test_clients_async(discovery_address):
     # When

@@ -13,11 +13,12 @@ pip install h2o-cloud-discovery
 
 ## Usage
 
-Package provides single async function `h2o_discovery.discover()` that returns
+Package provides two main functions.  Synchronous `h2o_discovery.discover()`
+and asynchronous `h2o_discovery.discover_async()`.  Both functions return
 a discovery object that can be used to obtain the information the H2O Cloud
 environment, its services and clients.
 
-It accepts a `environment` argument that can be used to specify the H2O Cloud
+Both accept a `environment` argument that can be used to specify the H2O Cloud
 environment for which the discovery should be performed. It's handy when for
 local development.
 Alternatively, the `H2O_CLOUD_ENVIRONMENT` environment variable can be used.
@@ -25,7 +26,7 @@ Alternatively, the `H2O_CLOUD_ENVIRONMENT` environment variable can be used.
 ```python
 import h2o_discovery
 
-discovery = await h2o_discovery.discover_async()
+discovery = h2o_discovery.discover()
 
 # Print the H2O Cloud environment that was discovered.
 print(discovery.environment.h2o_cloud_environment)
