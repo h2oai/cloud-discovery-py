@@ -4,6 +4,7 @@ from typing import Iterable
 from typing import Mapping
 
 from h2o_discovery import async_client
+from h2o_discovery import client
 from h2o_discovery import model
 
 
@@ -19,6 +20,15 @@ class Discovery:
 
     # Registered clients.
     clients: Mapping[str, model.Client]
+
+    @classmethod
+    def load(cls, cl: client.Client) -> "Discovery":
+        """Loads the discovery records from the Discovery Service."""
+        environment = cl.get_environment()
+        services = _get_service_map(cl.list_services())
+        clients = _get_client_map(cl.list_clients())
+
+        return cls(environment=environment, services=services, clients=clients)
 
     @classmethod
     async def load_async(cls, cl: async_client.AsyncClient) -> "Discovery":
