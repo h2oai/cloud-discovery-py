@@ -15,14 +15,14 @@ def determine_uri(
         raise ValueError("cannot specify both discovery and environment")
 
     if discovery_address is not None:
-        return discovery_address
+        return discovery_address.rstrip("/")
 
     if environment is not None:
         return _discovery_uri_from_environment(environment)
 
     discovery_address = os.environ.get("H2O_CLOUD_DISCOVERY")
     if discovery_address is not None:
-        return discovery_address
+        return discovery_address.rstrip("/")
 
     environment = os.environ.get("H2O_CLOUD_ENVIRONMENT")
     if environment is not None:
@@ -35,5 +35,5 @@ def determine_uri(
     )
 
 
-def _discovery_uri_from_environment(environment):
-    return urllib.parse.urljoin(environment, _WELL_KNOWN_PATH)
+def _discovery_uri_from_environment(environment: str):
+    return urllib.parse.urljoin(environment + "/", _WELL_KNOWN_PATH)

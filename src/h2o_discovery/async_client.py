@@ -14,8 +14,6 @@ class AsyncClient:
     """
 
     def __init__(self, uri: str):
-        self._uri = uri
-
         self._environment_uri = client.get_environment_uri(uri)
         self._services_uri = client.get_services_uri(uri)
         self._clients_uri = client.get_clients_uri(uri)

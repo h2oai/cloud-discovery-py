@@ -3,59 +3,98 @@ import pytest
 from h2o_discovery import lookup
 
 
-def test_find_uri_environment_param():
+def environment_test_cases():
+    yield "https://test.h2o.ai", "https://test.h2o.ai/.ai.h2o.cloud.discovery"
+    # With trailing slash.
+    yield "https://test.h2o.ai/", "https://test.h2o.ai/.ai.h2o.cloud.discovery"
+    # With port.
+    yield "https://test.h2o.ai:1234", "https://test.h2o.ai:1234/.ai.h2o.cloud.discovery"
+    # With port and trailing slash.
+    yield (
+        "https://test.h2o.ai:1234/",
+        "https://test.h2o.ai:1234/.ai.h2o.cloud.discovery",
+    )
+    # With path.
+    yield "https://test.h2o.ai/path", "https://test.h2o.ai/path/.ai.h2o.cloud.discovery"
+    # With path and trailing slash.
+    yield (
+        "https://test.h2o.ai/path/",
+        "https://test.h2o.ai/path/.ai.h2o.cloud.discovery",
+    )
+    # With path and port.
+    yield (
+        "https://test.h2o.ai:1234/path",
+        "https://test.h2o.ai:1234/path/.ai.h2o.cloud.discovery",
+    )
+    # With path, port and trailing slash.
+    yield (
+        "https://test.h2o.ai:1234/path/",
+        "https://test.h2o.ai:1234/path/.ai.h2o.cloud.discovery",
+    )
+
+
+def discovery_test_cases():
+    yield "http://test-service.domain:1234", "http://test-service.domain:1234"
+    # With trailing slash.
+    yield "http://test-service.domain:1234/", "http://test-service.domain:1234"
+    # With path.
+    yield "http://test-service.domain:1234/path", "http://test-service.domain:1234/path"
+    # With path and trailing slash.
+    yield (
+        "http://test-service.domain:1234/path/",
+        "http://test-service.domain:1234/path",
+    )
+
+
+@pytest.mark.parametrize("test_case", environment_test_cases())
+def test_find_uri_environment_param(test_case):
     # Given
-    environment = "https://test.h2o.ai"
+    environment_input, expected_uri = test_case
 
     # When
-    uri = lookup.determine_uri(environment=environment)
+    uri = lookup.determine_uri(environment=environment_input)
 
     # Then
-    assert uri == "https://test.h2o.ai/.ai.h2o.cloud.discovery"
+    assert uri == expected_uri
 
 
-def test_find_uri_environment_trailing_slash():
+@pytest.mark.parametrize("test_case", environment_test_cases())
+def test_find_uri_environment_env_var(monkeypatch, test_case):
+
     # Given
-    environment = "https://test.h2o.ai/"
+    environment_input, expected_uri = test_case
+    monkeypatch.setenv("H2O_CLOUD_ENVIRONMENT", environment_input)
 
     # When
-    uri = lookup.determine_uri(environment=environment)
+    uri = lookup.determine_uri()
 
     # Then
-    assert uri == "https://test.h2o.ai/.ai.h2o.cloud.discovery"
+    assert uri == expected_uri
 
 
-def test_find_uri_discovery_param():
+@pytest.mark.parametrize("test_case", discovery_test_cases())
+def test_find_uri_discovery_param(test_case):
     # Given
-    discovery = "http://test-service.domain:1234"
+    discovery, expected_uri = test_case
 
     # When
     uri = lookup.determine_uri(discovery_address=discovery)
 
     # Then
-    assert uri == "http://test-service.domain:1234"
+    assert uri == expected_uri
 
 
-def test_find_uri_environment_env_var(monkeypatch):
+@pytest.mark.parametrize("test_case", discovery_test_cases())
+def test_find_uri_discovery_env_var(monkeypatch, test_case):
     # Given
-    monkeypatch.setenv("H2O_CLOUD_ENVIRONMENT", "https://test.h2o.ai")
+    discovery, expected_uri = test_case
+    monkeypatch.setenv("H2O_CLOUD_DISCOVERY", discovery)
 
     # When
     uri = lookup.determine_uri()
 
     # Then
-    assert uri == "https://test.h2o.ai/.ai.h2o.cloud.discovery"
-
-
-def test_find_uri_discovery_env_var(monkeypatch):
-    # Given
-    monkeypatch.setenv("H2O_CLOUD_DISCOVERY", "http://test-service.domain:1234")
-
-    # When
-    uri = lookup.determine_uri()
-
-    # Then
-    assert uri == "http://test-service.domain:1234"
+    assert uri == expected_uri
 
 
 def test_find_uri_both_env_var_discovery_takes_precedence(monkeypatch):
