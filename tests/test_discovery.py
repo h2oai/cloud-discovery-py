@@ -57,7 +57,7 @@ def test_discovery_services(mock_client):
 
     # When
     discovery = h2o_discovery.Discovery.load(mock_client)
-    
+
     # Then
     assert discovery.services["test-service"] == SERVICE_RECORD
 
