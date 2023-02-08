@@ -8,12 +8,28 @@ from h2o_discovery import model
 
 
 @respx.mock
-def test_client_get_environment():
+def test_client_get_environment_internal():
     # Given
-    route = respx.get("https://test.example.com/v1/environment").respond(
+    route = respx.get("http://test.example.com:1234/v1/environment").respond(
         json=ENVIRONMENT_JSON
     )
-    cl = client.Client("https://test.example.com")
+    cl = client.Client("http://test.example.com:1234")
+
+    # When
+    env = cl.get_environment()
+
+    # Then
+    assert route.called
+    assert env == EXPECTED_ENVIRONMENT_DATA
+
+
+@respx.mock
+def test_client_get_environment_public():
+    # Given
+    route = respx.get(
+        "https://test.example.com/.ai.h2o.cloud.discovery/v1/environment"
+    ).respond(json=ENVIRONMENT_JSON)
+    cl = client.Client("https://test.example.com/.ai.h2o.cloud.discovery")
 
     # When
     env = cl.get_environment()
@@ -25,12 +41,12 @@ def test_client_get_environment():
 
 @respx.mock
 @pytest.mark.asyncio
-async def test_async_client_get_environment():
+async def test_async_client_get_environment_internal():
     # Given
-    route = respx.get("https://test.example.com/v1/environment").respond(
+    route = respx.get("http://test.example.com:1234/v1/environment").respond(
         json=ENVIRONMENT_JSON
     )
-    cl = async_client.AsyncClient("https://test.example.com")
+    cl = async_client.AsyncClient("http://test.example.com:1234")
 
     # When
     env = await cl.get_environment()
@@ -41,51 +57,95 @@ async def test_async_client_get_environment():
 
 
 @respx.mock
-def test_client_list_services():
+@pytest.mark.asyncio
+async def test_async_client_get_environment_public():
     # Given
-    route = respx.get("https://test.example.com/v1/services")
+    route = respx.get(
+        "https://test.example.com/.ai.h2o.cloud.discovery/v1/environment"
+    ).respond(json=ENVIRONMENT_JSON)
+    cl = async_client.AsyncClient("https://test.example.com/.ai.h2o.cloud.discovery")
+
+    # When
+    env = await cl.get_environment()
+
+    # Then
+    assert route.called
+    assert env == EXPECTED_ENVIRONMENT_DATA
+
+
+@respx.mock
+def test_client_list_services_internal():
+    # Given
+    route = respx.get("http://test.example.com:1234/v1/services")
     route.side_effect = SERVICES_RESPONSES
 
-    cl = client.Client("https://test.example.com")
+    cl = client.Client("http://test.example.com:1234")
 
     # When
     services = cl.list_services()
 
     # Then
     assert services == EXPECTED_SERVICES_RECORDS
-    assert route.call_count == 3
-    assert not route.calls[0].request.url.query
-    assert route.calls[1].request.url.query == b"pageToken=next-page-token-1"
-    assert route.calls[2].request.url.query == b"pageToken=next-page-token-2"
+    _assert_pagination_api_calls(route)
+
+
+@respx.mock
+def test_client_list_services_public():
+    # Given
+    route = respx.get("https://test.example.com/.ai.h2o.cloud.discovery/v1/services")
+    route.side_effect = SERVICES_RESPONSES
+
+    cl = client.Client("https://test.example.com/.ai.h2o.cloud.discovery")
+
+    # When
+    services = cl.list_services()
+
+    # Then
+    assert services == EXPECTED_SERVICES_RECORDS
+    _assert_pagination_api_calls(route)
 
 
 @respx.mock
 @pytest.mark.asyncio
-async def test_async_client_list_services():
+async def test_async_client_list_services_internal():
     # Given
-    route = respx.get("https://test.example.com/v1/services")
+    route = respx.get("http://test.example.com:1234/v1/services")
     route.side_effect = SERVICES_RESPONSES
 
-    cl = async_client.AsyncClient("https://test.example.com")
+    cl = async_client.AsyncClient("http://test.example.com:1234")
 
     # When
     services = await cl.list_services()
 
     # Then
     assert services == EXPECTED_SERVICES_RECORDS
-    assert route.call_count == 3
-    assert not route.calls[0].request.url.query
-    assert route.calls[1].request.url.query == b"pageToken=next-page-token-1"
-    assert route.calls[2].request.url.query == b"pageToken=next-page-token-2"
+    _assert_pagination_api_calls(route)
 
 
 @respx.mock
-def test_client_list_clients():
+@pytest.mark.asyncio
+async def test_async_client_list_services_pubclic():
     # Given
-    route = respx.get("https://test.example.com/v1/clients")
+    route = respx.get("https://test.example.com/.ai.h2o.cloud.discovery/v1/services")
+    route.side_effect = SERVICES_RESPONSES
+
+    cl = async_client.AsyncClient("https://test.example.com/.ai.h2o.cloud.discovery")
+
+    # When
+    services = await cl.list_services()
+
+    # Then
+    assert services == EXPECTED_SERVICES_RECORDS
+    _assert_pagination_api_calls(route)
+
+
+@respx.mock
+def test_client_list_clients_internal():
+    # Given
+    route = respx.get("http://test.example.com:1234/v1/clients")
     route.side_effect = CLIENTS_RESPONSES
 
-    cl = client.Client("https://test.example.com")
+    cl = client.Client("http://test.example.com:1234")
 
     # When
     clients = cl.list_clients()
@@ -93,20 +153,34 @@ def test_client_list_clients():
     # Then
 
     assert clients == EXPECTED_CLIENTS_RECORDS
-    assert route.call_count == 3
-    assert not route.calls[0].request.url.query
-    assert route.calls[1].request.url.query == b"pageToken=next-page-token-1"
-    assert route.calls[2].request.url.query == b"pageToken=next-page-token-2"
+    _assert_pagination_api_calls(route)
+
+
+@respx.mock
+def test_client_list_clients_public():
+    # Given
+    route = respx.get("https://test.example.com/.ai.h2o.cloud.discovery/v1/clients")
+    route.side_effect = CLIENTS_RESPONSES
+
+    cl = client.Client("https://test.example.com/.ai.h2o.cloud.discovery")
+
+    # When
+    clients = cl.list_clients()
+
+    # Then
+
+    assert clients == EXPECTED_CLIENTS_RECORDS
+    _assert_pagination_api_calls(route)
 
 
 @respx.mock
 @pytest.mark.asyncio
-async def test_async_client_list_clients():
+async def test_async_client_list_clients_internal():
     # Given
-    route = respx.get("https://test.example.com/v1/clients")
+    route = respx.get("https://test.example.com:1234/v1/clients")
     route.side_effect = CLIENTS_RESPONSES
 
-    cl = async_client.AsyncClient("https://test.example.com")
+    cl = async_client.AsyncClient("https://test.example.com:1234")
 
     # When
     clients = await cl.list_clients()
@@ -114,10 +188,25 @@ async def test_async_client_list_clients():
     # Then
 
     assert clients == EXPECTED_CLIENTS_RECORDS
-    assert route.call_count == 3
-    assert not route.calls[0].request.url.query
-    assert route.calls[1].request.url.query == b"pageToken=next-page-token-1"
-    assert route.calls[2].request.url.query == b"pageToken=next-page-token-2"
+    _assert_pagination_api_calls(route)
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_client_list_clients_public():
+    # Given
+    route = respx.get("https://test.example.com/.ai.h2o.cloud.discovery/v1/clients")
+    route.side_effect = CLIENTS_RESPONSES
+
+    cl = async_client.AsyncClient("https://test.example.com/.ai.h2o.cloud.discovery")
+
+    # When
+    clients = await cl.list_clients()
+
+    # Then
+
+    assert clients == EXPECTED_CLIENTS_RECORDS
+    _assert_pagination_api_calls(route)
 
 
 @respx.mock
@@ -172,6 +261,13 @@ async def test_async_client_list_clients_can_handle_empty_response():
 
     # Then
     assert services == []
+
+
+def _assert_pagination_api_calls(route):
+    assert route.call_count == 3
+    assert not route.calls[0].request.url.query
+    assert route.calls[1].request.url.query == b"pageToken=next-page-token-1"
+    assert route.calls[2].request.url.query == b"pageToken=next-page-token-2"
 
 
 ENVIRONMENT_JSON = {

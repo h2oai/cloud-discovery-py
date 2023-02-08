@@ -7,21 +7,21 @@ import httpx
 from h2o_discovery import model
 
 
-ENVIRONMENT_ENDPOINT = "/v1/environment"
-SERVICES_ENDPOINT = "/v1/services"
-CLIENTS_ENDPOINT = "/v1/clients"
+ENVIRONMENT_ENDPOINT = "v1/environment"
+SERVICES_ENDPOINT = "v1/services"
+CLIENTS_ENDPOINT = "v1/clients"
 
 
 def get_environment_uri(uri: str) -> str:
-    return urllib.parse.urljoin(uri, ENVIRONMENT_ENDPOINT)
+    return urllib.parse.urljoin(uri + "/", ENVIRONMENT_ENDPOINT)
 
 
 def get_services_uri(uri: str) -> str:
-    return urllib.parse.urljoin(uri, SERVICES_ENDPOINT)
+    return urllib.parse.urljoin(uri + "/", SERVICES_ENDPOINT)
 
 
 def get_clients_uri(uri: str) -> str:
-    return urllib.parse.urljoin(uri, CLIENTS_ENDPOINT)
+    return urllib.parse.urljoin(uri + "/", CLIENTS_ENDPOINT)
 
 
 class Client:
@@ -31,8 +31,6 @@ class Client:
     """
 
     def __init__(self, uri: str):
-        self._uri = uri
-
         self._environment_uri = get_environment_uri(uri)
         self._services_uri = get_services_uri(uri)
         self._clients_uri = get_clients_uri(uri)
