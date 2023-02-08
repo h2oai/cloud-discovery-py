@@ -4,53 +4,69 @@ from h2o_discovery import lookup
 
 
 def environment_test_cases():
-    yield "https://test.h2o.ai", "https://test.h2o.ai/.ai.h2o.cloud.discovery"
-    # With trailing slash.
-    yield "https://test.h2o.ai/", "https://test.h2o.ai/.ai.h2o.cloud.discovery"
-    # With port.
-    yield "https://test.h2o.ai:1234", "https://test.h2o.ai:1234/.ai.h2o.cloud.discovery"
-    # With port and trailing slash.
-    yield (
+    yield pytest.param(
+        "https://test.h2o.ai", "https://test.h2o.ai/.ai.h2o.cloud.discovery", id="clean"
+    )
+    yield pytest.param(
+        "https://test.h2o.ai/",
+        "https://test.h2o.ai/.ai.h2o.cloud.discovery",
+        id="with trailing slash",
+    )
+    yield pytest.param(
+        "https://test.h2o.ai:1234",
+        "https://test.h2o.ai:1234/.ai.h2o.cloud.discovery",
+        id="with port",
+    )
+    yield pytest.param(
         "https://test.h2o.ai:1234/",
         "https://test.h2o.ai:1234/.ai.h2o.cloud.discovery",
+        id="with port and trailing slash",
     )
-    # With path.
-    yield "https://test.h2o.ai/path", "https://test.h2o.ai/path/.ai.h2o.cloud.discovery"
-    # With path and trailing slash.
-    yield (
+    yield pytest.param(
+        "https://test.h2o.ai/path",
+        "https://test.h2o.ai/path/.ai.h2o.cloud.discovery",
+        id="with path",
+    )
+    yield pytest.param(
         "https://test.h2o.ai/path/",
         "https://test.h2o.ai/path/.ai.h2o.cloud.discovery",
+        id="with path and trailing slash",
     )
-    # With path and port.
-    yield (
+    yield pytest.param(
         "https://test.h2o.ai:1234/path",
         "https://test.h2o.ai:1234/path/.ai.h2o.cloud.discovery",
+        id="with path and port",
     )
-    # With path, port and trailing slash.
-    yield (
+    yield pytest.param(
         "https://test.h2o.ai:1234/path/",
         "https://test.h2o.ai:1234/path/.ai.h2o.cloud.discovery",
+        id="with path, port and trailing slash",
     )
 
 
 def discovery_test_cases():
-    yield "http://test-service.domain:1234", "http://test-service.domain:1234"
-    # With trailing slash.
-    yield "http://test-service.domain:1234/", "http://test-service.domain:1234"
-    # With path.
-    yield "http://test-service.domain:1234/path", "http://test-service.domain:1234/path"
-    # With path and trailing slash.
-    yield (
+    yield pytest.param(
+        "http://test-service.domain:1234", "http://test-service.domain:1234", id="clean"
+    )
+    yield pytest.param(
+        "http://test-service.domain:1234/",
+        "http://test-service.domain:1234",
+        id="with trailing slash",
+    )
+    yield pytest.param(
+        "http://test-service.domain:1234/path",
+        "http://test-service.domain:1234/path",
+        id="with path",
+    )
+    yield pytest.param(
         "http://test-service.domain:1234/path/",
         "http://test-service.domain:1234/path",
+        id="with path and trailing slash",
     )
 
 
-@pytest.mark.parametrize("test_case", environment_test_cases())
-def test_find_uri_environment_param(test_case):
-    # Given
-    environment_input, expected_uri = test_case
-
+@pytest.mark.parametrize("environment_input,expected_uri", environment_test_cases())
+def test_find_uri_environment_param(environment_input, expected_uri):
     # When
     uri = lookup.determine_uri(environment=environment_input)
 
@@ -58,11 +74,9 @@ def test_find_uri_environment_param(test_case):
     assert uri == expected_uri
 
 
-@pytest.mark.parametrize("test_case", environment_test_cases())
-def test_find_uri_environment_env_var(monkeypatch, test_case):
-
+@pytest.mark.parametrize("environment_input,expected_uri", environment_test_cases())
+def test_find_uri_environment_env_var(monkeypatch, environment_input, expected_uri):
     # Given
-    environment_input, expected_uri = test_case
     monkeypatch.setenv("H2O_CLOUD_ENVIRONMENT", environment_input)
 
     # When
@@ -72,23 +86,19 @@ def test_find_uri_environment_env_var(monkeypatch, test_case):
     assert uri == expected_uri
 
 
-@pytest.mark.parametrize("test_case", discovery_test_cases())
-def test_find_uri_discovery_param(test_case):
-    # Given
-    discovery, expected_uri = test_case
-
+@pytest.mark.parametrize("discovery_input,expected_uri", discovery_test_cases())
+def test_find_uri_discovery_param(discovery_input, expected_uri):
     # When
-    uri = lookup.determine_uri(discovery_address=discovery)
+    uri = lookup.determine_uri(discovery_address=discovery_input)
 
     # Then
     assert uri == expected_uri
 
 
-@pytest.mark.parametrize("test_case", discovery_test_cases())
-def test_find_uri_discovery_env_var(monkeypatch, test_case):
+@pytest.mark.parametrize("discovery_input,expected_uri", discovery_test_cases())
+def test_find_uri_discovery_env_var(monkeypatch, discovery_input, expected_uri):
     # Given
-    discovery, expected_uri = test_case
-    monkeypatch.setenv("H2O_CLOUD_DISCOVERY", discovery)
+    monkeypatch.setenv("H2O_CLOUD_DISCOVERY", discovery_input)
 
     # When
     uri = lookup.determine_uri()
