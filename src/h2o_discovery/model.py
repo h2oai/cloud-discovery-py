@@ -88,6 +88,9 @@ class Environment:
     # define its own scope.
     h2o_cloud_platform_oauth2_scope: str
 
+    # Version of the H2O Cloud Platform release that is running in the environment.
+    h2o_cloud_version: Optional[str]
+
     @classmethod
     def from_json_dict(cls, json: Mapping[str, str]) -> "Environment":
         """Create an Environment from a JSON dict returned by the server."""
@@ -95,4 +98,5 @@ class Environment:
             h2o_cloud_environment=json["h2oCloudEnvironment"],
             issuer_url=json["issuerUrl"],
             h2o_cloud_platform_oauth2_scope=json["h2oCloudPlatformOauth2Scope"],
+            h2o_cloud_version=json.get("h2oCloudVersion"),
         )

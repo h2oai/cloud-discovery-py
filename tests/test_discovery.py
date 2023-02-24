@@ -24,6 +24,7 @@ ENVIRONMENT_DATA = model.Environment(
     h2o_cloud_environment="https://test.example.com",
     h2o_cloud_platform_oauth2_scope="test-scope",
     issuer_url="https://test.example.com",
+    h2o_cloud_version="test-version",
 )
 
 
