@@ -275,6 +275,7 @@ ENVIRONMENT_JSON = {
         "h2oCloudEnvironment": "https://cloud.fbi.com",
         "h2oCloudPlatformOauth2Scope": "openid profile email",
         "issuerUrl": "https://phantauth.net",
+        "h2oCloudVersion": "70.25",
     }
 }
 
@@ -282,6 +283,7 @@ EXPECTED_ENVIRONMENT_DATA = model.Environment(
     h2o_cloud_environment="https://cloud.fbi.com",
     h2o_cloud_platform_oauth2_scope="openid profile email",
     issuer_url="https://phantauth.net",
+    h2o_cloud_version="70.25",
 )
 
 SERVICES_RESPONSES = [

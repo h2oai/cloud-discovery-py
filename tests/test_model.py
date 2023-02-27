@@ -51,6 +51,7 @@ def test_environment_from_json_dict():
         "h2oCloudEnvironment": "https://test.h2o.ai",
         "issuerUrl": "https://test.h2o.ai",
         "h2oCloudPlatformOauth2Scope": "test-platform-scope",
+        "h2oCloudVersion": "test-version",
     }
 
     # When
@@ -61,4 +62,25 @@ def test_environment_from_json_dict():
         h2o_cloud_environment="https://test.h2o.ai",
         issuer_url="https://test.h2o.ai",
         h2o_cloud_platform_oauth2_scope="test-platform-scope",
+        h2o_cloud_version="test-version",
+    )
+
+
+def test_environment_from_json_dict_with_missing_version():
+    # Given
+    json = {
+        "h2oCloudEnvironment": "https://test.h2o.ai",
+        "issuerUrl": "https://test.h2o.ai",
+        "h2oCloudPlatformOauth2Scope": "test-platform-scope",
+    }
+
+    # When
+    result = model.Environment.from_json_dict(json)
+
+    # Then
+    assert result == model.Environment(
+        h2o_cloud_environment="https://test.h2o.ai",
+        issuer_url="https://test.h2o.ai",
+        h2o_cloud_platform_oauth2_scope="test-platform-scope",
+        h2o_cloud_version=None,
     )
