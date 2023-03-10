@@ -1,0 +1,48 @@
+name: Python Lint
+
+on:
+  workflow_call:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        id: setup-python
+        with:
+          python-version: "3.10"
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pypoetry
+          key: ${{ runner.os }}-poetry-test-${{ steps.setup-python.outputs.python-version }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-lint-${{ steps.setup-python.outputs.python-version }}-
+            ${{ runner.os }}-poetry-lint-
+            ${{ runner.os }}-poetry
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-lint-${{ steps.setup-python.outputs.python-version }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-pip-lint-${{ steps.setup-python.outputs.python-version }}-
+            ${{ runner.os }}-pip-lint-
+            ${{ runner.os }}-pip
+
+      - name: Install nox
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry==1.2.2
+
+          poetry export --format=constraints.txt --with dev --without-hashes \
+          | pip install --constraint=/dev/stdin nox nox-poetry
+
+      - name: Run Linters
+        run: |
+          nox -s lint
