@@ -89,6 +89,9 @@ class Environment:
     h2o_cloud_platform_oauth2_scope: str
 
     # Version of the H2O Cloud Platform release that is running in the environment.
+    # In XC YY.MM.V format for released versions (e.g. MC 23.04.01 for managed
+    # cloud or HC 23.01.1 for hybrid cloud). Can be arbitrary string for
+    # testing environments.
     h2o_cloud_version: Optional[str]
 
     @classmethod
