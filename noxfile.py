@@ -29,10 +29,3 @@ def lint(session):
     session.run("black", "--check", ".")
     session.run("mypy", "src")
     session.run("flake8", "src", "tests")
-
-
-@nox_poetry.session()
-def e2e_tests(session):
-    session.install("pytest", "pytest-asyncio", "respx")
-    session.poetry.session.install(".")
-    session.run("pytest", "-m e2e", *session.posargs)

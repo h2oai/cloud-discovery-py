@@ -41,10 +41,3 @@ respx = ">=0.16"
 
 [tool.black]
 skip-magic-trailing-comma = true
-
-[tool.pytest.ini_options]
-markers = [
-    "e2e: mark test as end-to-end test",
-]
-
-addopts = "-m 'not e2e'"
