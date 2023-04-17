@@ -3,7 +3,10 @@
     ".": {
       "changelog-path": "CHANGELOG.md",
       "release-type": "python",
-      "draft-pull-request": true
+      "draft-pull-request": true,
+      "extra-files": [
+        "src/h2o_discovery/_version.py"
+      ]
     }
   },
   "pull-request-title-pattern": "chore: 🔖 release${component} ${version}",
