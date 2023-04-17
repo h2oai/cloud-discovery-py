@@ -1,9 +1,10 @@
 from typing import Optional
 
 from h2o_discovery import async_client, client, discovery, lookup
-from h2o_discovery._version import __version__  # noqa: F401
 
 Discovery = discovery.Discovery
+
+__version__ = "0.0.0"
 
 
 def discover(
