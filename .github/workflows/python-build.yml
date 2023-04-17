@@ -20,13 +20,22 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-build-${{ steps.setup-python.outputs.python-version }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-pip-build-${{ steps.setup-python.outputs.python-version }}-
+            ${{ runner.os }}-pip-build-
+            ${{ runner.os }}-pip
+
       - name: Install pypa/build
         run: |
-          python -m pip install build
+          pipx install build
 
       - name: Build a binary wheel and a source tarball on Python ${{ matrix.python-version }}
         run: |
-          python -m build
+          pyproject-build
 
   all-builds-passed:
     # Used as aggregate check for all builds being run in matrix.
