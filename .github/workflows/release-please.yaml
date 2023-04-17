@@ -1,0 +1,32 @@
+name: Release Please
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: release-please
+
+jobs:
+  release-please:
+    name: Release Please
+    runs-on: ubuntu-latest
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
+
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_GITHUB_TOKEN }}
+          command: manifest
+          draft-pull-request: "true"
+
+  release-go:
+    name: Release Go
+    uses: ./.github/workflows/pypi-release.yml
+
+    if: needs.release-please.outputs.releases_created
+    needs: release-please
+
+    secrets: inherit

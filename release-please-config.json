@@ -1,0 +1,17 @@
+{
+  "packages": {
+    ".": {
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "python",
+      "draft-pull-request": true
+    }
+  },
+  "pull-request-title-pattern": "chore: 🔖 release${component} ${version}",
+  "bootstrap-sha": "51c25061313acdb283dc32dd5add6aadc51d3d94",
+  "separate-pull-requests": true,
+  "draft-pull-request": true,
+  "plugins": [
+    "sentence-case"
+  ],
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
+}
