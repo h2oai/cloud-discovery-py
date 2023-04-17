@@ -22,15 +22,6 @@ jobs:
 
       - uses: actions/cache@v3
         with:
-          path: ~/.cache/pypoetry
-          key: ${{ runner.os }}-poetry-test-${{ steps.setup-python.outputs.python-version }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-poetry-test-${{ steps.setup-python.outputs.python-version }}-
-            ${{ runner.os }}-poetry-test-
-            ${{ runner.os }}-poetry
-
-      - uses: actions/cache@v3
-        with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-test-${{ steps.setup-python.outputs.python-version }}-${{ github.sha }}
           restore-keys: |
@@ -38,19 +29,16 @@ jobs:
             ${{ runner.os }}-pip-test-
             ${{ runner.os }}-pip
 
-      - name: Install nox
+      - name: Install Hatch
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install poetry==1.2.2
-
-          poetry export --format=constraints.txt --with dev --without-hashes \
-          | pip install --constraint=/dev/stdin nox nox-poetry
+          pipx install hatch
+          hatch --version
 
       - name: Run Tests in Python ${{ matrix.python-version }}
         env:
           PYTHON_VERSION: ${{ matrix.python-version }}
         run: |
-          nox -s tests -p ${PYTHON_VERSION%-*} -- -v
+          hatch run +py=${PYTHON_VERSION} test:pytest -v
 
   all-tests-passed:
     # Used as aggregate check for all tests being run in matrix.
