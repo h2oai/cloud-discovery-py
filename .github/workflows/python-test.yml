@@ -38,7 +38,7 @@ jobs:
         env:
           PYTHON_VERSION: ${{ matrix.python-version }}
         run: |
-          hatch run +py=${PYTHON_VERSION} test:pytest
+          hatch run +py=${PYTHON_VERSION} test:pytest -v
 
   all-tests-passed:
     # Used as aggregate check for all tests being run in matrix.
