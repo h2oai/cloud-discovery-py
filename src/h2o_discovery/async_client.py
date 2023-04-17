@@ -1,10 +1,8 @@
-from typing import List
-from typing import Optional
+from typing import List, Optional
 
 import httpx
 
-from h2o_discovery import model
-from h2o_discovery import client
+from h2o_discovery import client, model
 
 
 class AsyncClient:
