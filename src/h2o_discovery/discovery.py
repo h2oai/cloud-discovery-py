@@ -1,11 +1,8 @@
 import dataclasses
 import types
-from typing import Iterable
-from typing import Mapping
+from typing import Iterable, Mapping
 
-from h2o_discovery import async_client
-from h2o_discovery import client
-from h2o_discovery import model
+from h2o_discovery import async_client, client, model
 
 
 @dataclasses.dataclass(frozen=True)
