@@ -10,7 +10,7 @@
     }
   },
   "pull-request-title-pattern": "chore: 🔖 release${component} ${version}",
-  "bootstrap-sha": "86ecbf9c5981fb0d71f0ad93bbe9c5f3734b9a19",
+  "bootstrap-sha": "1bf6f4a2a1faefce3e5141130cd05c7bdfaf48bd",
   "separate-pull-requests": true,
   "draft-pull-request": true,
   "plugins": [
