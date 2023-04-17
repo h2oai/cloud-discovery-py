@@ -1,11 +1,9 @@
+from typing import List, Optional
 import urllib.parse
-from typing import List
-from typing import Optional
 
 import httpx
 
 from h2o_discovery import model
-
 
 ENVIRONMENT_ENDPOINT = "v1/environment"
 SERVICES_ENDPOINT = "v1/services"
