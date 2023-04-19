@@ -2,7 +2,9 @@ import httpx
 import pytest
 import respx
 
-from h2o_discovery import async_client, client, model
+from h2o_discovery import async_client
+from h2o_discovery import client
+from h2o_discovery import model
 
 
 @respx.mock

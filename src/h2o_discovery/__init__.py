@@ -1,6 +1,9 @@
 from typing import Optional
 
-from h2o_discovery import async_client, client, discovery, lookup
+from h2o_discovery import async_client
+from h2o_discovery import client
+from h2o_discovery import discovery
+from h2o_discovery import lookup
 from h2o_discovery._version import __version__  # noqa: F401
 
 Discovery = discovery.Discovery

@@ -1,5 +1,6 @@
 import dataclasses
-from typing import Mapping, Optional
+from typing import Mapping
+from typing import Optional
 
 
 @dataclasses.dataclass(frozen=True)
