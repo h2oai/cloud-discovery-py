@@ -1,9 +1,8 @@
 from typing import Optional
 
-from h2o_discovery import _async_client
 from h2o_discovery import _client
 from h2o_discovery import _load
-from h2o_discovery import _lookup
+from h2o_discovery import lookup
 from h2o_discovery import model
 from h2o_discovery._version import __version__  # noqa: F401
 
@@ -24,7 +23,7 @@ def discover(
         discovery_address: The address of the discovery service.
 
     """
-    uri = _lookup.determine_uri(environment, discovery_address)
+    uri = lookup.determine_uri(environment, discovery_address)
     cl = _client.Client(uri)
     return _load.load_discovery(cl)
 
@@ -43,6 +42,6 @@ async def discover_async(
         discovery_address: The address of the discovery service.
 
     """
-    uri = _lookup.determine_uri(environment, discovery_address)
-    cl = _async_client.AsyncClient(uri)
+    uri = lookup.determine_uri(environment, discovery_address)
+    cl = _client.AsyncClient(uri)
     return await _load.load_discovery_async(cl)
