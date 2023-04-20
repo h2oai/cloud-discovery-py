@@ -3,7 +3,7 @@ from unittest import mock
 
 import pytest
 
-from h2o_discovery import load
+from h2o_discovery import _load
 from h2o_discovery import model
 
 
@@ -33,7 +33,7 @@ def test_load_environment(mock_client):
     mock_client.get_environment.return_value = ENVIRONMENT_DATA
 
     # When
-    discovery = load.load_discovery(mock_client)
+    discovery = _load.load_discovery(mock_client)
 
     # Then
     assert discovery.environment == ENVIRONMENT_DATA
@@ -46,7 +46,7 @@ async def test_load_environment_async(mock_client):
     mock_client.get_environment.return_value.set_result(ENVIRONMENT_DATA)
 
     # When
-    discovery = await load.load_discovery_async(mock_client)
+    discovery = await _load.load_discovery_async(mock_client)
 
     # Then
     assert discovery.environment == ENVIRONMENT_DATA
@@ -57,7 +57,7 @@ def test_load_services(mock_client):
     mock_client.list_services.return_value = [SERVICE_RECORD]
 
     # When
-    discovery = load.load_discovery(mock_client)
+    discovery = _load.load_discovery(mock_client)
 
     # Then
     assert discovery.services["test-service"] == SERVICE_RECORD
@@ -80,7 +80,7 @@ async def test_load_services_async(mock_client):
     mock_client.list_services.return_value.set_result([SERVICE_RECORD])
 
     # When
-    discovery = await load.load_discovery_async(mock_client)
+    discovery = await _load.load_discovery_async(mock_client)
 
     # Then
     assert discovery.services["test-service"] == SERVICE_RECORD
@@ -98,7 +98,7 @@ def test_load_clients(mock_client):
     mock_client.list_clients.return_value = [CLIENT_RECORD]
 
     # When
-    discovery = load.load_discovery(mock_client)
+    discovery = _load.load_discovery(mock_client)
 
     # Then
     assert discovery.clients["test-client"] == CLIENT_RECORD
@@ -111,7 +111,7 @@ async def test_load_clients_async(mock_client):
     mock_client.list_clients.return_value.set_result([CLIENT_RECORD])
 
     # When
-    discovery = await load.load_discovery_async(mock_client)
+    discovery = await _load.load_discovery_async(mock_client)
 
     # Then
     assert discovery.clients["test-client"] == CLIENT_RECORD
