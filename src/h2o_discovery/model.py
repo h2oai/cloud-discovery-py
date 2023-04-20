@@ -103,3 +103,17 @@ class Environment:
             h2o_cloud_platform_oauth2_scope=json["h2oCloudPlatformOauth2Scope"],
             h2o_cloud_version=json.get("h2oCloudVersion"),
         )
+
+
+@dataclasses.dataclass(frozen=True)
+class Discovery:
+    """Representation of the discovery records."""
+
+    # Environment information.
+    environment: Environment
+
+    # Registered services.
+    services: Mapping[str, Service]
+
+    # Registered clients.
+    clients: Mapping[str, Client]
