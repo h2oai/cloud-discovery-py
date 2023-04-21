@@ -1,6 +1,5 @@
 from typing import Optional
 
-from h2o_discovery import _async_client
 from h2o_discovery import _client
 from h2o_discovery import _load
 from h2o_discovery import _lookup
@@ -44,5 +43,5 @@ async def discover_async(
 
     """
     uri = _lookup.determine_uri(environment, discovery_address)
-    cl = _async_client.AsyncClient(uri)
+    cl = _client.AsyncClient(uri)
     return await _load.load_discovery_async(cl)
