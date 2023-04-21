@@ -3,7 +3,7 @@ from typing import Optional
 
 import httpx
 
-from h2o_discovery import client
+from h2o_discovery import _client
 from h2o_discovery import model
 
 
@@ -14,9 +14,9 @@ class AsyncClient:
     """
 
     def __init__(self, uri: str):
-        self._environment_uri = client.get_environment_uri(uri)
-        self._services_uri = client.get_services_uri(uri)
-        self._clients_uri = client.get_clients_uri(uri)
+        self._environment_uri = _client.get_environment_uri(uri)
+        self._services_uri = _client.get_services_uri(uri)
+        self._clients_uri = _client.get_clients_uri(uri)
 
     async def get_environment(self) -> model.Environment:
         """Returns the information about the environment."""
