@@ -1,0 +1,12 @@
+<!--
+`pydoc-markdown` generates the files with the name same as the corresponding
+`*.py` file. For example, `__init__.py` will be converted to `__init__.md`.
+
+Docusaurus ignores all files starting with `_` and consider them partials.
+
+Therefore we import the `__init__.md` as the partial
+-->
+
+import DunderInit from './__init__.md';
+
+<DunderInit />

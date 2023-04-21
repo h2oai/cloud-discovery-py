@@ -1,0 +1,17 @@
+loaders:
+  - type: python
+    modules:
+      - h2o_discovery
+      - h2o_discovery.model
+
+processors:
+  - type: filter
+    skip_empty_modules: true
+  - type: smart
+  - type: crossref
+renderer:
+  type: docusaurus
+  docs_base_path: documentation/docs
+  relative_output_path: api
+  relative_sidebar_path: sidebar.json
+  sidebar_top_level_label: "API Reference"
