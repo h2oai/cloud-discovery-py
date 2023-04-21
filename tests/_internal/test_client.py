@@ -2,8 +2,8 @@ import httpx
 import pytest
 import respx
 
-from h2o_discovery import _client
 from h2o_discovery import model
+from h2o_discovery._internal import client
 
 
 @respx.mock
@@ -12,7 +12,7 @@ def test_client_get_environment_internal():
     route = respx.get("http://test.example.com:1234/v1/environment").respond(
         json=ENVIRONMENT_JSON
     )
-    cl = _client.Client("http://test.example.com:1234")
+    cl = client.Client("http://test.example.com:1234")
 
     # When
     env = cl.get_environment()
@@ -28,7 +28,7 @@ def test_client_get_environment_public():
     route = respx.get(
         "https://test.example.com/.ai.h2o.cloud.discovery/v1/environment"
     ).respond(json=ENVIRONMENT_JSON)
-    cl = _client.Client("https://test.example.com/.ai.h2o.cloud.discovery")
+    cl = client.Client("https://test.example.com/.ai.h2o.cloud.discovery")
 
     # When
     env = cl.get_environment()
@@ -45,7 +45,7 @@ async def test_async_client_get_environment_internal():
     route = respx.get("http://test.example.com:1234/v1/environment").respond(
         json=ENVIRONMENT_JSON
     )
-    cl = _client.AsyncClient("http://test.example.com:1234")
+    cl = client.AsyncClient("http://test.example.com:1234")
 
     # When
     env = await cl.get_environment()
@@ -62,7 +62,7 @@ async def test_async_client_get_environment_public():
     route = respx.get(
         "https://test.example.com/.ai.h2o.cloud.discovery/v1/environment"
     ).respond(json=ENVIRONMENT_JSON)
-    cl = _client.AsyncClient("https://test.example.com/.ai.h2o.cloud.discovery")
+    cl = client.AsyncClient("https://test.example.com/.ai.h2o.cloud.discovery")
 
     # When
     env = await cl.get_environment()
@@ -78,7 +78,7 @@ def test_client_list_services_internal():
     route = respx.get("http://test.example.com:1234/v1/services")
     route.side_effect = SERVICES_RESPONSES
 
-    cl = _client.Client("http://test.example.com:1234")
+    cl = client.Client("http://test.example.com:1234")
 
     # When
     services = cl.list_services()
@@ -94,7 +94,7 @@ def test_client_list_services_public():
     route = respx.get("https://test.example.com/.ai.h2o.cloud.discovery/v1/services")
     route.side_effect = SERVICES_RESPONSES
 
-    cl = _client.Client("https://test.example.com/.ai.h2o.cloud.discovery")
+    cl = client.Client("https://test.example.com/.ai.h2o.cloud.discovery")
 
     # When
     services = cl.list_services()
@@ -111,7 +111,7 @@ async def test_async_client_list_services_internal():
     route = respx.get("http://test.example.com:1234/v1/services")
     route.side_effect = SERVICES_RESPONSES
 
-    cl = _client.AsyncClient("http://test.example.com:1234")
+    cl = client.AsyncClient("http://test.example.com:1234")
 
     # When
     services = await cl.list_services()
@@ -128,7 +128,7 @@ async def test_async_client_list_services_pubclic():
     route = respx.get("https://test.example.com/.ai.h2o.cloud.discovery/v1/services")
     route.side_effect = SERVICES_RESPONSES
 
-    cl = _client.AsyncClient("https://test.example.com/.ai.h2o.cloud.discovery")
+    cl = client.AsyncClient("https://test.example.com/.ai.h2o.cloud.discovery")
 
     # When
     services = await cl.list_services()
@@ -144,7 +144,7 @@ def test_client_list_clients_internal():
     route = respx.get("http://test.example.com:1234/v1/clients")
     route.side_effect = CLIENTS_RESPONSES
 
-    cl = _client.Client("http://test.example.com:1234")
+    cl = client.Client("http://test.example.com:1234")
 
     # When
     clients = cl.list_clients()
@@ -161,7 +161,7 @@ def test_client_list_clients_public():
     route = respx.get("https://test.example.com/.ai.h2o.cloud.discovery/v1/clients")
     route.side_effect = CLIENTS_RESPONSES
 
-    cl = _client.Client("https://test.example.com/.ai.h2o.cloud.discovery")
+    cl = client.Client("https://test.example.com/.ai.h2o.cloud.discovery")
 
     # When
     clients = cl.list_clients()
@@ -179,7 +179,7 @@ async def test_async_client_list_clients_internal():
     route = respx.get("https://test.example.com:1234/v1/clients")
     route.side_effect = CLIENTS_RESPONSES
 
-    cl = _client.AsyncClient("https://test.example.com:1234")
+    cl = client.AsyncClient("https://test.example.com:1234")
 
     # When
     clients = await cl.list_clients()
@@ -197,7 +197,7 @@ async def test_async_client_list_clients_public():
     route = respx.get("https://test.example.com/.ai.h2o.cloud.discovery/v1/clients")
     route.side_effect = CLIENTS_RESPONSES
 
-    cl = _client.AsyncClient("https://test.example.com/.ai.h2o.cloud.discovery")
+    cl = client.AsyncClient("https://test.example.com/.ai.h2o.cloud.discovery")
 
     # When
     clients = await cl.list_clients()
@@ -212,7 +212,7 @@ async def test_async_client_list_clients_public():
 def test_client_list_services_can_handle_empty_response():
     # Given
     respx.get("https://test.example.com/v1/services").respond(json={})
-    cl = _client.Client("https://test.example.com")
+    cl = client.Client("https://test.example.com")
 
     # When
     services = cl.list_services()
@@ -226,7 +226,7 @@ def test_client_list_services_can_handle_empty_response():
 async def test_async_client_list_services_can_handle_empty_response():
     # Given
     respx.get("https://test.example.com/v1/services").respond(json={})
-    cl = _client.AsyncClient("https://test.example.com")
+    cl = client.AsyncClient("https://test.example.com")
 
     # When
     services = await cl.list_services()
@@ -239,7 +239,7 @@ async def test_async_client_list_services_can_handle_empty_response():
 def test_client_list_clients_can_handle_empty_response():
     # Given
     respx.get("https://test.example.com/v1/clients").respond(json={})
-    cl = _client.Client("https://test.example.com")
+    cl = client.Client("https://test.example.com")
 
     # When
     services = cl.list_clients()
@@ -253,7 +253,7 @@ def test_client_list_clients_can_handle_empty_response():
 async def test_async_client_list_clients_can_handle_empty_response():
     # Given
     respx.get("https://test.example.com/v1/clients").respond(json={})
-    cl = _client.AsyncClient("https://test.example.com")
+    cl = client.AsyncClient("https://test.example.com")
 
     # When
     services = await cl.list_clients()
