@@ -1,6 +1,5 @@
 from typing import List
 from typing import Optional
-import urllib.parse
 
 import httpx
 
@@ -18,22 +17,20 @@ class Client:
     """
 
     def __init__(self, uri: str):
-        self._environment_uri = _get_environment_uri(uri)
-        self._services_uri = _get_services_uri(uri)
-        self._clients_uri = _get_clients_uri(uri)
+        self._uri = uri
 
     def get_environment(self) -> model.Environment:
         """Returns the information about the environment."""
-        with httpx.Client() as client:
-            resp = _fetch(client, self._environment_uri)
+        with httpx.Client(base_url=self._uri) as client:
+            resp = _fetch(client, _ENVIRONMENT_ENDPOINT)
             return model.Environment.from_json_dict(resp.json()["environment"])
 
     def list_services(self) -> List[model.Service]:
         """Returns the list of all registered services."""
-        with httpx.Client() as client:
+        with httpx.Client(base_url=self._uri) as client:
             services: List[model.Service] = []
 
-            pages = _get_all_pages(client, self._services_uri)
+            pages = _get_all_pages(client, _SERVICES_ENDPOINT)
             for page in pages:
                 services.extend(
                     [model.Service.from_json_dict(d) for d in page.get("services", [])]
@@ -42,10 +39,10 @@ class Client:
 
     def list_clients(self) -> List[model.Client]:
         """Returns the list of all registered clients."""
-        with httpx.Client() as client:
+        with httpx.Client(base_url=self._uri) as client:
             clients: List[model.Client] = []
 
-            pages = _get_all_pages(client, self._clients_uri)
+            pages = _get_all_pages(client, _CLIENTS_ENDPOINT)
             for page in pages:
                 clients.extend(
                     [model.Client.from_json_dict(d) for d in page.get("clients", [])]
@@ -84,22 +81,20 @@ class AsyncClient:
     """
 
     def __init__(self, uri: str):
-        self._environment_uri = _get_environment_uri(uri)
-        self._services_uri = _get_services_uri(uri)
-        self._clients_uri = _get_clients_uri(uri)
+        self._uri = uri
 
     async def get_environment(self) -> model.Environment:
         """Returns the information about the environment."""
-        async with httpx.AsyncClient() as client:
-            resp = await _fetch_async(client, self._environment_uri)
+        async with httpx.AsyncClient(base_url=self._uri) as client:
+            resp = await _fetch_async(client, _ENVIRONMENT_ENDPOINT)
             return model.Environment.from_json_dict(resp.json()["environment"])
 
     async def list_services(self) -> List[model.Service]:
         """Returns the list of all registered services."""
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(base_url=self._uri) as client:
             services: List[model.Service] = []
 
-            pages = await _get_all_pages_async(client, self._services_uri)
+            pages = await _get_all_pages_async(client, _SERVICES_ENDPOINT)
             for page in pages:
                 services.extend(
                     [model.Service.from_json_dict(d) for d in page.get("services", [])]
@@ -108,10 +103,10 @@ class AsyncClient:
 
     async def list_clients(self) -> List[model.Client]:
         """Returns the list of all registered clients."""
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(base_url=self._uri) as client:
             clients: List[model.Client] = []
 
-            pages = await _get_all_pages_async(client, self._clients_uri)
+            pages = await _get_all_pages_async(client, _CLIENTS_ENDPOINT)
             for page in pages:
                 clients.extend(
                     [model.Client.from_json_dict(d) for d in page.get("clients", [])]
@@ -141,15 +136,3 @@ async def _get_all_pages_async(client: httpx.AsyncClient, uri: str) -> List[dict
         next_page_token = resp_json.get("nextPageToken")
         if next_page_token is None:
             return all_pages
-
-
-def _get_environment_uri(uri: str) -> str:
-    return urllib.parse.urljoin(uri + "/", _ENVIRONMENT_ENDPOINT)
-
-
-def _get_services_uri(uri: str) -> str:
-    return urllib.parse.urljoin(uri + "/", _SERVICES_ENDPOINT)
-
-
-def _get_clients_uri(uri: str) -> str:
-    return urllib.parse.urljoin(uri + "/", _CLIENTS_ENDPOINT)
