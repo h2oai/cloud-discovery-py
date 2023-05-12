@@ -1,0 +1,47 @@
+name: API Docs Release
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        description: 'The tag of the release where to upload the API docs'
+        required: true
+
+
+jobs:
+  release-api-docs:
+    name: API Docs Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        id: setup-python
+        with:
+          python-version: "3.10"
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-apidocs-${{ steps.setup-python.outputs.python-version }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-pip-apidocs-${{ steps.setup-python.outputs.python-version }}-
+            ${{ runner.os }}-pip-apidocs-
+            ${{ runner.os }}-pip
+
+      - name: Install Hatch
+        run: |
+          pipx install hatch
+          hatch --version
+
+      - name: Generate Markdown
+        run: |
+          hatch run docs:generate
+
+      - name: Attach Docs to Release
+        run:
+          gh release upload ${{ github.event.inputs.tag }} --clobber dist/API.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

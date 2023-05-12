@@ -22,11 +22,23 @@ jobs:
           command: manifest
           draft-pull-request: "true"
 
-  release-go:
-    name: Release Go
+  release-pypi:
+    name: Release to PyPI
     uses: ./.github/workflows/pypi-release.yml
 
     if: needs.release-please.outputs.releases_created
     needs: release-please
+
+    secrets: inherit
+
+  release-api-docs:
+    name: Attach API Docs to Release
+    uses: ./.github/workflows/api-docs-release.yml
+
+    if: needs.release-please.outputs.releases_created
+    needs: release-please
+
+    with:
+      tag: ${{ needs.release-please.outputs.tag_name }}
 
     secrets: inherit
