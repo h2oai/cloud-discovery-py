@@ -43,3 +43,5 @@ jobs:
       - name: Attach Docs to Release
         run:
           gh release upload ${{ github.event.inputs.tag }} --clobber dist/API.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
