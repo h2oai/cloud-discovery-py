@@ -38,6 +38,7 @@ jobs:
 
       - name: Generate Markdown
         run: |
+          mkdir -p ./dist
           hatch run docs:generate
 
       - name: Attach Docs to Release
