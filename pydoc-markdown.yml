@@ -1,0 +1,25 @@
+loaders:
+  - type: python
+    modules:
+      - h2o_discovery
+      - h2o_discovery.model
+
+processors:
+  - type: filter
+    skip_empty_modules: true
+  - type: smart
+  - type: crossref
+
+renderer:
+  type: markdown
+
+  filename: dist/API.md
+  insert_header_anchors: false
+  code_headers: true
+  descriptive_class_title: false
+  descriptive_module_title: true
+  classdef_code_block: false
+  render_typehint_in_data_header: true
+  render_toc: true
+  render_toc_title: "`h2o-cloud-discovery` API"
+  toc_maxdepth: 1
