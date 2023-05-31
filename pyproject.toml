@@ -94,5 +94,3 @@ skip-magic-trailing-comma = true
 force_single_line = true
 known_application = ["h2o_discovery"]
 profile = "appnexus"
-
-
