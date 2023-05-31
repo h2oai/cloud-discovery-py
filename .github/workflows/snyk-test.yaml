@@ -1,11 +1,9 @@
 name: Snyk Test
 
 on:
-  push:
+  pull_request:
     paths:
       - 'pyproject.toml'
-    branches:
-      - devops/snyk-integration
   
 env:
   SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

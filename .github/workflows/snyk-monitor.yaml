@@ -8,7 +8,6 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+-*'
     branches:
       - main
-      - devops/snyk-integration
 
 env:
   SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
