@@ -1,0 +1,32 @@
+name: Snyk Test
+
+on:
+  pull_request:
+    paths:
+      - ./pyproject.toml
+  
+env:
+  SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  PYTHON_VERSION: '3.10'
+  PYTHON: python$PYTHON_VERSION
+
+jobs:
+  snyk_scan_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: snyk/actions/setup@master
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: $PYTHON_VERSION
+
+      - name: Scan python dependencies
+        run: |
+          $PYTHON -m pip install .
+          $PYTHON -m pip freeze > requirements.txt
+          snyk test \
+            -d \
+            --file=requirements.txt \
+            --command=$PYTHON \
+            --skip-unresolved \
