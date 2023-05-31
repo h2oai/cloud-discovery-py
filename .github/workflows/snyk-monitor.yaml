@@ -13,7 +13,6 @@ on:
 env:
   SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   PYTHON_VERSION: '3.10'
-  PYTHON: 'python$PYTHON_VERSION'
 
 jobs:
   snyk_scan_monitor:
@@ -26,19 +25,16 @@ jobs:
         shell: bash
         run: echo "ref=$(echo ${GITHUB_REF##*/})" >> $GITHUB_OUTPUT
         id: extract_ref
-      
-      - name: Check environment variables
-        shell: bash
-        run: echo '$PYTHON_VERSION_$PYTHON'
 
       - uses: actions/setup-python@v4
         with:
-          python-version: '$PYTHON_VERSION'
+          python-version: ${{ env.PYTHON_VERSION }}
         
       - name: Monitor python dependencies
         env:
           SNYK_TOKEN: '${{ secrets.SNYK_TOKEN }}'
         run: |
+          PYTHON=python${{ env.PYTHON_VERSION }}
           $PYTHON -m pip install .
           $PYTHON -m pip freeze > requirements.txt
           snyk monitor \
