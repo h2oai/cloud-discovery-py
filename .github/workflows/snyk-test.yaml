@@ -10,7 +10,6 @@ on:
 env:
   SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   PYTHON_VERSION: '3.10'
-  PYTHON: 'python$PYTHON_VERSION'
 
 jobs:
   snyk_scan_test:
@@ -21,10 +20,11 @@ jobs:
 
       - uses: actions/setup-python@v4
         with:
-          python-version: '$PYTHON_VERSION'
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Scan python dependencies
         run: |
+          PYTHON=python${{ env.PYTHON_VERSION }}
           $PYTHON -m pip install .
           $PYTHON -m pip freeze > requirements.txt
           snyk test \
