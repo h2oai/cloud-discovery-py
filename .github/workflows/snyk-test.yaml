@@ -1,14 +1,16 @@
 name: Snyk Test
 
 on:
-  pull_request:
+  push:
     paths:
       - ./pyproject.toml
+    branches:
+      - devops/snyk-integration
   
 env:
   SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   PYTHON_VERSION: '3.10'
-  PYTHON: python$PYTHON_VERSION
+  PYTHON: 'python$PYTHON_VERSION'
 
 jobs:
   snyk_scan_test:
@@ -19,7 +21,7 @@ jobs:
 
       - uses: actions/setup-python@v4
         with:
-          python-version: $PYTHON_VERSION
+          python-version: '$PYTHON_VERSION'
 
       - name: Scan python dependencies
         run: |

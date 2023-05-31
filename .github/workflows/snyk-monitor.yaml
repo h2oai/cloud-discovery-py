@@ -13,7 +13,7 @@ on:
 env:
   SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   PYTHON_VERSION: '3.10'
-  PYTHON: python$PYTHON_VERSION
+  PYTHON: 'python$PYTHON_VERSION'
 
 jobs:
   snyk_scan_monitor:
@@ -29,7 +29,7 @@ jobs:
 
       - uses: actions/setup-python@v4
         with:
-          python-version: $PYTHON_VERSION
+          python-version: '$PYTHON_VERSION'
         
       - name: Monitor python dependencies
         env:
