@@ -29,4 +29,4 @@ jobs:
             -d \
             --file=requirements.txt \
             --command=$PYTHON \
-            --skip-unresolved \
+            --skip-unresolved
