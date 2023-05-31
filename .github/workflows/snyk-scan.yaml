@@ -35,9 +35,10 @@ jobs:
           SNYK_TOKEN: '${{ secrets.SNYK_TOKEN }}'
         run: |
           python3.10 -m pip install .
+          python3.10 -m pip freeze > requirements.txt
           snyk test \
             -d \
-            --file=pyproject.toml \
+            --file=requirements.txt \
             --command=python3.10 \
             --skip-unresolved \
      
@@ -62,11 +63,12 @@ jobs:
           SNYK_TOKEN: '${{ secrets.SNYK_TOKEN }}'
         run: |
           python3.10 -m pip install .
+          python3.10 -m pip freeze > requirements.txt
           snyk monitor \
             -d \
-            --file=pyproject.toml \
+            --file=requirements.txt \
             --command=python3.10 \
             --skip-unresolved \
             --remote-repo-url=cloud-discovery-py/${{ steps.extract_ref.outputs.ref }} \
             --org=haic \
-            --project-name=HAIC/cloud-discovery-py/${{ steps.extract_ref.outputs.ref }}/pyproject.toml
+            --project-name=HAIC/cloud-discovery-py/${{ steps.extract_ref.outputs.ref }}/requirements.txt
