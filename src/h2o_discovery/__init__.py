@@ -51,11 +51,11 @@ def discover(
 
 
 async def discover_async(
-    environment: Optional[str] = None, discovery_address: Optional[str] = None,
+    environment: Optional[str] = None,
+    discovery_address: Optional[str] = None,
     config_path: Optional[Union[str, bytes, os.PathLike]] = None,
-
 ) -> Discovery:
-    """Asynchronous variant of discover. See discover for more details."""
+    """Asynchronous variant of [discover](#discover)."""
 
     uri, cfg = _lookup(environment, discovery_address, config_path)
     discovery = await load.load_discovery_async(client.AsyncClient(uri))
@@ -67,7 +67,7 @@ async def discover_async(
 def _lookup(
     environment: Optional[str] = None,
     discovery_address: Optional[str] = None,
-    config_path: Optional[Union[str, bytes, os.PathLike]] = None
+    config_path: Optional[Union[str, bytes, os.PathLike]] = None,
 ) -> Tuple[str, config.Config]:
     cfg = config.Config()
     if config_path is not None:
