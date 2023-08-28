@@ -1,4 +1,5 @@
 import dataclasses
+import types
 from typing import Mapping
 from typing import Optional
 
@@ -120,6 +121,10 @@ class Credentials:
     refresh_token: str
 
 
+def _default_credentials() -> Mapping[str, Credentials]:
+    return types.MappingProxyType({})
+
+
 @dataclasses.dataclass(frozen=True)
 class Discovery:
     """Representation of the discovery records."""
@@ -134,4 +139,6 @@ class Discovery:
     clients: Mapping[str, Client]
 
     #: Map of credentials in the `{"client-identifier": Credentials(...)}` format.
-    credentials: Mapping[str, Credentials] = dataclasses.field(default_factory=dict)
+    credentials: Mapping[str, Credentials] = dataclasses.field(
+        default_factory=_default_credentials
+    )

@@ -2,9 +2,13 @@ import dataclasses
 import os
 import types
 from typing import Mapping
+from typing import Union
 from typing import Optional
 
 from h2o_discovery._internal.compat import tomllib
+
+def _default_tokens() -> Mapping[str, str]:
+    return types.MappingProxyType({})
 
 
 @dataclasses.dataclass(frozen=True)
@@ -12,14 +16,14 @@ class Config:
     """Internal representation of the H2O CLI Configuration."""
 
     #: Configured URI of environment.
-    endpoint: Optional[str]
+    endpoint: Optional[str] = None
 
     #: Map of found tokens in the configuration file. in the `{"client-id": "token"}`
     #: format.
-    tokens: Mapping[str, str]
+    tokens: Mapping[str, str] = dataclasses.field(default_factory=_default_tokens,)
 
 
-def load_config(path: os.PathLike):
+def load_config(path: Union[str, bytes, os.PathLike]):
     """Loads the configuration from the specified path."""
     with open(path, "rb") as f:
         data = tomllib.load(f)
