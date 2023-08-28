@@ -3,6 +3,9 @@ from typing import Mapping
 from typing import Optional
 
 
+from h2o_discovery import credentials
+
+
 @dataclasses.dataclass(frozen=True)
 class Service:
     """Representation of a registered service record."""
@@ -110,6 +113,17 @@ class Environment:
 
 
 @dataclasses.dataclass(frozen=True)
+class Credentials:
+    """Contain credentials associated with single registered client.
+
+    Credentials are only determined locally and are not returned by the server.
+    """
+
+    #: Opaque string containing refresh token.
+    refresh_token: str
+
+
+@dataclasses.dataclass(frozen=True)
 class Discovery:
     """Representation of the discovery records."""
 
@@ -121,3 +135,6 @@ class Discovery:
 
     #: Map of registered clients in the `{"client-identifier": Client(...)}` format.
     clients: Mapping[str, Client]
+
+    #: Map of credentials in the `{"client-identifier": Credentials(...)}` format.
+    credentials: Mapping[str, Credentials]
