@@ -34,6 +34,7 @@ def test_determine_local_config_path_default_location_does_not_exist(
     # Then
     assert path is None
 
+
 def test_determine_local_config_path_default_location_does_exists(
     monkeypatch, tmp_path
 ):

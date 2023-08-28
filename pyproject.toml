@@ -14,7 +14,10 @@ classifiers = [
   "Topic :: Security",
   "Topic :: Utilities",
 ]
-dependencies = ["httpx>=0.16"]
+dependencies = [
+  "httpx>=0.16",
+  "tomli >= 1.1.0 ; python_version < \"3.11\"",
+]
 description = 'H2O Cloud Discovery Python CLient'
 keywords = []
 license = "Apache-2.0"

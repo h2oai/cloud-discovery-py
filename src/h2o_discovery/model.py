@@ -3,9 +3,6 @@ from typing import Mapping
 from typing import Optional
 
 
-from h2o_discovery import credentials
-
-
 @dataclasses.dataclass(frozen=True)
 class Service:
     """Representation of a registered service record."""
@@ -137,4 +134,4 @@ class Discovery:
     clients: Mapping[str, Client]
 
     #: Map of credentials in the `{"client-identifier": Credentials(...)}` format.
-    credentials: Mapping[str, Credentials]
+    credentials: Mapping[str, Credentials] = dataclasses.field(default_factory=dict)
