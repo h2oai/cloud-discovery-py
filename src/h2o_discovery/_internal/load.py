@@ -5,7 +5,6 @@ from typing import Mapping
 
 from h2o_discovery import model
 from h2o_discovery._internal import client
-from h2o_discovery._internal import config
 
 
 def load_discovery(cl: client.Client) -> model.Discovery:
@@ -27,13 +26,13 @@ async def load_discovery_async(cl: client.AsyncClient) -> model.Discovery:
 
 
 def load_credentials(
-    clients: Mapping[str, model.Client], config: config.Config
+    clients: Mapping[str, model.Client], config_tokens: Mapping[str, str]
 ) -> Mapping[str, model.Credentials]:
     """Loads client credentials from the environment or loaded config."""
     out = {}
     for name, cl in clients.items():
         env_name = f"H2O_CLOUD_CLIENT_{name.upper()}_TOKEN"
-        token = os.environ.get(env_name, config.tokens.get(cl.oauth2_client_id))
+        token = os.environ.get(env_name, config_tokens.get(cl.oauth2_client_id))
         if token:
             out[name] = model.Credentials(refresh_token=token)
     return types.MappingProxyType(out)
