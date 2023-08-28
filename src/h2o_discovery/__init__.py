@@ -32,11 +32,12 @@ def discover(
     Config path is determined with the following precedence:
         - config_path parameter
         - H2OCONFIG environment variable
-        - default local configuration path
+        - default H2O CLI configuration configuration path
 
     Args:
         environment: The H2O Cloud environment URL to use (e.g. https://cloud.h2o.ai).
         discovery_address: The address of the discovery service.
+        config_path: The path to the H2O CLI configuration file.
 
     Raises:
         LookupError: If the URI cannot be determined.
