@@ -121,6 +121,17 @@ def test_determine_uri_both_env_var_discovery_takes_precedence(monkeypatch):
     assert uri == "http://test-service.domain:1234"
 
 
+def test_determine_uri_config_endpoint():
+    # Given
+    config_endpoint = "https://test.h2o.ai"
+
+    # When
+    uri = lookup.determine_uri(config_endpoint=config_endpoint)
+
+    # Then
+    assert uri == config_endpoint
+
+
 def test_determine_uri_environment_param_takes_precedence(monkeypatch):
     # Given
     monkeypatch.setenv("H2O_CLOUD_ENVIRONMENT", "https://test-env.h2o.ai")
@@ -159,7 +170,7 @@ def test_determine_uri_environment_param_takes_precedence_over_discovery_env_var
     assert uri == "https://test-param.h2o.ai/.ai.h2o.cloud.discovery"
 
 
-def test_find_cannot_set_both_params():
+def test_determine_uri_cannot_set_both_params():
     # Given
     environment = "https://test.h2o.ai"
     discovery = "http://test-service.domain:1234"
@@ -172,14 +183,11 @@ def test_find_cannot_set_both_params():
     assert "cannot specify both discovery and environment" in str(excinfo.value)
 
 
-def test_find_cannot_determine_url():
+def test_determine_uri_cannot_determine_url():
     # Given
     environment = None
     discovery = None
 
-    # When
-    with pytest.raises(LookupError) as excinfo:
+    # When / Then
+    with pytest.raises(lookup.DetermineURIError):
         lookup.determine_uri(environment=environment, discovery_address=discovery)
-
-    # Then
-    assert "Cannot determine discovery URI" in str(excinfo.value)

@@ -1,8 +1,6 @@
 import dataclasses
-import os
 import types
 from typing import Mapping
-from typing import Union
 from typing import Optional
 
 from h2o_discovery._internal.compat import tomllib
@@ -23,7 +21,7 @@ class Config:
     tokens: Mapping[str, str] = dataclasses.field(default_factory=_default_tokens,)
 
 
-def load_config(path: Union[str, bytes, os.PathLike]):
+def load_config(path: str):
     """Loads the configuration from the specified path."""
     with open(path, "rb") as f:
         data = tomllib.load(f)
