@@ -36,7 +36,7 @@ def determine_uri(
         return _discovery_uri_from_environment(environment)
 
     if config_endpoint is not None:
-        return config_endpoint.rstrip("/")
+        return _discovery_uri_from_environment(config_endpoint)
 
     raise DetermineURIError
 
@@ -52,7 +52,7 @@ def determine_local_config_path(config_path: Optional[str] = None) -> Optional[s
 
     config_path = os.environ.get("H2OCONFIG")
     if config_path is not None:
-        return config_path
+        return os.fspath(config_path)
 
     local_config_path = os.path.expanduser(_DEFAULT_LOCAL_CONFIG_PATH)
     if not os.path.isfile(local_config_path):

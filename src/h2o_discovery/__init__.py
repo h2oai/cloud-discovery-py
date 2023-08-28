@@ -55,10 +55,12 @@ async def discover_async(
 def _lookup(
     environment: Optional[str] = None,
     discovery_address: Optional[str] = None,
-    config_path: Optional[Union[str, bytes, os.PathLike]] = None,
+    config_path: Optional[Union[str, bytes, os.PathLike]] = None
 ) -> Tuple[str, config.Config]:
     cfg = config.Config()
-    config_path = lookup.determine_local_config_path(str(config_path))
+    if config_path is not None:
+        config_path = str(os.fspath(config_path))
+    config_path = lookup.determine_local_config_path(config_path)
     if config_path:
         cfg = config.load_config(config_path)
 

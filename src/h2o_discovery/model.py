@@ -118,7 +118,7 @@ class Credentials:
     """
 
     #: Opaque string containing refresh token.
-    refresh_token: str
+    refresh_token: str = dataclasses.field(repr=False)
 
 
 def _default_credentials() -> Mapping[str, Credentials]:
