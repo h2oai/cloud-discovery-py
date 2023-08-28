@@ -50,7 +50,6 @@ def determine_local_config_path(config: Optional[str] = None) -> Optional[str]:
         return config
 
     local_config_path = os.path.expanduser(_DEFAULT_LOCAL_CONFIG_PATH)
-    print(">" * 15, local_config_path)  # XXX
     if not os.path.isfile(local_config_path):
         return None
     return local_config_path
