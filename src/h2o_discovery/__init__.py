@@ -22,13 +22,24 @@ def discover(
 ) -> Discovery:
     """Obtains and returns a Discovery object from the discovery service.
 
-    Both arguments are optional. If neither is provided, the environment variable
-    H2O_CLOUD_ENVIRONMENT is used. If that is not set, the environment variable
-    H2O_CLOUD_DISCOVERY is used. If that is not set, a LookupError is raised.
+    All arguments are optional. Discovery determined with the following precedence:
+     - discovery_address parameter
+     - H2O_CLOUD_DISCOVERY environment variable
+     - environment parameter
+     - H2O_CLOUD_ENVIRONMENT environment variable
+     - environment URI loaded from the local configuration file
+
+    Config path is determined with the following precedence:
+        - config_path parameter
+        - H2OCONFIG environment variable
+        - default local configuration path
 
     Args:
         environment: The H2O Cloud environment URL to use (e.g. https://cloud.h2o.ai).
         discovery_address: The address of the discovery service.
+
+    Raises:
+        LookupError: If the URI cannot be determined.
 
     """
     uri, cfg = _lookup(environment, discovery_address, config_path)
