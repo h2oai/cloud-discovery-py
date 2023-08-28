@@ -6,7 +6,7 @@ from h2o_discovery import model
 from h2o_discovery._internal import client
 
 
-def load_discovery(cl: client.Client) -> model.Discovery:
+def fetch_discovery(cl: client.Client) -> model.Discovery:
     """Loads the discovery records from the Discovery Service."""
     environment = cl.get_environment()
     services = _get_service_map(cl.list_services())
@@ -15,7 +15,7 @@ def load_discovery(cl: client.Client) -> model.Discovery:
     return model.Discovery(environment=environment, services=services, clients=clients)
 
 
-async def load_discovery_async(cl: client.AsyncClient) -> model.Discovery:
+async def fetch_discovery_async(cl: client.AsyncClient) -> model.Discovery:
     """Loads the discovery records from the Discovery Service."""
     environment = await cl.get_environment()
     services = _get_service_map(await cl.list_services())

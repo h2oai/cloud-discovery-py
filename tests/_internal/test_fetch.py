@@ -4,7 +4,7 @@ from unittest import mock
 import pytest
 
 from h2o_discovery import model
-from h2o_discovery._internal import load
+from h2o_discovery._internal import fetch
 
 
 @pytest.fixture()
@@ -28,36 +28,36 @@ ENVIRONMENT_DATA = model.Environment(
 )
 
 
-def test_load_environment(mock_client):
+def test_fetch_environment(mock_client):
     # Given
     mock_client.get_environment.return_value = ENVIRONMENT_DATA
 
     # When
-    discovery = load.load_discovery(mock_client)
+    discovery = fetch.fetch_discovery(mock_client)
 
     # Then
     assert discovery.environment == ENVIRONMENT_DATA
 
 
 @pytest.mark.asyncio
-async def test_load_environment_async(mock_client):
+async def test_fetch_environment_async(mock_client):
     # Given
     mock_client.get_environment.return_value = asyncio.Future()
     mock_client.get_environment.return_value.set_result(ENVIRONMENT_DATA)
 
     # When
-    discovery = await load.load_discovery_async(mock_client)
+    discovery = await fetch.fetch_discovery_async(mock_client)
 
     # Then
     assert discovery.environment == ENVIRONMENT_DATA
 
 
-def test_load_services(mock_client):
+def test_fetch_services(mock_client):
     # Given
     mock_client.list_services.return_value = [SERVICE_RECORD]
 
     # When
-    discovery = load.load_discovery(mock_client)
+    discovery = fetch.fetch_discovery(mock_client)
 
     # Then
     assert discovery.services["test-service"] == SERVICE_RECORD
@@ -74,13 +74,13 @@ SERVICE_RECORD = model.Service(
 
 
 @pytest.mark.asyncio
-async def test_load_services_async(mock_client):
+async def test_fetch_services_async(mock_client):
     # Given
     mock_client.list_services.return_value = asyncio.Future()
     mock_client.list_services.return_value.set_result([SERVICE_RECORD])
 
     # When
-    discovery = await load.load_discovery_async(mock_client)
+    discovery = await fetch.fetch_discovery_async(mock_client)
 
     # Then
     assert discovery.services["test-service"] == SERVICE_RECORD
@@ -93,25 +93,25 @@ CLIENT_RECORD = model.Client(
 )
 
 
-def test_load_clients(mock_client):
+def test_fetch_clients(mock_client):
     # Given
     mock_client.list_clients.return_value = [CLIENT_RECORD]
 
     # When
-    discovery = load.load_discovery(mock_client)
+    discovery = fetch.fetch_discovery(mock_client)
 
     # Then
     assert discovery.clients["test-client"] == CLIENT_RECORD
 
 
 @pytest.mark.asyncio
-async def test_load_clients_async(mock_client):
+async def test_fetch_clients_async(mock_client):
     # Given
     mock_client.list_clients.return_value = asyncio.Future()
     mock_client.list_clients.return_value.set_result([CLIENT_RECORD])
 
     # When
-    discovery = await load.load_discovery_async(mock_client)
+    discovery = await fetch.fetch_discovery_async(mock_client)
 
     # Then
     assert discovery.clients["test-client"] == CLIENT_RECORD

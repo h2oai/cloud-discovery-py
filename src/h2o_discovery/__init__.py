@@ -2,7 +2,7 @@ from typing import Optional
 
 from h2o_discovery import model
 from h2o_discovery._internal import client
-from h2o_discovery._internal import load
+from h2o_discovery._internal import fetch
 from h2o_discovery._internal import lookup
 from h2o_discovery._version import __version__  # noqa: F401
 
@@ -24,8 +24,9 @@ def discover(
 
     """
     uri = lookup.determine_uri(environment, discovery_address)
-    cl = client.Client(uri)
-    return load.load_discovery(cl)
+
+    discovery = fetch.fetch_discovery(client.Client(uri))
+    return discovery
 
 
 async def discover_async(
@@ -43,5 +44,5 @@ async def discover_async(
 
     """
     uri = lookup.determine_uri(environment, discovery_address)
-    cl = client.AsyncClient(uri)
-    return await load.load_discovery_async(cl)
+    discovery = await fetch.fetch_discovery_async(client.AsyncClient(uri))
+    return discovery

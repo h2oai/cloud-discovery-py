@@ -3,6 +3,7 @@ from typing import Optional
 import urllib.parse
 
 _WELL_KNOWN_PATH = ".ai.h2o.cloud.discovery"
+_DEFAULT_LOCAL_CONFIG_PATH = "~/.h2oai/config/h2o-cli-config.toml"
 
 
 def determine_uri(
@@ -37,3 +38,19 @@ def determine_uri(
 
 def _discovery_uri_from_environment(environment: str):
     return urllib.parse.urljoin(environment + "/", _WELL_KNOWN_PATH)
+
+
+def determine_local_config_path(config: Optional[str] = None) -> Optional[str]:
+    """Returns the path to the local configuration file."""
+    if config is not None:
+        return config
+
+    config = os.environ.get("H2OCONFIG")
+    if config is not None:
+        return config
+
+    local_config_path = os.path.expanduser(_DEFAULT_LOCAL_CONFIG_PATH)
+    print(">" * 15, local_config_path)  # XXX
+    if not os.path.isfile(local_config_path):
+        return None
+    return local_config_path
