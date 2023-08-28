@@ -3,7 +3,7 @@ from typing import Optional
 import urllib.parse
 
 _WELL_KNOWN_PATH = ".ai.h2o.cloud.discovery"
-_DEFAULT_LOCAL_CONFIG_PATH = "~/.h2oai/config/h2o-cli-config.toml"
+_DEFAULT_LOCAL_CONFIG_PATH = "~/.h2oai/h2o-cli-config.toml"
 
 
 def determine_uri(

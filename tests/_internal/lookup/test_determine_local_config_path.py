@@ -43,7 +43,7 @@ def test_determine_local_config_path_default_location_does_exists(
     home.mkdir(parents=True)
     monkeypatch.setenv("HOME", str(home))
 
-    config_dir = home / ".h2oai" / "config"
+    config_dir = home / ".h2oai"
     config_dir.mkdir(parents=True)
     config_file = config_dir / "h2o-cli-config.toml"
     config_file.touch()
