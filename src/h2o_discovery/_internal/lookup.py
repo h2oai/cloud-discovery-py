@@ -1,5 +1,6 @@
 import os
 from typing import Optional
+from typing import Union
 import urllib.parse
 
 _WELL_KNOWN_PATH = ".ai.h2o.cloud.discovery"
@@ -45,10 +46,12 @@ def _discovery_uri_from_environment(environment: str):
     return urllib.parse.urljoin(environment + "/", _WELL_KNOWN_PATH)
 
 
-def determine_local_config_path(config_path: Optional[str] = None) -> Optional[str]:
+def determine_local_config_path(
+    config_path: Optional[Optional[Union[str, bytes, os.PathLike]]] = None
+) -> Optional[str]:
     """Returns the path to the local configuration file."""
     if config_path is not None:
-        return config_path
+        return str(os.fspath(config_path))
 
     config_path = os.environ.get("H2OCONFIG")
     if config_path is not None:
