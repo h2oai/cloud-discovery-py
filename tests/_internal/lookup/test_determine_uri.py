@@ -129,7 +129,7 @@ def test_determine_uri_config_endpoint():
     uri = lookup.determine_uri(config_endpoint=config_endpoint)
 
     # Then
-    assert uri == config_endpoint
+    assert uri == config_endpoint + "/.ai.h2o.cloud.discovery"
 
 
 def test_determine_uri_environment_param_takes_precedence(monkeypatch):
