@@ -54,6 +54,10 @@ dev-mode = false
 [tool.hatch.envs.test.scripts]
 pytest = "python -m pytest {args}"
 
+[tool.hatch.envs.devtest]
+template = "test"
+dev-mode = true
+
 [tool.hatch.envs.lint]
 dependencies = [
   "black==22.10.0",
