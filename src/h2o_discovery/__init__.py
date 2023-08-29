@@ -1,15 +1,14 @@
-import os
 import dataclasses
+import os
 from typing import Optional
 from typing import Tuple
 from typing import Union
 
-
 from h2o_discovery import model
 from h2o_discovery._internal import client
+from h2o_discovery._internal import config
 from h2o_discovery._internal import load
 from h2o_discovery._internal import lookup
-from h2o_discovery._internal import config
 from h2o_discovery._version import __version__  # noqa: F401
 
 Discovery = model.Discovery
