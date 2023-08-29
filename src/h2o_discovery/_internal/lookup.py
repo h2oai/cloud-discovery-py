@@ -8,7 +8,7 @@ _DEFAULT_LOCAL_CONFIG_PATH = "~/.h2oai/h2o-cli-config.toml"
 
 
 class DetermineURIError(LookupError):
-    """Raised when the discovery URI cannot be determined."""
+    """Raised when the discovery endpoint cannot be determined."""
 
 
 def determine_uri(
@@ -49,7 +49,9 @@ def _discovery_uri_from_environment(environment: str):
 def determine_local_config_path(
     config_path: Optional[Optional[Union[str, bytes, os.PathLike]]] = None
 ) -> Optional[str]:
-    """Returns the path to the local configuration file."""
+    """Uses passed parameter, environment variable and H2O CLI default to get the
+    path to the local config file.
+    """
     if config_path is not None:
         return str(os.fspath(config_path))
 

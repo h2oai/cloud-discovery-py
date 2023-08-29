@@ -29,7 +29,9 @@ async def load_discovery_async(cl: client.AsyncClient) -> model.Discovery:
 def load_credentials(
     clients: Mapping[str, model.Client], config_tokens: Optional[Mapping[str, str]]
 ) -> Mapping[str, model.Credentials]:
-    """Loads client credentials from the environment or loaded config."""
+    """Loads client credentials from the environment or tokens loaded from the
+    config.
+    """
     tokens: Mapping[str, str] = {}
     if config_tokens is not None:
         tokens = config_tokens
