@@ -41,7 +41,6 @@ def discover(
 
     Raises:
         LookupError: If the URI cannot be determined.
-
     """
     uri, cfg = _lookup(environment, discovery_address, config_path)
     discovery = load.load_discovery(client.Client(uri))
@@ -55,8 +54,28 @@ async def discover_async(
     discovery_address: Optional[str] = None,
     config_path: Optional[Union[str, bytes, os.PathLike]] = None,
 ) -> Discovery:
-    """Asynchronous variant of [discover](#discover)."""
+    """Obtains and returns a Discovery object from the discovery service.
 
+    All arguments are optional. Discovery determined with the following precedence:
+     - discovery_address parameter
+     - H2O_CLOUD_DISCOVERY environment variable
+     - environment parameter
+     - H2O_CLOUD_ENVIRONMENT environment variable
+     - environment URI loaded from the local configuration file
+
+    Config path is determined with the following precedence:
+        - config_path parameter
+        - H2OCONFIG environment variable
+        - default H2O CLI configuration configuration path
+
+    Args:
+        environment: The H2O Cloud environment URL to use (e.g. https://cloud.h2o.ai).
+        discovery_address: The address of the discovery service.
+        config_path: The path to the H2O CLI configuration file.
+
+    Raises:
+        LookupError: If the URI cannot be determined.
+    """
     uri, cfg = _lookup(environment, discovery_address, config_path)
     discovery = await load.load_discovery_async(client.AsyncClient(uri))
     credentials = load.load_credentials(discovery.clients, cfg.tokens)
