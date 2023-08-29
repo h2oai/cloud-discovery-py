@@ -5,6 +5,7 @@ from typing import Optional
 
 from h2o_discovery._internal.compat import tomllib
 
+
 def _default_tokens() -> Mapping[str, str]:
     return types.MappingProxyType({})
 
@@ -18,7 +19,7 @@ class Config:
 
     #: Map of found tokens in the configuration file. in the `{"client-id": "token"}`
     #: format.
-    tokens: Mapping[str, str] = dataclasses.field(default_factory=_default_tokens,)
+    tokens: Mapping[str, str] = dataclasses.field(default_factory=_default_tokens)
 
 
 def load_config(path: str):
