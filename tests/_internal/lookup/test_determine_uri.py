@@ -157,7 +157,7 @@ def test_find_uri_environment_param_takes_precedence_over_discovery_env_var(
     assert uri == "https://test-param.h2o.ai/.ai.h2o.cloud.discovery"
 
 
-def test_find_cannot_set_both_params():
+def test_find_uri_cannot_set_both_params():
     # Given
     environment = "https://test.h2o.ai"
     discovery = "http://test-service.domain:1234"
@@ -170,7 +170,7 @@ def test_find_cannot_set_both_params():
     assert "cannot specify both discovery and environment" in str(excinfo.value)
 
 
-def test_find_cannot_determine_url():
+def test_find_uri_cannot_determine_url():
     # Given
     environment = None
     discovery = None

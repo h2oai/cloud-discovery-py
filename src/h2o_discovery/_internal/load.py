@@ -2,6 +2,7 @@ import os
 import types
 from typing import Iterable
 from typing import Mapping
+from typing import Optional
 
 from h2o_discovery import model
 from h2o_discovery._internal import client
@@ -26,17 +27,21 @@ async def load_discovery_async(cl: client.AsyncClient) -> model.Discovery:
 
 
 def load_credentials(
-    clients: Mapping[str, model.Client]
+    clients: Mapping[str, model.Client], config_tokens: Optional[Mapping[str, str]]
 ) -> Mapping[str, model.Credentials]:
-    """Loads client credentials from the environment."""
-    out = {}
+    """Loads client credentials from the environment or tokens loaded from the
+    config.
+    """
+    tokens: Mapping[str, str] = {}
+    if config_tokens is not None:
+        tokens = config_tokens
 
-    for name in clients.keys():
+    out = {}
+    for name, cl in clients.items():
         env_name = f"H2O_CLOUD_CLIENT_{name.upper()}_TOKEN"
-        token = os.environ.get(env_name)
+        token = os.environ.get(env_name) or tokens.get(cl.oauth2_client_id)
         if token:
             out[name] = model.Credentials(client=name, refresh_token=token)
-
     return types.MappingProxyType(out)
 
 
