@@ -1,8 +1,10 @@
 import os
 from typing import Optional
+from typing import Union
 import urllib.parse
 
 _WELL_KNOWN_PATH = ".ai.h2o.cloud.discovery"
+_DEFAULT_LOCAL_CONFIG_PATH = "~/.h2oai/h2o-cli-config.toml"
 
 
 def determine_uri(
@@ -37,3 +39,22 @@ def determine_uri(
 
 def _discovery_uri_from_environment(environment: str):
     return urllib.parse.urljoin(environment + "/", _WELL_KNOWN_PATH)
+
+
+def determine_local_config_path(
+    config_path: Optional[Optional[Union[str, bytes, os.PathLike]]] = None
+) -> Optional[str]:
+    """Uses passed parameter, environment variable and H2O CLI default to get the
+    path to the local config file.
+    """
+    if config_path is not None:
+        return str(os.fspath(config_path))
+
+    config_path = os.environ.get("H2OCONFIG")
+    if config_path is not None:
+        return config_path
+
+    local_config_path = os.path.expanduser(_DEFAULT_LOCAL_CONFIG_PATH)
+    if not os.path.isfile(local_config_path):
+        return None
+    return local_config_path
