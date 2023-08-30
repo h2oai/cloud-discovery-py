@@ -170,14 +170,11 @@ def test_find_uri_cannot_set_both_params():
     assert "cannot specify both discovery and environment" in str(excinfo.value)
 
 
-def test_find_uri_cannot_determine_url():
+def test_determine_uri_cannot_determine_url():
     # Given
     environment = None
     discovery = None
 
-    # When
-    with pytest.raises(LookupError) as excinfo:
+    # When / Then
+    with pytest.raises(lookup.DetermineURIError):
         lookup.determine_uri(environment=environment, discovery_address=discovery)
-
-    # Then
-    assert "Cannot determine discovery URI" in str(excinfo.value)

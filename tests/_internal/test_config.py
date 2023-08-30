@@ -4,16 +4,21 @@ from h2o_discovery._internal import config
 
 
 def config_test_cases():
-    yield pytest.param("", config.Config(tokens={}), id="empty config")
+    yield pytest.param("", config.Config(endpoint=None, tokens={}), id="empty config")
     yield pytest.param(
         """
+        Endpoint = "https://cloud.h2o.ai"
         ClientID = "client-id"
         Token = "TestToken"
         PlatformClientID = "platform-client-id"
         PlatformToken = "TestPlatformToken"
         """,
         config.Config(
-            tokens={"client-id": "TestToken", "platform-client-id": "TestPlatformToken"}
+            endpoint="https://cloud.h2o.ai",
+            tokens={
+                "client-id": "TestToken",
+                "platform-client-id": "TestPlatformToken",
+            },
         ),
         id="full config",
     )
@@ -32,6 +37,13 @@ def config_test_cases():
         """,
         config.Config(tokens={"platform-client-id": "TestPlatformToken"}),
         id="platform token only",
+    )
+    yield pytest.param(
+        """
+        Endpoint = "https://cloud.h2o.ai"
+        """,
+        config.Config(endpoint="https://cloud.h2o.ai", tokens={}),
+        id="endpoint only",
     )
 
 
