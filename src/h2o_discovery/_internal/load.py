@@ -1,3 +1,4 @@
+import os
 import types
 from typing import Iterable
 from typing import Mapping
@@ -22,6 +23,21 @@ async def load_discovery_async(cl: client.AsyncClient) -> model.Discovery:
     clients = _get_client_map(await cl.list_clients())
 
     return model.Discovery(environment=environment, services=services, clients=clients)
+
+
+def load_credentials(
+    clients: Mapping[str, model.Client]
+) -> Mapping[str, model.Credentials]:
+    """Loads client credentials from the environment."""
+    out = {}
+
+    for name in clients.keys():
+        env_name = f"H2O_CLOUD_CLIENT_{name.upper()}_TOKEN"
+        token = os.environ.get(env_name)
+        if token:
+            out[name] = model.Credentials(client=name, refresh_token=token)
+
+    return types.MappingProxyType(out)
 
 
 def _get_service_map(services: Iterable[model.Service]) -> Mapping[str, model.Service]:
