@@ -64,3 +64,33 @@ async def serve(q: Q):
     ...
 
 ```
+
+## Development
+
+Project is managed using [Hatch](https://hatch.pypa.io/latest/).
+
+### Testing
+
+For quick development tests use:
+
+```sh
+hatch run devtest:pytest
+```
+
+Full test matrix can be run using:
+
+```sh
+hatch env remove test && hatch run test:pytest
+```
+
+### Linting
+
+```sh
+hatch run lint:check
+```
+
+Formating and imports can be fixed using:
+
+```sh
+hatch run lint:fix
+```
