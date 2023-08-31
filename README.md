@@ -71,7 +71,7 @@ Project is managed using [Hatch](https://hatch.pypa.io/latest/).
 
 ### Testing
 
-For quick development tests use :
+For quick development tests use:
 
 ```sh
 hatch run devtest:pytest
