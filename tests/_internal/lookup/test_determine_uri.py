@@ -66,7 +66,7 @@ def discovery_test_cases():
 
 
 @pytest.mark.parametrize("environment_input,expected_uri", environment_test_cases())
-def test_find_uri_environment_param(environment_input, expected_uri):
+def test_determine_uri_environment_param(environment_input, expected_uri):
     # When
     uri = lookup.determine_uri(environment=environment_input)
 
@@ -75,7 +75,9 @@ def test_find_uri_environment_param(environment_input, expected_uri):
 
 
 @pytest.mark.parametrize("environment_input,expected_uri", environment_test_cases())
-def test_find_uri_environment_env_var(monkeypatch, environment_input, expected_uri):
+def test_determine_uri_environment_env_var(
+    monkeypatch, environment_input, expected_uri
+):
     # Given
     monkeypatch.setenv("H2O_CLOUD_ENVIRONMENT", environment_input)
 
@@ -87,7 +89,7 @@ def test_find_uri_environment_env_var(monkeypatch, environment_input, expected_u
 
 
 @pytest.mark.parametrize("discovery_input,expected_uri", discovery_test_cases())
-def test_find_uri_discovery_param(discovery_input, expected_uri):
+def test_determine_uri_discovery_param(discovery_input, expected_uri):
     # When
     uri = lookup.determine_uri(discovery_address=discovery_input)
 
@@ -96,7 +98,7 @@ def test_find_uri_discovery_param(discovery_input, expected_uri):
 
 
 @pytest.mark.parametrize("discovery_input,expected_uri", discovery_test_cases())
-def test_find_uri_discovery_env_var(monkeypatch, discovery_input, expected_uri):
+def test_determine_uri_discovery_env_var(monkeypatch, discovery_input, expected_uri):
     # Given
     monkeypatch.setenv("H2O_CLOUD_DISCOVERY", discovery_input)
 
@@ -107,7 +109,7 @@ def test_find_uri_discovery_env_var(monkeypatch, discovery_input, expected_uri):
     assert uri == expected_uri
 
 
-def test_find_uri_both_env_var_discovery_takes_precedence(monkeypatch):
+def test_determine_uri_both_env_var_discovery_takes_precedence(monkeypatch):
     # Given
     monkeypatch.setenv("H2O_CLOUD_ENVIRONMENT", "https://test.h2o.ai")
     monkeypatch.setenv("H2O_CLOUD_DISCOVERY", "http://test-service.domain:1234")
@@ -119,7 +121,7 @@ def test_find_uri_both_env_var_discovery_takes_precedence(monkeypatch):
     assert uri == "http://test-service.domain:1234"
 
 
-def test_find_uri_environment_param_takes_precedence(monkeypatch):
+def test_determine_uri_environment_param_takes_precedence(monkeypatch):
     # Given
     monkeypatch.setenv("H2O_CLOUD_ENVIRONMENT", "https://test-env.h2o.ai")
     environment = "https://test-param.h2o.ai"
@@ -131,7 +133,7 @@ def test_find_uri_environment_param_takes_precedence(monkeypatch):
     assert uri == "https://test-param.h2o.ai/.ai.h2o.cloud.discovery"
 
 
-def test_find_uri_discovery_param_takes_precedence(monkeypatch):
+def test_determine_uri_discovery_param_takes_precedence(monkeypatch):
     # Given
     monkeypatch.setenv("H2O_CLOUD_DISCOVERY", "http://test-env.domain:1234")
     discovery = "http://test-param.domain:1234"
@@ -143,7 +145,7 @@ def test_find_uri_discovery_param_takes_precedence(monkeypatch):
     assert uri == "http://test-param.domain:1234"
 
 
-def test_find_uri_environment_param_takes_precedence_over_discovery_env_var(
+def test_determine_uri_environment_param_takes_precedence_over_discovery_env_var(
     monkeypatch,
 ):
     # Given
@@ -157,7 +159,7 @@ def test_find_uri_environment_param_takes_precedence_over_discovery_env_var(
     assert uri == "https://test-param.h2o.ai/.ai.h2o.cloud.discovery"
 
 
-def test_find_uri_cannot_set_both_params():
+def test_determine_uri_cannot_set_both_params():
     # Given
     environment = "https://test.h2o.ai"
     discovery = "http://test-service.domain:1234"
@@ -170,7 +172,7 @@ def test_find_uri_cannot_set_both_params():
     assert "cannot specify both discovery and environment" in str(excinfo.value)
 
 
-def test_find_uri_cannot_determine_url():
+def test_determine_uri_cannot_determine_url():
     # Given
     environment = None
     discovery = None
