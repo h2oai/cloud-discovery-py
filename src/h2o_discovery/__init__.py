@@ -4,6 +4,7 @@ from typing import Optional
 from typing import Tuple
 from typing import Union
 
+from h2o_discovery import error
 from h2o_discovery import model
 from h2o_discovery._internal import client
 from h2o_discovery._internal import config
@@ -40,7 +41,9 @@ def discover(
         config_path: The path to the H2O CLI configuration file.
 
     Raises:
-        LookupError: If the URI cannot be determined.
+        exceptions.DiscoveryLookupError: If the URI cannot be determined.
+        exceptions.H2OCloudEnvironmentError: If there seems to be a problem with the
+            deployment of the server side.
     """
     uri, cfg = _lookup_and_load(environment, discovery_address, config_path)
 
@@ -78,7 +81,9 @@ async def discover_async(
         config_path: The path to the H2O CLI configuration file.
 
     Raises:
-        LookupError: If the URI cannot be determined.
+        exceptions.DiscoveryLookupError: If the URI cannot be determined.
+        exceptions.H2OCloudEnvironmentError: If there seems to be a problem with the
+            deployment of the server side.
     """
 
     uri, cfg = _lookup_and_load(environment, discovery_address, config_path)
@@ -101,7 +106,7 @@ def _lookup_and_load(
     try:
         uri = lookup.determine_uri(environment, discovery_address, cfg.endpoint)
     except lookup.DetermineURIError:
-        raise LookupError(
+        raise error.DiscoveryLookupError(
             "Cannot determine discovery URI."
             " Please set H2O_CLOUD_ENVIRONMENT or H2O_CLOUD_DISCOVERY environment"
             " variables or use the environment or discovery parameters."

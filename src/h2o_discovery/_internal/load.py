@@ -1,27 +1,39 @@
+import json
 import os
 import types
 from typing import Iterable
 from typing import Mapping
 from typing import Optional
 
+import httpx
+
+from h2o_discovery import error
 from h2o_discovery import model
 from h2o_discovery._internal import client
 
 
 def load_discovery(cl: client.Client) -> model.Discovery:
     """Loads the discovery records from the Discovery Service."""
-    environment = cl.get_environment()
-    services = _get_service_map(cl.list_services())
-    clients = _get_client_map(cl.list_clients())
+    try:
+        environment = cl.get_environment()
+        services = _get_service_map(cl.list_services())
+        clients = _get_client_map(cl.list_clients())
+    except Exception as e:
+        _handle_specific_client_exceptions(e)
+        raise
 
     return model.Discovery(environment=environment, services=services, clients=clients)
 
 
 async def load_discovery_async(cl: client.AsyncClient) -> model.Discovery:
     """Loads the discovery records from the Discovery Service."""
-    environment = await cl.get_environment()
-    services = _get_service_map(await cl.list_services())
-    clients = _get_client_map(await cl.list_clients())
+    try:
+        environment = await cl.get_environment()
+        services = _get_service_map(await cl.list_services())
+        clients = _get_client_map(await cl.list_clients())
+    except Exception as e:
+        _handle_specific_client_exceptions(e)
+        raise
 
     return model.Discovery(environment=environment, services=services, clients=clients)
 
@@ -75,3 +87,17 @@ def _client_key(name: str) -> str:
     if name.startswith(_CLIENTS_COLLECTION_PREFIX):
         return name[len(_CLIENTS_COLLECTION_PREFIX) :]
     raise ValueError(f"invalid client name: {name}")
+
+
+_ENV_ERROR = error.H2OCloudEnvironmentError(
+    "Received an unexpected response from the server."
+    " Please make sure that the environment you are trying to connect to is"
+    " configured correctly and has the H2O Cloud Discovery Service enabled."
+)
+
+
+def _handle_specific_client_exceptions(e: Exception) -> None:
+    if isinstance(e, json.decoder.JSONDecodeError):
+        raise _ENV_ERROR from e
+    if isinstance(e, httpx.HTTPStatusError) and e.response.status_code == 404:
+        raise _ENV_ERROR from e
