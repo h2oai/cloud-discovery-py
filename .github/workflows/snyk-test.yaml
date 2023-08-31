@@ -3,15 +3,20 @@ name: Snyk Test
 on:
   pull_request:
     paths:
-      - 'pyproject.toml'
-  
+      - "pyproject.toml"
+      - ".github/workflows/snyk-test.yml"
+
 env:
   SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-  PYTHON_VERSION: '3.10'
+  PYTHON_VERSION: "3.10"
 
 jobs:
   snyk_scan_test:
     runs-on: ubuntu-latest
+
+    # Don't try to scan for dependabot PRs.
+    if: github.actor != 'dependabot[bot]'
+
     steps:
       - uses: actions/checkout@v3
       - uses: snyk/actions/setup@master
@@ -27,6 +32,7 @@ jobs:
           $PYTHON -m pip freeze > requirements.txt
           snyk test \
             -d \
+            --fail-on=all \
             --file=requirements.txt \
             --command=$PYTHON \
             --skip-unresolved
