@@ -1,5 +1,8 @@
+import datetime
+import ssl
 from typing import List
 from typing import Optional
+from typing import Union
 
 import httpx
 
@@ -9,8 +12,29 @@ _ENVIRONMENT_ENDPOINT = "v1/environment"
 _SERVICES_ENDPOINT = "v1/services"
 _CLIENTS_ENDPOINT = "v1/clients"
 
+DEFAULT_HTTP_TIMEOUT = datetime.timedelta(seconds=5)
 
-class Client:
+
+class _BaseClient:
+    def __init__(
+        self,
+        uri: str,
+        timeout: Optional[datetime.timedelta] = None,
+        ssl_context: Optional[ssl.SSLContext] = None,
+    ):
+        self._uri = uri
+        self._ssl_context = ssl_context
+
+        self._timeout = 5.0
+        if timeout is not None:
+            self._timeout = timeout.total_seconds()
+
+        self._verify: Union[bool, ssl.SSLContext] = True
+        if self._ssl_context is not None:
+            self._verify = self._ssl_context
+
+
+class Client(_BaseClient):
     """Synchronous Implementation of the Discovery Service API.
 
     Listing methods do pagination and always return all of the available objects.
@@ -49,6 +73,11 @@ class Client:
                 )
             return clients
 
+    def _client(self) -> httpx.Client:
+        return httpx.Client(
+            base_url=self._uri, timeout=self._timeout, verify=self._verify
+        )
+
 
 def _fetch(
     client: httpx.Client, uri: str, next_page_token: Optional[str] = None
@@ -74,14 +103,11 @@ def _get_all_pages(client: httpx.Client, uri: str) -> List[dict]:
             return all_pages
 
 
-class AsyncClient:
+class AsyncClient(_BaseClient):
     """Asynchronous Implementation of the Discovery Service API.
 
     Listing methods do pagination and always return all of the available objects.
     """
-
-    def __init__(self, uri: str):
-        self._uri = uri
 
     async def get_environment(self) -> model.Environment:
         """Returns the information about the environment."""
@@ -112,6 +138,11 @@ class AsyncClient:
                     [model.Client.from_json_dict(d) for d in page.get("clients", [])]
                 )
             return clients
+
+    def _client(self) -> httpx.AsyncClient:
+        return httpx.AsyncClient(
+            base_url=self._uri, timeout=self._timeout, verify=self._verify
+        )
 
 
 async def _fetch_async(
