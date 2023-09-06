@@ -28,6 +28,9 @@ Documentation = "https://github.com/h2oai/cloud-discovery-py#readme"
 Issues = "https://github.com/h2oai/cloud-discovery-py/issues"
 Source = "https://github.com/h2oai/cloud-discovery-py"
 
+[tool.hatch.build.targets.sdist]
+include = ["/src", "/tests", "CHANGELOG.md"]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/h2o_discovery"]
 
@@ -55,8 +58,8 @@ dev-mode = false
 pytest = "python -m pytest {args}"
 
 [tool.hatch.envs.devtest]
-template = "test"
 dev-mode = true
+template = "test"
 
 [tool.hatch.envs.lint]
 dependencies = [
