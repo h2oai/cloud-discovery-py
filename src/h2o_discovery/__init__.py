@@ -1,3 +1,4 @@
+import dataclasses
 from typing import Optional
 
 from h2o_discovery import model
@@ -24,8 +25,11 @@ def discover(
 
     """
     uri = lookup.determine_uri(environment, discovery_address)
-    cl = client.Client(uri)
-    return load.load_discovery(cl)
+
+    discovery = load.load_discovery(client.Client(uri))
+    credentials = load.load_credentials(clients=discovery.clients)
+
+    return dataclasses.replace(discovery, credentials=credentials)
 
 
 async def discover_async(
@@ -43,5 +47,8 @@ async def discover_async(
 
     """
     uri = lookup.determine_uri(environment, discovery_address)
-    cl = client.AsyncClient(uri)
-    return await load.load_discovery_async(cl)
+
+    discovery = await load.load_discovery_async(client.AsyncClient(uri))
+    credentials = load.load_credentials(clients=discovery.clients)
+
+    return dataclasses.replace(discovery, credentials=credentials)

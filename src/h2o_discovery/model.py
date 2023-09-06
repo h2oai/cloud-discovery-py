@@ -1,4 +1,5 @@
 import dataclasses
+import types
 from typing import Mapping
 from typing import Optional
 
@@ -110,6 +111,28 @@ class Environment:
 
 
 @dataclasses.dataclass(frozen=True)
+class Credentials:
+    """Contain credentials associated with single registered client.
+
+    Credentials are only determined locally and are not returned by the server.
+    """
+
+    #: Client identifier that the credentials are associated with.
+    client: str
+
+    #: Opaque string containing refresh token that can be used to obtain access token.
+    refresh_token: str = dataclasses.field(
+        # We don't want to show the refresh token to accidentally leak when printing
+        # the object.
+        repr=False
+    )
+
+
+def _empty_credentials_factory() -> Mapping[str, Credentials]:
+    return types.MappingProxyType({})
+
+
+@dataclasses.dataclass(frozen=True)
 class Discovery:
     """Representation of the discovery records."""
 
@@ -121,3 +144,8 @@ class Discovery:
 
     #: Map of registered clients in the `{"client-identifier": Client(...)}` format.
     clients: Mapping[str, Client]
+
+    #: Map of credentials in the `{"client-identifier": Credentials(...)}` format.
+    credentials: Mapping[str, Credentials] = dataclasses.field(
+        default_factory=_empty_credentials_factory
+    )
