@@ -177,9 +177,6 @@ def test_determine_uri_cannot_determine_url():
     environment = None
     discovery = None
 
-    # When
-    with pytest.raises(LookupError) as excinfo:
+    # When / Then
+    with pytest.raises(lookup.DetermineURIError):
         lookup.determine_uri(environment=environment, discovery_address=discovery)
-
-    # Then
-    assert "Cannot determine discovery URI" in str(excinfo.value)
