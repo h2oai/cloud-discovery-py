@@ -14,6 +14,9 @@ def _empty_tokens_factory() -> Mapping[str, str]:
 class Config:
     """Internal representation of the H2O CLI Configuration."""
 
+    #: Configured URI of environment.
+    endpoint: Optional[str] = None
+
     #: Map of found tokens in the configuration file. in the `{"client-id": "token"}`
     #: format.
     tokens: Mapping[str, str] = dataclasses.field(default_factory=_empty_tokens_factory)
@@ -31,6 +34,7 @@ def load_config(path: Optional[str] = None) -> Config:
     with open(path, "rb") as f:
         data = tomllib.load(f)
 
+    endpoint = data.get("Endpoint")
     client_id = data.get("ClientID")
     token = data.get("Token")
     platform_client_id = data.get("PlatformClientID")
@@ -42,4 +46,4 @@ def load_config(path: Optional[str] = None) -> Config:
     if platform_client_id is not None and platform_token is not None:
         tokens[platform_client_id] = platform_token
 
-    return Config(tokens=types.MappingProxyType(tokens))
+    return Config(endpoint=endpoint, tokens=types.MappingProxyType(tokens))
