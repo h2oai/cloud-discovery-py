@@ -83,6 +83,14 @@ fix = [
   "check",
 ]
 
+[tool.hatch.envs.docs]
+dependencies = [
+  "pydoc-markdown==4.6.4",
+]
+
+[tool.hatch.envs.docs.scripts]
+generate = "pydoc-markdown"
+
 [tool.black]
 skip-magic-trailing-comma = true
 
