@@ -24,7 +24,7 @@ license = "Apache-2.0"
 name = "h2o-cloud-discovery"
 readme = "README.md"
 requires-python = ">=3.7"
-version = "1.0.1"
+version = "1.1.0"
 
 [project.urls]
 Documentation = "https://github.com/h2oai/cloud-discovery-py#readme"
