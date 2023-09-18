@@ -67,24 +67,18 @@ template = "test"
 [tool.hatch.envs.lint]
 dependencies = [
   "black==22.10.0",
-  "flake8-bugbear==22.10.27",
-  "flake8-builtins==1.5.3",
-  "flake8-deprecated==1.3",
-  "flake8-eradicate==1.4",
-  "flake8==5.0.4",
-  "isort==5.12",
   "mypy~=1.1",
+  "ruff==0.0.286",
 ]
 
 [tool.hatch.envs.lint.scripts]
 check = [
   "black --check .",
-  "isort --check-only .",
-  "flake8 src tests",
+  "ruff check .",
   "mypy src",
 ]
 fix = [
-  "isort .",
+  "ruff check --fix .",
   "black .",
   "check",
 ]
@@ -100,7 +94,17 @@ generate = "pydoc-markdown"
 [tool.black]
 skip-magic-trailing-comma = true
 
-[tool.isort]
-force_single_line = true
-known_application = ["h2o_discovery"]
-profile = "appnexus"
+[tool.ruff]
+extend-select = ["I", "B", "A", "ERA"]
+line-length = 88 # Same as black.
+src = ["src", "test"]
+target-version = "py37"
+
+[tool.ruff.isort]
+case-sensitive = false
+force-single-line = true
+force-sort-within-sections = true
+known-first-party = ["h2o_discovery"]
+order-by-type = false
+relative-imports-order = "closest-to-furthest"
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
