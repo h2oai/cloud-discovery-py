@@ -85,7 +85,7 @@ fix = [
 
 [tool.hatch.envs.docs]
 dependencies = [
-  "pydoc-markdown==4.6.4",
+  "pydoc-markdown~=4.8",
 ]
 
 [tool.hatch.envs.docs.scripts]
