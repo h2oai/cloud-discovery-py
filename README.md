@@ -18,10 +18,16 @@ and asynchronous `h2o_discovery.discover_async()`.  Both functions return
 a discovery object that can be used to obtain the information the H2O Cloud
 environment, its services and clients.
 
-Both accept a `environment` argument that can be used to specify the H2O Cloud
-environment for which the discovery should be performed. It's handy when for
-local development.
-Alternatively, the `H2O_CLOUD_ENVIRONMENT` environment variable can be used.
+When used within the [H2O AI Cloud](https://h2o.ai/platform/ai-cloud/)
+environment or locally with the
+[H2O AI Cloud CLI](https://docs.h2o.ai/h2o-ai-cloud/developerguide/cli)
+configured, no further configuration is needed.
+
+Both functions accept a `environment` argument that can be used to specify the
+H2O Cloud environment for which the discovery should be performed.
+Alternatively, the `H2O_CLOUD_ENVIRONMENT` environment variables can be used.
+
+See API documentation for more details.
 
 ```python
 import h2o_discovery
@@ -63,6 +69,48 @@ async def serve(q: Q):
 
     ...
 
+```
+
+### Example 2: Use within a notebook to connect to the H2O AI Drive
+
+```py
+# Install required packages.
+
+import sys
+!{sys.executable} -m pip install h2o-cloud-discovery h2o-authn[discovery]
+```
+
+```py
+# Load discovery for the current environment.
+
+import h2o_discovery
+discovery = h2o_discovery.discover()
+```
+
+```py
+# Create a token provider using the credentials loaded from the environment.
+
+import h2o_authn.discovery
+token_provider = h2o_authn.discovery.create_async(discovery)
+```
+
+```py
+# Install the H2O AI Drive client in the version specified by the available
+# service.
+
+import sys
+!{sys.executable} -m pip install '{discovery.services["drive"].python_client}'
+```
+
+```py
+# Connect to the H2O AI Drive and list home objects.
+
+import h2o_drive
+home = await h2o_drive.MyHome(
+    token=token_provider,
+    endpoint_url=discovery.services["drive"].uri,
+)
+await home.list_objects()
 ```
 
 ## Development
