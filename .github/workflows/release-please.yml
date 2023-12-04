@@ -19,8 +19,6 @@ jobs:
         id: release
         with:
           token: ${{ secrets.RELEASE_PLEASE_GITHUB_TOKEN }}
-          command: manifest
-          draft-pull-request: "true"
 
   release-pypi:
     name: Release to PyPI

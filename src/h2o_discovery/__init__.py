@@ -113,6 +113,7 @@ def _lookup_and_load(
             " Alternatively, you can create configure your local environment with"
             " the with H2O CLI with and/or use H2OCONFIG environment variable"
             " (see https://docs.h2o.ai/h2o-ai-cloud/developerguide/cli)."
+
         ) from None
 
     return uri, cfg
