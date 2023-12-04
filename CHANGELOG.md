@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/h2oai/cloud-discovery-py/compare/v1.1.0...v1.1.1) (2023-12-04)
+
+
+### Documentation
+
+* 📝 Reflect new features in the README ([#79](https://github.com/h2oai/cloud-discovery-py/issues/79)) ([375969b](https://github.com/h2oai/cloud-discovery-py/commit/375969b3ca8682f1ce94a0d06028b8bd5fddd92d))
+
 ## [1.1.0](https://github.com/h2oai/cloud-discovery-py/compare/v1.0.1...v1.1.0) (2023-09-18)
 
 
