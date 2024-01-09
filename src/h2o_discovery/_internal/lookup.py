@@ -47,7 +47,7 @@ def _discovery_uri_from_environment(environment: str):
 
 
 def determine_local_config_path(
-    config_path: Optional[Optional[Union[str, bytes, os.PathLike]]] = None
+    config_path: Optional[Optional[Union[str, bytes, os.PathLike]]] = None,
 ) -> Optional[str]:
     """Uses passed parameter, environment variable and H2O CLI default to get the
     path to the local config file.
