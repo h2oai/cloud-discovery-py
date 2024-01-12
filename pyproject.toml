@@ -66,20 +66,19 @@ template = "test"
 
 [tool.hatch.envs.lint]
 dependencies = [
-  "black==22.10.0",
   "mypy~=1.1",
-  "ruff==0.0.286",
+  "ruff==0.1.11",
 ]
 
 [tool.hatch.envs.lint.scripts]
 check = [
-  "black --check .",
+  "ruff format --check .",
   "ruff check .",
   "mypy src",
 ]
 fix = [
   "ruff check --fix .",
-  "black .",
+  "ruff format .",
   "check",
 ]
 
@@ -91,14 +90,15 @@ dependencies = [
 [tool.hatch.envs.docs.scripts]
 generate = "pydoc-markdown"
 
-[tool.black]
-skip-magic-trailing-comma = true
-
 [tool.ruff]
 extend-select = ["I", "B", "A", "ERA"]
 line-length = 88 # Same as black.
 src = ["src", "test"]
 target-version = "py37"
+
+[tool.ruff.format]
+docstring-code-format = true
+skip-magic-trailing-comma = true
 
 [tool.ruff.isort]
 case-sensitive = false
