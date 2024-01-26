@@ -39,7 +39,7 @@ packages = ["src/h2o_discovery"]
 
 [[tool.hatch.envs.test.matrix]]
 httpx = ["httpx0.16", "httpx0.21", "httpx0.22", "httpx0.23"]
-python = ["3.7", "3.8", "3.9", "3.10", "3.11"]
+python = ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
 
 [tool.hatch.envs.test.overrides]
 matrix.httpx.dependencies = [
