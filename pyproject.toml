@@ -38,7 +38,7 @@ include = ["/src", "/tests", "CHANGELOG.md"]
 packages = ["src/h2o_discovery"]
 
 [[tool.hatch.envs.test.matrix]]
-httpx = ["httpx0.16", "httpx0.21", "httpx0.22", "httpx0.23"]
+httpx = ["httpx0.16", "httpx0.21", "httpx0.22", "httpx0.23", "httpx0.24", "httpx0.25", "httpx0.26"]
 python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
 [tool.hatch.envs.test.overrides]
@@ -47,6 +47,9 @@ matrix.httpx.dependencies = [
   {value = "httpx==0.21.*", if = ["httpx0.21"]},
   {value = "httpx==0.22.*", if = ["httpx0.22"]},
   {value = "httpx==0.23.*", if = ["httpx0.23"]},
+  {value = "httpx==0.24.*", if = ["httpx0.24"]},
+  {value = "httpx==0.25.*", if = ["httpx0.25"]},
+  {value = "httpx==0.26.*", if = ["httpx0.26"]},
 ]
 
 [tool.hatch.envs.test]
