@@ -43,35 +43,7 @@ my_service_client = my_service.client(address=discovery.services["my-service"].u
 
 ## Examples
 
-### Example: Use with H2O.ai MLOps Python Client within the Wave App
-
-```python
-import h2o_authn
-import h2o_discovery
-import h2o_mlops_client as mlops
-from h2o_wave import Q, app, ui
-from h2o_wave import main
-
-@app("/")
-async def serve(q: Q):
-    discovery = await h2o_discovery.discover_async()
-
-    token_provider = h2o_authn.AsyncTokenProvider(
-        refresh_token=q.auth.refresh_token,
-        issuer_url=discovery.environment.issuer_url,
-        client_id=discovery.clients["platform"].oauth2_client_id,
-    )
-
-    mlops_client = mlops.Client(
-        gateway_url=discovery.services["mlops-api"].uri,
-        token_provider=token_provider,
-    )
-
-    ...
-
-```
-
-### Example 2: Use within a notebook to connect to the H2O AI Drive
+### Example: Use within a notebook to connect to the H2O AI Drive
 
 ```py
 # Install required packages.
