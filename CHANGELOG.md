@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.0.0](https://github.com/h2oai/cloud-discovery-py/compare/v1.1.1...v2.0.0) (2024-03-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* Python 3.7 is no longer supported. The minimum supported version is now Python 3.8.
+* Python 3.7 is no longer supported. The minimum supported version is now Python 3.8.
+
+### Build System
+
+* 💥 remove support for Python 3.7 ([be67542](https://github.com/h2oai/cloud-discovery-py/commit/be67542550151c2673e38d640391793b8295bde2))
+
+
+### Continuous Integration
+
+* 👷 extend testing matrix of the httpx dependency ([#88](https://github.com/h2oai/cloud-discovery-py/issues/88)) ([b6fca62](https://github.com/h2oai/cloud-discovery-py/commit/b6fca62f0ed94b5edb9825945ca6d0028b7f65c1))
+
 ## [1.1.1](https://github.com/h2oai/cloud-discovery-py/compare/v1.1.0...v1.1.1) (2023-12-04)
 
 
