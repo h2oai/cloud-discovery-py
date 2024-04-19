@@ -6,7 +6,6 @@
 ### ⚠ BREAKING CHANGES
 
 * Python 3.7 is no longer supported. The minimum supported version is now Python 3.8.
-* Python 3.7 is no longer supported. The minimum supported version is now Python 3.8.
 
 ### Documentation
 
