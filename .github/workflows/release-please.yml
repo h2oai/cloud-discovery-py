@@ -15,11 +15,13 @@ jobs:
       releases_created: ${{ steps.release.outputs.releases_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
 
+    permissions:
+      contents: write
+      pull-requests: write
+
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
-        with:
-          token: ${{ secrets.RELEASE_PLEASE_GITHUB_TOKEN }}
 
   release-pypi:
     name: Release to PyPI
@@ -36,6 +38,9 @@ jobs:
 
     if: needs.release-please.outputs.releases_created == 'true'
     needs: release-please
+
+    permissions:
+      contents: write
 
     with:
       tag: ${{ needs.release-please.outputs.tag_name }}
