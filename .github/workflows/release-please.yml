@@ -30,7 +30,8 @@ jobs:
     if: needs.release-please.outputs.releases_created == 'true'
     needs: release-please
 
-    secrets: inherit
+    permissions:
+      id-token: write
 
   release-api-docs:
     name: Attach API Docs to Release
@@ -44,5 +45,3 @@ jobs:
 
     with:
       tag: ${{ needs.release-please.outputs.tag_name }}
-
-    secrets: inherit
