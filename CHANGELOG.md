@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.0](https://github.com/h2oai/cloud-discovery-py/compare/v2.0.0...v2.1.0) (2024-07-25)
+
+
+### Features
+
+* ✨ expose http timeout and ssl_context options on the entry functions ([#101](https://github.com/h2oai/cloud-discovery-py/issues/101)) ([f63a371](https://github.com/h2oai/cloud-discovery-py/commit/f63a371e4837a6b04a17f3e9cc6ef6050a944a52)), closes [#100](https://github.com/h2oai/cloud-discovery-py/issues/100)
+* Use default ssl context by default ([f63a371](https://github.com/h2oai/cloud-discovery-py/commit/f63a371e4837a6b04a17f3e9cc6ef6050a944a52))
+
+
+### Bug Fixes
+
+* Use nase inherited constructor in sync `Client` ([f63a371](https://github.com/h2oai/cloud-discovery-py/commit/f63a371e4837a6b04a17f3e9cc6ef6050a944a52))
+
 ## [2.0.0](https://github.com/h2oai/cloud-discovery-py/compare/v1.1.1...v2.0.0) (2024-04-19)
 
 
