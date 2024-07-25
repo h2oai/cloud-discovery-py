@@ -2,7 +2,6 @@ import datetime
 import ssl
 from typing import List
 from typing import Optional
-from typing import Union
 
 import httpx
 
@@ -23,15 +22,11 @@ class _BaseClient:
         ssl_context: Optional[ssl.SSLContext] = None,
     ):
         self._uri = uri
-        self._ssl_context = ssl_context
+        self._verify = ssl_context or ssl.create_default_context()
 
         self._timeout = 5.0
         if timeout is not None:
             self._timeout = timeout.total_seconds()
-
-        self._verify: Union[bool, ssl.SSLContext] = True
-        if self._ssl_context is not None:
-            self._verify = self._ssl_context
 
 
 class Client(_BaseClient):
@@ -39,9 +34,6 @@ class Client(_BaseClient):
 
     Listing methods do pagination and always return all of the available objects.
     """
-
-    def __init__(self, uri: str):
-        self._uri = uri
 
     def get_environment(self) -> model.Environment:
         """Returns the information about the environment."""

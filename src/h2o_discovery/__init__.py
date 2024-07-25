@@ -1,5 +1,7 @@
 import dataclasses
+import datetime
 import os
+import ssl
 from typing import Optional
 from typing import Tuple
 from typing import Union
@@ -19,6 +21,9 @@ def discover(
     environment: Optional[str] = None,
     discovery_address: Optional[str] = None,
     config_path: Optional[Union[str, bytes, os.PathLike]] = None,
+    *,
+    http_timeout: Optional[datetime.timedelta] = None,
+    ssl_context: Optional[ssl.SSLContext] = None,
 ) -> Discovery:
     """Obtains and returns a Discovery object from the discovery service.
 
@@ -39,6 +44,11 @@ def discover(
         environment: The H2O Cloud environment URL to use (e.g. https://cloud.h2o.ai).
         discovery_address: The address of the discovery service.
         config_path: The path to the H2O CLI configuration file.
+        http_timeout: The timeout for HTTP requests. Value applies to all of the
+            timeouts (connect, read, write).
+        ssl_context: The SSL context to use for HTTPS requests.
+            If not specified default SSL context is used.
+
 
     Raises:
         exceptions.DiscoveryLookupError: If the URI cannot be determined.
@@ -47,7 +57,9 @@ def discover(
     """
     uri, cfg = _lookup_and_load(environment, discovery_address, config_path)
 
-    discovery = load.load_discovery(client.Client(uri))
+    discovery = load.load_discovery(
+        client.Client(uri=uri, timeout=http_timeout, ssl_context=ssl_context)
+    )
     credentials = load.load_credentials(
         clients=discovery.clients, config_tokens=cfg.tokens
     )
@@ -59,6 +71,9 @@ async def discover_async(
     environment: Optional[str] = None,
     discovery_address: Optional[str] = None,
     config_path: Optional[Union[str, bytes, os.PathLike]] = None,
+    *,
+    http_timeout: Optional[datetime.timedelta] = None,
+    ssl_context: Optional[ssl.SSLContext] = None,
 ) -> Discovery:
     """Obtains and returns a Discovery object from the discovery service.
 
@@ -79,6 +94,10 @@ async def discover_async(
         environment: The H2O Cloud environment URL to use (e.g. https://cloud.h2o.ai).
         discovery_address: The address of the discovery service.
         config_path: The path to the H2O CLI configuration file.
+        http_timeout: The timeout for HTTP requests. Value applies to all of the
+            timeouts (connect, read, write).
+        ssl_context: The SSL context to use for HTTPS requests.
+            If not specified default SSL context is used.
 
     Raises:
         exceptions.DiscoveryLookupError: If the URI cannot be determined.
@@ -88,7 +107,9 @@ async def discover_async(
 
     uri, cfg = _lookup_and_load(environment, discovery_address, config_path)
 
-    discovery = await load.load_discovery_async(client.AsyncClient(uri))
+    discovery = await load.load_discovery_async(
+        client.AsyncClient(uri=uri, timeout=http_timeout, ssl_context=ssl_context)
+    )
     credentials = load.load_credentials(
         clients=discovery.clients, config_tokens=cfg.tokens
     )
