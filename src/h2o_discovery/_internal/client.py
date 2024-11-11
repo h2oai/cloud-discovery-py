@@ -37,13 +37,13 @@ class Client(_BaseClient):
 
     def get_environment(self) -> model.Environment:
         """Returns the information about the environment."""
-        with httpx.Client(base_url=self._uri) as client:
+        with self._client() as client:
             resp = _fetch(client, _ENVIRONMENT_ENDPOINT)
             return model.Environment.from_json_dict(resp.json()["environment"])
 
     def list_services(self) -> List[model.Service]:
         """Returns the list of all registered services."""
-        with httpx.Client(base_url=self._uri) as client:
+        with self._client() as client:
             services: List[model.Service] = []
 
             pages = _get_all_pages(client, _SERVICES_ENDPOINT)
@@ -55,7 +55,7 @@ class Client(_BaseClient):
 
     def list_clients(self) -> List[model.Client]:
         """Returns the list of all registered clients."""
-        with httpx.Client(base_url=self._uri) as client:
+        with self._client() as client:
             clients: List[model.Client] = []
 
             pages = _get_all_pages(client, _CLIENTS_ENDPOINT)
@@ -103,13 +103,13 @@ class AsyncClient(_BaseClient):
 
     async def get_environment(self) -> model.Environment:
         """Returns the information about the environment."""
-        async with httpx.AsyncClient(base_url=self._uri) as client:
+        async with self._client() as client:
             resp = await _fetch_async(client, _ENVIRONMENT_ENDPOINT)
             return model.Environment.from_json_dict(resp.json()["environment"])
 
     async def list_services(self) -> List[model.Service]:
         """Returns the list of all registered services."""
-        async with httpx.AsyncClient(base_url=self._uri) as client:
+        async with self._client() as client:
             services: List[model.Service] = []
 
             pages = await _get_all_pages_async(client, _SERVICES_ENDPOINT)
@@ -121,7 +121,7 @@ class AsyncClient(_BaseClient):
 
     async def list_clients(self) -> List[model.Client]:
         """Returns the list of all registered clients."""
-        async with httpx.AsyncClient(base_url=self._uri) as client:
+        async with self._client() as client:
             clients: List[model.Client] = []
 
             pages = await _get_all_pages_async(client, _CLIENTS_ENDPOINT)
