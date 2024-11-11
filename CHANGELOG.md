@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/h2oai/cloud-discovery-py/compare/v2.1.0...v2.1.1) (2024-11-11)
+
+
+### Bug Fixes
+
+* 🐛 pass the timeout and ssl_context to the httpx ([#105](https://github.com/h2oai/cloud-discovery-py/issues/105)) ([106dbf2](https://github.com/h2oai/cloud-discovery-py/commit/106dbf27732cacf1dd795a694e95ab7e14b86b41)), closes [#104](https://github.com/h2oai/cloud-discovery-py/issues/104)
+
 ## [2.1.0](https://github.com/h2oai/cloud-discovery-py/compare/v2.0.0...v2.1.0) (2024-07-25)
 
 
