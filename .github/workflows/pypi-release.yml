@@ -1,14 +1,7 @@
 name: Release Python package to PyPI
 
 on:
-  # TODO(@zoido): Remove pull_request when latest version is uploaded.
-  pull_request:
   workflow_call:
-
-# TODO(@zoido): Remove permissions when latest version is uploaded.
-permissions:
-  contents: read
-  id-token: write
 
 jobs:
   test:
