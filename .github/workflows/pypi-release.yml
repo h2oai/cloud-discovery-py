@@ -35,3 +35,9 @@ jobs:
           verify-metadata: false
           verbose: true
           print-hash: true
+
+          # Attentions are disabled temporarily. They do seem to work with the
+          # reusable wokrflow.
+          # - https://github.com/pypa/gh-action-pypi-publish/issues/166
+          # - https://github.com/pypa/gh-action-pypi-publish/issues/283
+          attestations: false
