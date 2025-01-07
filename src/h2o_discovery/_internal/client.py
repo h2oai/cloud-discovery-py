@@ -10,6 +10,7 @@ from h2o_discovery import model
 _ENVIRONMENT_ENDPOINT = "v1/environment"
 _SERVICES_ENDPOINT = "v1/services"
 _CLIENTS_ENDPOINT = "v1/clients"
+_LINKS_ENDPOINT = "v1/links"
 
 DEFAULT_HTTP_TIMEOUT = datetime.timedelta(seconds=5)
 
@@ -64,6 +65,18 @@ class Client(_BaseClient):
                     [model.Client.from_json_dict(d) for d in page.get("clients", [])]
                 )
             return clients
+
+    def list_links(self) -> List[model.Link]:
+        """Returns the list of all registered links."""
+        with self._client() as client:
+            links: List[model.Link] = []
+
+            pages = _get_all_pages(client, _LINKS_ENDPOINT)
+            for page in pages:
+                links.extend(
+                    [model.Link.from_json_dict(d) for d in page.get("links", [])]
+                )
+            return links
 
     def _client(self) -> httpx.Client:
         return httpx.Client(
@@ -130,6 +143,18 @@ class AsyncClient(_BaseClient):
                     [model.Client.from_json_dict(d) for d in page.get("clients", [])]
                 )
             return clients
+
+    async def list_links(self) -> List[model.Link]:
+        """Returns the list of all registered links."""
+        async with self._client() as client:
+            links: List[model.Link] = []
+
+            pages = await _get_all_pages_async(client, _LINKS_ENDPOINT)
+            for page in pages:
+                links.extend(
+                    [model.Link.from_json_dict(d) for d in page.get("links", [])]
+                )
+            return links
 
     def _client(self) -> httpx.AsyncClient:
         return httpx.AsyncClient(

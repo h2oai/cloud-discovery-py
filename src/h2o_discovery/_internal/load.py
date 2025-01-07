@@ -2,6 +2,7 @@ import json
 import os
 import types
 from typing import Iterable
+from typing import List
 from typing import Mapping
 from typing import Optional
 
@@ -18,11 +19,13 @@ def load_discovery(cl: client.Client) -> model.Discovery:
         environment = cl.get_environment()
         services = _get_service_map(cl.list_services())
         clients = _get_client_map(cl.list_clients())
+        links = _get_link_map(_list_links(cl))
     except Exception as e:
         _handle_specific_client_exceptions(e)
         raise
-
-    return model.Discovery(environment=environment, services=services, clients=clients)
+    return model.Discovery(
+        environment=environment, services=services, clients=clients, links=links
+    )
 
 
 async def load_discovery_async(cl: client.AsyncClient) -> model.Discovery:
@@ -31,11 +34,36 @@ async def load_discovery_async(cl: client.AsyncClient) -> model.Discovery:
         environment = await cl.get_environment()
         services = _get_service_map(await cl.list_services())
         clients = _get_client_map(await cl.list_clients())
+        links = _get_link_map(await _list_links_async(cl))
     except Exception as e:
         _handle_specific_client_exceptions(e)
         raise
 
-    return model.Discovery(environment=environment, services=services, clients=clients)
+    return model.Discovery(
+        environment=environment, services=services, clients=clients, links=links
+    )
+
+
+def _list_links(cl: client.Client) -> List[model.Link]:
+    try:
+        return cl.list_links()
+    except Exception as e:
+        # Links are added in the server version 2.5.0. In order to have client that
+        # is backwards compatible, we won't fail if the links are not available.
+        if isinstance(e, httpx.HTTPStatusError) and e.response.status_code == 404:
+            return []
+        raise
+
+
+async def _list_links_async(cl: client.AsyncClient) -> List[model.Link]:
+    try:
+        return await cl.list_links()
+    except Exception as e:
+        # Links are added in the server version 2.5.0. In order to have client that
+        # is backwards compatible, we won't fail if the links are not available.
+        if isinstance(e, httpx.HTTPStatusError) and e.response.status_code == 404:
+            return []
+        raise
 
 
 def load_credentials(
@@ -71,6 +99,13 @@ def _get_client_map(clients: Iterable[model.Client]) -> Mapping[str, model.Clien
     return types.MappingProxyType(out)
 
 
+def _get_link_map(links: Iterable[model.Link]) -> Mapping[str, model.Link]:
+    out = {}
+    for ln in links:
+        out[_link_key(ln.name)] = ln
+    return types.MappingProxyType(out)
+
+
 _SERVICES_COLLECTION_PREFIX = "services/"
 
 
@@ -87,6 +122,15 @@ def _client_key(name: str) -> str:
     if name.startswith(_CLIENTS_COLLECTION_PREFIX):
         return name[len(_CLIENTS_COLLECTION_PREFIX) :]
     raise ValueError(f"invalid client name: {name}")
+
+
+_LINKS_COLLECTION_PREFIX = "links/"
+
+
+def _link_key(name: str) -> str:
+    if name.startswith(_LINKS_COLLECTION_PREFIX):
+        return name[len(_LINKS_COLLECTION_PREFIX) :]
+    raise ValueError(f"invalid link name: {name}")
 
 
 _ENV_ERROR = error.H2OCloudEnvironmentError(
