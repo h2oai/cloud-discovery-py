@@ -167,6 +167,9 @@ class Discovery:
     #: Map of registered clients in the `{"client-identifier": Client(...)}` format.
     clients: Mapping[str, Client]
 
+    #: Map of registered links in the `{"link-identifier": Link(...)}` format.
+    links: Mapping[str, Link]
+
     #: Map of credentials in the `{"client-identifier": Credentials(...)}` format.
     credentials: Mapping[str, Credentials] = dataclasses.field(
         default_factory=_empty_credentials_factory
