@@ -12,6 +12,7 @@ from h2o_discovery import model
 _ENVIRONMENT_ENDPOINT = "v1/environment"
 _SERVICES_ENDPOINT = "v1/services"
 _CLIENTS_ENDPOINT = "v1/clients"
+_LINKS_ENDPOINT = "v1/links"
 
 DEFAULT_HTTP_TIMEOUT = datetime.timedelta(seconds=5)
 
@@ -56,6 +57,12 @@ class Client(_BaseClient):
         """Returns the list of all registered clients."""
         return self._get_all_entities(
             _CLIENTS_ENDPOINT, "clients", model.Client.from_json_dict
+        )
+
+    def list_links(self) -> List[model.Link]:
+        """Returns the list of all registered links."""
+        return self._get_all_entities(
+            _LINKS_ENDPOINT, "links", model.Link.from_json_dict
         )
 
     def _get_all_entities(
@@ -121,6 +128,12 @@ class AsyncClient(_BaseClient):
         """Returns the list of all registered clients."""
         return await self._get_all_entities(
             _CLIENTS_ENDPOINT, "clients", model.Client.from_json_dict
+        )
+
+    async def list_links(self) -> List[model.Link]:
+        """Returns the list of all registered links."""
+        return await self._get_all_entities(
+            _LINKS_ENDPOINT, "links", model.Link.from_json_dict
         )
 
     async def _get_all_entities(

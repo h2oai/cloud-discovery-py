@@ -111,6 +111,28 @@ class Environment:
 
 
 @dataclasses.dataclass(frozen=True)
+class Link:
+    """Representation of the navigation link."""
+
+    #: Canonical name of the Link. For example: "links/app-link".
+    name: str
+
+    #: Value that applications can put into the HTML anchor's href
+    #: attribute to navigate to link.
+    uri: str
+
+    #: Preferred text to use as a link text. This usually make sense
+    #: only as part of the navigation menus.
+    #:     Example: <a href="{{ link.uri }}">{{ link.text }}</a>
+    text: Optional[str]
+
+    @classmethod
+    def from_json_dict(cls, json: Mapping[str, str]) -> "Link":
+        """Create a Link from a JSON dict returned by the server."""
+        return cls(name=json["name"], uri=json["uri"], text=json.get("text"))
+
+
+@dataclasses.dataclass(frozen=True)
 class Credentials:
     """Contain credentials associated with single registered client.
 
