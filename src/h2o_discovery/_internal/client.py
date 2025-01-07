@@ -1,7 +1,9 @@
 import datetime
 import ssl
+from typing import Callable
 from typing import List
 from typing import Optional
+from typing import TypeVar
 
 import httpx
 
@@ -13,6 +15,9 @@ _CLIENTS_ENDPOINT = "v1/clients"
 _LINKS_ENDPOINT = "v1/links"
 
 DEFAULT_HTTP_TIMEOUT = datetime.timedelta(seconds=5)
+
+
+T = TypeVar("T")
 
 
 class _BaseClient:
@@ -44,39 +49,32 @@ class Client(_BaseClient):
 
     def list_services(self) -> List[model.Service]:
         """Returns the list of all registered services."""
-        with self._client() as client:
-            services: List[model.Service] = []
-
-            pages = _get_all_pages(client, _SERVICES_ENDPOINT)
-            for page in pages:
-                services.extend(
-                    [model.Service.from_json_dict(d) for d in page.get("services", [])]
-                )
-            return services
+        return self._get_all_entities(
+            _SERVICES_ENDPOINT, "services", model.Service.from_json_dict
+        )
 
     def list_clients(self) -> List[model.Client]:
         """Returns the list of all registered clients."""
-        with self._client() as client:
-            clients: List[model.Client] = []
-
-            pages = _get_all_pages(client, _CLIENTS_ENDPOINT)
-            for page in pages:
-                clients.extend(
-                    [model.Client.from_json_dict(d) for d in page.get("clients", [])]
-                )
-            return clients
+        return self._get_all_entities(
+            _CLIENTS_ENDPOINT, "clients", model.Client.from_json_dict
+        )
 
     def list_links(self) -> List[model.Link]:
         """Returns the list of all registered links."""
-        with self._client() as client:
-            links: List[model.Link] = []
+        return self._get_all_entities(
+            _LINKS_ENDPOINT, "links", model.Link.from_json_dict
+        )
 
-            pages = _get_all_pages(client, _LINKS_ENDPOINT)
+    def _get_all_entities(
+        self, endpoint: str, collection_key: str, factory: Callable[[dict], T]
+    ) -> List[T]:
+        with self._client() as client:
+            entities: List[T] = []
+
+            pages = _get_all_pages(client, endpoint)
             for page in pages:
-                links.extend(
-                    [model.Link.from_json_dict(d) for d in page.get("links", [])]
-                )
-            return links
+                entities.extend([factory(d) for d in page.get(collection_key, [])])
+            return entities
 
     def _client(self) -> httpx.Client:
         return httpx.Client(
@@ -122,39 +120,32 @@ class AsyncClient(_BaseClient):
 
     async def list_services(self) -> List[model.Service]:
         """Returns the list of all registered services."""
-        async with self._client() as client:
-            services: List[model.Service] = []
-
-            pages = await _get_all_pages_async(client, _SERVICES_ENDPOINT)
-            for page in pages:
-                services.extend(
-                    [model.Service.from_json_dict(d) for d in page.get("services", [])]
-                )
-            return services
+        return await self._get_all_entities(
+            _SERVICES_ENDPOINT, "services", model.Service.from_json_dict
+        )
 
     async def list_clients(self) -> List[model.Client]:
         """Returns the list of all registered clients."""
-        async with self._client() as client:
-            clients: List[model.Client] = []
-
-            pages = await _get_all_pages_async(client, _CLIENTS_ENDPOINT)
-            for page in pages:
-                clients.extend(
-                    [model.Client.from_json_dict(d) for d in page.get("clients", [])]
-                )
-            return clients
+        return await self._get_all_entities(
+            _CLIENTS_ENDPOINT, "clients", model.Client.from_json_dict
+        )
 
     async def list_links(self) -> List[model.Link]:
         """Returns the list of all registered links."""
-        async with self._client() as client:
-            links: List[model.Link] = []
+        return await self._get_all_entities(
+            _LINKS_ENDPOINT, "links", model.Link.from_json_dict
+        )
 
-            pages = await _get_all_pages_async(client, _LINKS_ENDPOINT)
+    async def _get_all_entities(
+        self, endpoint: str, collection_key: str, factory: Callable[[dict], T]
+    ) -> List[T]:
+        async with self._client() as client:
+            entities: List[T] = []
+
+            pages = await _get_all_pages_async(client, endpoint)
             for page in pages:
-                links.extend(
-                    [model.Link.from_json_dict(d) for d in page.get("links", [])]
-                )
-            return links
+                entities.extend([factory(d) for d in page.get(collection_key, [])])
+            return entities
 
     def _client(self) -> httpx.AsyncClient:
         return httpx.AsyncClient(
