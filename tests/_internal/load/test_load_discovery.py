@@ -7,8 +7,7 @@ from h2o_discovery import model
 from h2o_discovery._internal import load
 
 
-@pytest.fixture()
-def mock_client():
+def mock_async_client():
     client = mock.Mock()
     client.get_environment.return_value = asyncio.Future()
     client.get_environment.return_value.set_result(mock.Mock())
@@ -16,6 +15,16 @@ def mock_client():
     client.list_services.return_value.set_result({})
     client.list_clients.return_value = asyncio.Future()
     client.list_clients.return_value.set_result({})
+
+    return client
+
+
+def mock_sync_client():
+    client = mock.Mock()
+    client.get_environment.return_value = {}
+    client.list_services.return_value = {}
+    client.list_clients.return_value = {}
+    client.list_clients.return_value = {}
 
     return client
 
@@ -28,8 +37,9 @@ ENVIRONMENT_DATA = model.Environment(
 )
 
 
-def test_load_environment(mock_client):
+def test_load_environment():
     # Given
+    mock_client = mock_sync_client()
     mock_client.get_environment.return_value = ENVIRONMENT_DATA
 
     # When
@@ -40,8 +50,9 @@ def test_load_environment(mock_client):
 
 
 @pytest.mark.asyncio
-async def test_load_environment_async(mock_client):
+async def test_load_environment_async():
     # Given
+    mock_client = mock_async_client()
     mock_client.get_environment.return_value = asyncio.Future()
     mock_client.get_environment.return_value.set_result(ENVIRONMENT_DATA)
 
@@ -52,8 +63,9 @@ async def test_load_environment_async(mock_client):
     assert discovery.environment == ENVIRONMENT_DATA
 
 
-def test_load_services(mock_client):
+def test_load_services():
     # Given
+    mock_client = mock_sync_client()
     mock_client.list_services.return_value = [SERVICE_RECORD]
 
     # When
@@ -74,8 +86,9 @@ SERVICE_RECORD = model.Service(
 
 
 @pytest.mark.asyncio
-async def test_load_services_async(mock_client):
+async def test_load_services_async():
     # Given
+    mock_client = mock_async_client()
     mock_client.list_services.return_value = asyncio.Future()
     mock_client.list_services.return_value.set_result([SERVICE_RECORD])
 
@@ -93,8 +106,9 @@ CLIENT_RECORD = model.Client(
 )
 
 
-def test_load_clients(mock_client):
+def test_load_clients():
     # Given
+    mock_client = mock_sync_client()
     mock_client.list_clients.return_value = [CLIENT_RECORD]
 
     # When
@@ -105,8 +119,9 @@ def test_load_clients(mock_client):
 
 
 @pytest.mark.asyncio
-async def test_load_clients_async(mock_client):
+async def test_load_clients_async():
     # Given
+    mock_client = mock_async_client()
     mock_client.list_clients.return_value = asyncio.Future()
     mock_client.list_clients.return_value.set_result([CLIENT_RECORD])
 
