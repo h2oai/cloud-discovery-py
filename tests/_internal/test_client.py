@@ -335,10 +335,10 @@ def test_client_list_links_can_handle_empty_response():
     cl = client.Client("https://test.example.com")
 
     # When
-    services = cl.list_links()
+    links = cl.list_links()
 
     # Then
-    assert services == []
+    assert links == []
 
 
 @respx.mock
@@ -349,10 +349,10 @@ async def test_async_client_list_links_can_handle_empty_response():
     cl = client.AsyncClient("https://test.example.com")
 
     # When
-    services = await cl.list_links()
+    links = await cl.list_links()
 
     # Then
-    assert services == []
+    assert links == []
 
 
 def _assert_pagination_api_calls(route):
