@@ -123,7 +123,7 @@ async def test_async_client_list_services_internal():
 
 @respx.mock
 @pytest.mark.asyncio
-async def test_async_client_list_services_pubclic():
+async def test_async_client_list_services_public():
     # Given
     route = respx.get("https://test.example.com/.ai.h2o.cloud.discovery/v1/services")
     route.side_effect = SERVICES_RESPONSES
@@ -209,6 +209,72 @@ async def test_async_client_list_clients_public():
 
 
 @respx.mock
+def test_client_list_links_internal():
+    # Given
+    route = respx.get("http://test.example.com:1234/v1/links")
+    route.side_effect = LINKS_RESPONSES
+
+    cl = client.Client("http://test.example.com:1234")
+
+    # When
+    links = cl.list_links()
+
+    # Then
+    assert links == EXPECTED_LINKS_RECORDS
+    _assert_pagination_api_calls(route)
+
+
+@respx.mock
+def test_client_list_links_public():
+    # Given
+    route = respx.get("https://test.example.com/.ai.h2o.cloud.discovery/v1/links")
+    route.side_effect = LINKS_RESPONSES
+
+    cl = client.Client("https://test.example.com/.ai.h2o.cloud.discovery")
+
+    # When
+    links = cl.list_links()
+
+    # Then
+    assert links == EXPECTED_LINKS_RECORDS
+    _assert_pagination_api_calls(route)
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_client_list_links_internal():
+    # Given
+    route = respx.get("https://test.example.com:1234/v1/links")
+    route.side_effect = LINKS_RESPONSES
+
+    cl = client.AsyncClient("https://test.example.com:1234")
+
+    # When
+    links = await cl.list_links()
+
+    # Then
+    assert links == EXPECTED_LINKS_RECORDS
+    _assert_pagination_api_calls(route)
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_client_list_links_public():
+    # Given
+    route = respx.get("https://test.example.com/.ai.h2o.cloud.discovery/v1/links")
+    route.side_effect = LINKS_RESPONSES
+
+    cl = client.AsyncClient("https://test.example.com/.ai.h2o.cloud.discovery")
+
+    # When
+    links = await cl.list_links()
+
+    # Then
+    assert links == EXPECTED_LINKS_RECORDS
+    _assert_pagination_api_calls(route)
+
+
+@respx.mock
 def test_client_list_services_can_handle_empty_response():
     # Given
     respx.get("https://test.example.com/v1/services").respond(json={})
@@ -260,6 +326,33 @@ async def test_async_client_list_clients_can_handle_empty_response():
 
     # Then
     assert services == []
+
+
+@respx.mock
+def test_client_list_links_can_handle_empty_response():
+    # Given
+    respx.get("https://test.example.com/v1/links").respond(json={})
+    cl = client.Client("https://test.example.com")
+
+    # When
+    links = cl.list_links()
+
+    # Then
+    assert links == []
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_client_list_links_can_handle_empty_response():
+    # Given
+    respx.get("https://test.example.com/v1/links").respond(json={})
+    cl = client.AsyncClient("https://test.example.com")
+
+    # When
+    links = await cl.list_links()
+
+    # Then
+    assert links == []
 
 
 def _assert_pagination_api_calls(route):
@@ -435,5 +528,63 @@ EXPECTED_CLIENTS_RECORDS = [
         name="clients/test-client-4",
         display_name="Test Client 4",
         oauth2_client_id="test-client-4",
+    ),
+]
+
+
+LINKS_RESPONSES = [
+    httpx.Response(
+        200,
+        json={
+            "links": [
+                {"name": "links/test-link-1", "uri": "http://test-link-1.domain:1234"},
+                {
+                    "name": "links/test-link-2",
+                    "uri": "http://test-link-2.domain:1234",
+                    "text": "Test Link 2",
+                },
+            ],
+            "nextPageToken": "next-page-token-1",
+        },
+    ),
+    httpx.Response(
+        200,
+        json={
+            "links": [
+                {
+                    "name": "links/test-link-3",
+                    "uri": "http://test-link-3.domain:1234",
+                    "text": "Test Link 3",
+                }
+            ],
+            "nextPageToken": "next-page-token-2",
+        },
+    ),
+    httpx.Response(
+        200,
+        json={
+            "links": [
+                {"name": "links/test-link-4", "uri": "http://test-link-4.domain:1234"}
+            ]
+        },
+    ),
+]
+
+EXPECTED_LINKS_RECORDS = [
+    model.Link(
+        name="links/test-link-1", uri="http://test-link-1.domain:1234", text=None
+    ),
+    model.Link(
+        name="links/test-link-2",
+        uri="http://test-link-2.domain:1234",
+        text="Test Link 2",
+    ),
+    model.Link(
+        name="links/test-link-3",
+        uri="http://test-link-3.domain:1234",
+        text="Test Link 3",
+    ),
+    model.Link(
+        name="links/test-link-4", uri="http://test-link-4.domain:1234", text=None
     ),
 ]

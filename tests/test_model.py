@@ -84,3 +84,33 @@ def test_environment_from_json_dict_with_missing_version():
         h2o_cloud_platform_oauth2_scope="test-platform-scope",
         h2o_cloud_version=None,
     )
+
+
+def test_link_from_json_dictt():
+    # Given
+    json = {
+        "name": "links/test-link",
+        "uri": "http://test-link.domain:1234",
+        "text": "Test Link",
+    }
+
+    # When
+    result = model.Link.from_json_dict(json)
+
+    # Then
+    assert result == model.Link(
+        name="links/test-link", uri="http://test-link.domain:1234", text="Test Link"
+    )
+
+
+def test_link_from_json_dict_with_missing_text():
+    # Given
+    json = {"name": "links/test-link", "uri": "http://test-link.domain:1234"}
+
+    # When
+    result = model.Link.from_json_dict(json)
+
+    # Then
+    assert result == model.Link(
+        name="links/test-link", uri="http://test-link.domain:1234", text=None
+    )
