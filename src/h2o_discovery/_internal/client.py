@@ -1,7 +1,9 @@
 import datetime
 import ssl
+from typing import Callable
 from typing import List
 from typing import Optional
+from typing import TypeVar
 
 import httpx
 
@@ -29,6 +31,9 @@ class _BaseClient:
             self._timeout = timeout.total_seconds()
 
 
+_T = TypeVar("_T")
+
+
 class Client(_BaseClient):
     """Synchronous Implementation of the Discovery Service API.
 
@@ -43,27 +48,26 @@ class Client(_BaseClient):
 
     def list_services(self) -> List[model.Service]:
         """Returns the list of all registered services."""
-        with self._client() as client:
-            services: List[model.Service] = []
-
-            pages = _get_all_pages(client, _SERVICES_ENDPOINT)
-            for page in pages:
-                services.extend(
-                    [model.Service.from_json_dict(d) for d in page.get("services", [])]
-                )
-            return services
+        return self._get_all_entities(
+            _SERVICES_ENDPOINT, "services", model.Service.from_json_dict
+        )
 
     def list_clients(self) -> List[model.Client]:
         """Returns the list of all registered clients."""
-        with self._client() as client:
-            clients: List[model.Client] = []
+        return self._get_all_entities(
+            _CLIENTS_ENDPOINT, "clients", model.Client.from_json_dict
+        )
 
-            pages = _get_all_pages(client, _CLIENTS_ENDPOINT)
+    def _get_all_entities(
+        self, endpoint: str, collection_key: str, factory: Callable[[dict], _T]
+    ) -> List[_T]:
+        with self._client() as client:
+            entities: List[_T] = []
+
+            pages = _get_all_pages(client, endpoint)
             for page in pages:
-                clients.extend(
-                    [model.Client.from_json_dict(d) for d in page.get("clients", [])]
-                )
-            return clients
+                entities.extend([factory(d) for d in page.get(collection_key, [])])
+            return entities
 
     def _client(self) -> httpx.Client:
         return httpx.Client(
@@ -109,27 +113,26 @@ class AsyncClient(_BaseClient):
 
     async def list_services(self) -> List[model.Service]:
         """Returns the list of all registered services."""
-        async with self._client() as client:
-            services: List[model.Service] = []
-
-            pages = await _get_all_pages_async(client, _SERVICES_ENDPOINT)
-            for page in pages:
-                services.extend(
-                    [model.Service.from_json_dict(d) for d in page.get("services", [])]
-                )
-            return services
+        return await self._get_all_entities(
+            _SERVICES_ENDPOINT, "services", model.Service.from_json_dict
+        )
 
     async def list_clients(self) -> List[model.Client]:
         """Returns the list of all registered clients."""
-        async with self._client() as client:
-            clients: List[model.Client] = []
+        return await self._get_all_entities(
+            _CLIENTS_ENDPOINT, "clients", model.Client.from_json_dict
+        )
 
-            pages = await _get_all_pages_async(client, _CLIENTS_ENDPOINT)
+    async def _get_all_entities(
+        self, endpoint: str, collection_key: str, factory: Callable[[dict], _T]
+    ) -> List[_T]:
+        async with self._client() as client:
+            entities: List[_T] = []
+
+            pages = await _get_all_pages_async(client, endpoint)
             for page in pages:
-                clients.extend(
-                    [model.Client.from_json_dict(d) for d in page.get("clients", [])]
-                )
-            return clients
+                entities.extend([factory(d) for d in page.get(collection_key, [])])
+            return entities
 
     def _client(self) -> httpx.AsyncClient:
         return httpx.AsyncClient(
