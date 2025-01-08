@@ -1,6 +1,7 @@
 import asyncio
 from unittest import mock
 
+import httpx
 import pytest
 
 from h2o_discovery import model
@@ -15,6 +16,8 @@ def mock_async_client():
     client.list_services.return_value.set_result({})
     client.list_clients.return_value = asyncio.Future()
     client.list_clients.return_value.set_result({})
+    client.list_links.return_value = asyncio.Future()
+    client.list_links.return_value.set_result({})
 
     return client
 
@@ -25,6 +28,7 @@ def mock_sync_client():
     client.list_services.return_value = {}
     client.list_clients.return_value = {}
     client.list_clients.return_value = {}
+    client.list_links.return_value = {}
 
     return client
 
@@ -130,3 +134,65 @@ async def test_load_clients_async():
 
     # Then
     assert discovery.clients["test-client"] == CLIENT_RECORD
+
+
+LINK_RECORD = model.Link(
+    name="links/test-link", uri="http://test-link.domain:1234", text="Test Link"
+)
+
+
+def test_load_links():
+    # Given
+    mock_client = mock_sync_client()
+    mock_client.list_links.return_value = [LINK_RECORD]
+
+    # When
+    discovery = load.load_discovery(mock_client)
+
+    # Then
+    assert discovery.links["test-link"] == LINK_RECORD
+
+
+@pytest.mark.asyncio
+async def test_load_links_async():
+    # Given
+    mock_client = mock_async_client()
+    mock_client.list_links.return_value = asyncio.Future()
+    mock_client.list_links.return_value.set_result([LINK_RECORD])
+
+    # When
+    discovery = await load.load_discovery_async(mock_client)
+
+    # Then
+    assert discovery.links["test-link"] == LINK_RECORD
+
+
+def test_load_links_not_found_returns_empty_map():
+    # Given
+    not_found_exception = httpx.HTTPStatusError(
+        "Test Error", request=mock.Mock(), response=mock.Mock(status_code=404)
+    )
+    mock_client = mock_sync_client()
+    mock_client.list_links.side_effect = not_found_exception
+
+    # When
+    discovery = load.load_discovery(mock_client)
+
+    # Then
+    assert discovery.links == {}
+
+
+@pytest.mark.asyncio
+async def test_load_links_async_not_found_returns_empty_map():
+    # Given
+    not_found_exception = httpx.HTTPStatusError(
+        "Test Error", request=mock.Mock(), response=mock.Mock(status_code=404)
+    )
+    mock_client = mock_async_client()
+    mock_client.list_links.side_effect = not_found_exception
+
+    # When
+    discovery = await load.load_discovery_async(mock_client)
+
+    # Then
+    assert discovery.links == {}
