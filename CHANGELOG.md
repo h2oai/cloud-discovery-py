@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/h2oai/cloud-discovery-py/compare/v2.1.1...v2.2.0) (2025-01-08)
+
+
+### Features
+
+* ✨ Discover registered links when available ([#112](https://github.com/h2oai/cloud-discovery-py/issues/112)) ([8d584dd](https://github.com/h2oai/cloud-discovery-py/commit/8d584ddf5a437a533b40a6b25460f4028b45f9a6))
+
 ## [2.1.1](https://github.com/h2oai/cloud-discovery-py/compare/v2.1.0...v2.1.1) (2024-11-11)
 
 
