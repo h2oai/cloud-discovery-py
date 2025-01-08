@@ -220,7 +220,6 @@ def test_client_list_links_internal():
     links = cl.list_links()
 
     # Then
-
     assert links == EXPECTED_LINKS_RECORDS
     _assert_pagination_api_calls(route)
 
@@ -237,7 +236,6 @@ def test_client_list_links_public():
     links = cl.list_links()
 
     # Then
-
     assert links == EXPECTED_LINKS_RECORDS
     _assert_pagination_api_calls(route)
 
@@ -255,7 +253,6 @@ async def test_async_client_list_links_internal():
     links = await cl.list_links()
 
     # Then
-
     assert links == EXPECTED_LINKS_RECORDS
     _assert_pagination_api_calls(route)
 
@@ -273,7 +270,6 @@ async def test_async_client_list_links_public():
     links = await cl.list_links()
 
     # Then
-
     assert links == EXPECTED_LINKS_RECORDS
     _assert_pagination_api_calls(route)
 
