@@ -23,19 +23,19 @@ class Service:
     #: Can be the version of the API or the version of
     #: the service. Clients can utilize this information change their behavior
     #: in accessing the service or downloading the correct client version.
-    version: Optional[str]
+    version: Optional[str] = None
 
     #: OAuth 2.0 Scope required to access the service.
     #: Clients request the access token with this scope in order to access the service.
     #: If the scope is not defined (or empty), clients should use
     #: h2o_cloud_platform_scope.
-    oauth2_scope: Optional[str]
+    oauth2_scope: Optional[str] = None
 
     #: Requirement Specifier (PEP 508) for the Python client that can be used for
     #: accessing the service.
     #: Any string that can be `pip install`ed.
     #:     Example: my-client==0.1.0
-    python_client: Optional[str]
+    python_client: Optional[str] = None
 
     @classmethod
     def from_json_dict(cls, json: Mapping[str, str]) -> "Service":
@@ -97,7 +97,7 @@ class Environment:
     #: In the XC YY.MM.V format for released versions (e.g. MC 23.04.01 for managed
     #: cloud or HC 23.01.1 for hybrid cloud). Can be arbitrary string for
     #: testing or special environments.
-    h2o_cloud_version: Optional[str]
+    h2o_cloud_version: Optional[str] = None
 
     @classmethod
     def from_json_dict(cls, json: Mapping[str, str]) -> "Environment":
@@ -154,6 +154,10 @@ def _empty_credentials_factory() -> Mapping[str, Credentials]:
     return types.MappingProxyType({})
 
 
+def _empty_links_factory() -> Mapping[str, Link]:
+    return types.MappingProxyType({})
+
+
 @dataclasses.dataclass(frozen=True)
 class Discovery:
     """Representation of the discovery records."""
@@ -168,7 +172,7 @@ class Discovery:
     clients: Mapping[str, Client]
 
     #: Map of registered links in the `{"link-identifier": Link(...)}` format.
-    links: Mapping[str, Link]
+    links: Mapping[str, Link] = dataclasses.field(default_factory=_empty_links_factory)
 
     #: Map of credentials in the `{"client-identifier": Credentials(...)}` format.
     credentials: Mapping[str, Credentials] = dataclasses.field(
