@@ -113,3 +113,25 @@ def test_link_from_json_dict_with_missing_text():
     assert result == model.Link(
         name="links/test-link", uri="http://test-link.domain:1234", text=None
     )
+
+
+def test_discovery_without_links_ok():
+    """Test that Discovery can be created without explicitly providing links in
+    the constructor to ensure backward compatibility.
+    """
+
+    # When
+    _ = model.Discovery(
+        environment=model.Environment(
+            h2o_cloud_environment="https://test.h2o.ai",
+            issuer_url="https://test.h2o.ai",
+            h2o_cloud_platform_oauth2_scope="test-platform-scope",
+        ),
+        credentials={},
+        services={},
+        clients={},
+        # No links,
+    )
+
+    # Then
+    # No exception is raised.
