@@ -440,25 +440,16 @@ EXPECTED_SERVICES_RECORDS = [
         name="services/test-service-2",
         display_name="Test Service 2",
         uri="http://test-service-2.domain:1234",
-        version=None,
-        oauth2_scope=None,
-        python_client=None,
     ),
     model.Service(
         name="services/test-service-3",
         display_name="Test Service 3",
         uri="http://test-service-3.domain:1234",
-        version=None,
-        oauth2_scope=None,
-        python_client=None,
     ),
     model.Service(
         name="services/test-service-4",
         display_name="Test Service 4",
         uri="http://test-service-4.domain:1234",
-        version=None,
-        oauth2_scope=None,
-        python_client=None,
     ),
 ]
 

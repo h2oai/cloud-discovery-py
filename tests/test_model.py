@@ -82,7 +82,6 @@ def test_environment_from_json_dict_with_missing_version():
         h2o_cloud_environment="https://test.h2o.ai",
         issuer_url="https://test.h2o.ai",
         h2o_cloud_platform_oauth2_scope="test-platform-scope",
-        h2o_cloud_version=None,
     )
 
 
