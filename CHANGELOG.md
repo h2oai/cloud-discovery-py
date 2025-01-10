@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/h2oai/cloud-discovery-py/compare/v2.2.0...v2.2.1) (2025-01-09)
+
+
+### Bug Fixes
+
+* 🐛 Make addition of links to the discovery model backward compatible ([#115](https://github.com/h2oai/cloud-discovery-py/issues/115)) ([fd994c4](https://github.com/h2oai/cloud-discovery-py/commit/fd994c4fdd5a07f4aaeae9e5ca4445c5ef309658))
+
 ## [2.2.0](https://github.com/h2oai/cloud-discovery-py/compare/v2.1.1...v2.2.0) (2025-01-08)
 
 
