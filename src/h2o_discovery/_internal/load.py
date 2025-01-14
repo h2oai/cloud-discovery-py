@@ -1,3 +1,4 @@
+import asyncio
 import json
 import os
 import types
@@ -31,16 +32,27 @@ def load_discovery(cl: client.Client) -> model.Discovery:
 async def load_discovery_async(cl: client.AsyncClient) -> model.Discovery:
     """Loads the discovery records from the Discovery Service."""
     try:
-        environment = await cl.get_environment()
-        services = _get_service_map(await cl.list_services())
-        clients = _get_client_map(await cl.list_clients())
-        links = _get_link_map(await _list_links_async(cl))
+        return await _gather_discovery_async(cl)
     except Exception as e:
         _handle_specific_client_exceptions(e)
         raise
 
+
+async def _gather_discovery_async(cl: client.AsyncClient) -> model.Discovery:
+    environment_future = cl.get_environment()
+    services_future = cl.list_services()
+    clients_future = cl.list_clients()
+    links_future = _list_links_async(cl)
+
+    environment, services, clients, links = await asyncio.gather(
+        environment_future, services_future, clients_future, links_future
+    )
+
     return model.Discovery(
-        environment=environment, services=services, clients=clients, links=links
+        environment=environment,
+        services=_get_service_map(services),
+        clients=_get_client_map(clients),
+        links=_get_link_map(links),
     )
 
 
