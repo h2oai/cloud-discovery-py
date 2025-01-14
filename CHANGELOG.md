@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.2](https://github.com/h2oai/cloud-discovery-py/compare/v2.2.1...v2.2.2) (2025-01-14)
+
+
+### Performance Improvements
+
+* ⚡️ Fetch data concurrently in async mode ([#117](https://github.com/h2oai/cloud-discovery-py/issues/117)) ([2a8f8ea](https://github.com/h2oai/cloud-discovery-py/commit/2a8f8eaab15953f91dec908e4d77c84c039f14a4))
+
 ## [2.2.1](https://github.com/h2oai/cloud-discovery-py/compare/v2.2.0...v2.2.1) (2025-01-09)
 
 
