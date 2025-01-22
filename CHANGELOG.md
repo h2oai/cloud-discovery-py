@@ -1,5 +1,23 @@
 # Changelog
 
+## [3.0.0](https://github.com/h2oai/cloud-discovery-py/compare/v2.2.1...v3.0.0) (2025-01-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* Now requires requires `httpx >= 0.23.0`
+* Do not officially support Python 3.8 anymore
+
+### Performance Improvements
+
+* ⚡️ Fetch data concurrently in async mode ([#117](https://github.com/h2oai/cloud-discovery-py/issues/117)) ([2a8f8ea](https://github.com/h2oai/cloud-discovery-py/commit/2a8f8eaab15953f91dec908e4d77c84c039f14a4))
+
+
+### Build System
+
+* Do not officially support Python 3.8 anymore ([5a6972e](https://github.com/h2oai/cloud-discovery-py/commit/5a6972e233288e9b2cda39bbdd43f108a2b81e9b))
+* Now requires requires `httpx &gt;= 0.23.0` ([5a6972e](https://github.com/h2oai/cloud-discovery-py/commit/5a6972e233288e9b2cda39bbdd43f108a2b81e9b))
+
 ## [2.2.1](https://github.com/h2oai/cloud-discovery-py/compare/v2.2.0...v2.2.1) (2025-01-09)
 
 
