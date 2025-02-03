@@ -115,7 +115,7 @@ def test_link_from_json_dict_with_missing_text():
     )
 
 
-def test_discovery_without_links_ok():
+def test_discovery_without_new_entities_ok():
     """Test that Discovery can be created without explicitly providing links in
     the constructor to ensure backward compatibility.
     """
@@ -130,7 +130,7 @@ def test_discovery_without_links_ok():
         credentials={},
         services={},
         clients={},
-        # No links,
+        # No links nor components.
     )
 
     # Then

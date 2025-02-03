@@ -133,6 +133,35 @@ class Link:
 
 
 @dataclasses.dataclass(frozen=True)
+class Component:
+    """Representation of a registered component record."""
+
+    #: Name of the Component. For example: "components/h2o-component".
+    name: str
+
+    #: Name of the Component that can be displayed on the front-end.
+    display_name: str
+
+    #: Version of the component.
+    version: str
+
+    #: Description of the Component. This will be displayed on the front-end.
+    #: This should explain what the component does and why it belongs
+    #: in the environment.
+    description: Optional[str] = None
+
+    @classmethod
+    def from_json_dict(cls, json: Mapping[str, str]) -> "Component":
+        """Create a Component from a JSON dict returned by the server."""
+        return cls(
+            name=json["name"],
+            display_name=json["displayName"],
+            version=json["version"],
+            description=json.get("description"),
+        )
+
+
+@dataclasses.dataclass(frozen=True)
 class Credentials:
     """Contain credentials associated with single registered client.
 
@@ -158,6 +187,10 @@ def _empty_links_factory() -> Mapping[str, Link]:
     return types.MappingProxyType({})
 
 
+def _empty_components_factory() -> Mapping[str, Component]:
+    return types.MappingProxyType({})
+
+
 @dataclasses.dataclass(frozen=True)
 class Discovery:
     """Representation of the discovery records."""
@@ -173,6 +206,12 @@ class Discovery:
 
     #: Map of registered links in the `{"link-identifier": Link(...)}` format.
     links: Mapping[str, Link] = dataclasses.field(default_factory=_empty_links_factory)
+
+    #: Map of registered components in the
+    #: `{"component-identifier": Component(...)}` format.
+    components: Mapping[str, Component] = dataclasses.field(
+        default_factory=_empty_components_factory
+    )
 
     #: Map of credentials in the `{"client-identifier": Credentials(...)}` format.
     credentials: Mapping[str, Credentials] = dataclasses.field(

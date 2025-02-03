@@ -21,11 +21,16 @@ def load_discovery(cl: client.Client) -> model.Discovery:
         services = _get_service_map(cl.list_services())
         clients = _get_client_map(cl.list_clients())
         links = _get_link_map(_list_links(cl))
+        components = _get_component_map(_list_components(cl))
     except Exception as e:
         _handle_specific_client_exceptions(e)
         raise
     return model.Discovery(
-        environment=environment, services=services, clients=clients, links=links
+        environment=environment,
+        services=services,
+        clients=clients,
+        links=links,
+        components=components,
     )
 
 
@@ -43,9 +48,14 @@ async def _gather_discovery_async(cl: client.AsyncClient) -> model.Discovery:
     services_future = cl.list_services()
     clients_future = cl.list_clients()
     links_future = _list_links_async(cl)
+    components_future = _list_components_async(cl)
 
-    environment, services, clients, links = await asyncio.gather(
-        environment_future, services_future, clients_future, links_future
+    environment, services, clients, links, components = await asyncio.gather(
+        environment_future,
+        services_future,
+        clients_future,
+        links_future,
+        components_future,
     )
 
     return model.Discovery(
@@ -53,6 +63,7 @@ async def _gather_discovery_async(cl: client.AsyncClient) -> model.Discovery:
         services=_get_service_map(services),
         clients=_get_client_map(clients),
         links=_get_link_map(links),
+        components=_get_component_map(components),
     )
 
 
@@ -73,6 +84,28 @@ async def _list_links_async(cl: client.AsyncClient) -> List[model.Link]:
     except Exception as e:
         # Links are added in the server version 2.5.0. In order to have client that
         # is backwards compatible, we won't fail if the links are not available.
+        if isinstance(e, httpx.HTTPStatusError) and e.response.status_code == 404:
+            return []
+        raise
+
+
+def _list_components(cl: client.Client) -> List[model.Component]:
+    try:
+        return cl.list_components()
+    except Exception as e:
+        # Components are added in the server version 2.6.0. In order to have client that
+        # is backwards compatible, we won't fail if the components are not available.
+        if isinstance(e, httpx.HTTPStatusError) and e.response.status_code == 404:
+            return []
+        raise
+
+
+async def _list_components_async(cl: client.AsyncClient) -> List[model.Component]:
+    try:
+        return await cl.list_components()
+    except Exception as e:
+        # Components are added in the server version 2.6.0. In order to have client that
+        # is backwards compatible, we won't fail if the components are not available.
         if isinstance(e, httpx.HTTPStatusError) and e.response.status_code == 404:
             return []
         raise
@@ -118,6 +151,15 @@ def _get_link_map(links: Iterable[model.Link]) -> Mapping[str, model.Link]:
     return types.MappingProxyType(out)
 
 
+def _get_component_map(
+    components: Iterable[model.Component],
+) -> Mapping[str, model.Component]:
+    out = {}
+    for c in components:
+        out[_component_key(c.name)] = c
+    return types.MappingProxyType(out)
+
+
 _SERVICES_COLLECTION_PREFIX = "services/"
 
 
@@ -143,6 +185,15 @@ def _link_key(name: str) -> str:
     if name.startswith(_LINKS_COLLECTION_PREFIX):
         return name[len(_LINKS_COLLECTION_PREFIX) :]
     raise ValueError(f"invalid link name: {name}")
+
+
+_COMPONENTS_COLLECTION_PREFIX = "components/"
+
+
+def _component_key(name: str) -> str:
+    if name.startswith(_COMPONENTS_COLLECTION_PREFIX):
+        return name[len(_COMPONENTS_COLLECTION_PREFIX) :]
+    raise ValueError(f"invalid component name: {name}")
 
 
 _ENV_ERROR = error.H2OCloudEnvironmentError(

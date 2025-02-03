@@ -18,6 +18,8 @@ def mock_async_client():
     client.list_clients.return_value.set_result({})
     client.list_links.return_value = asyncio.Future()
     client.list_links.return_value.set_result({})
+    client.list_components.return_value = asyncio.Future()
+    client.list_components.return_value.set_result({})
 
     return client
 
@@ -29,6 +31,7 @@ def mock_sync_client():
     client.list_clients.return_value = {}
     client.list_clients.return_value = {}
     client.list_links.return_value = {}
+    client.list_components.return_value = {}
 
     return client
 
@@ -196,3 +199,68 @@ async def test_load_links_async_not_found_returns_empty_map():
 
     # Then
     assert discovery.links == {}
+
+
+COMPONENT_RECORD = model.Component(
+    name="components/test-component",
+    display_name="Test Component",
+    description="Test Description",
+    version="1.0.0",
+)
+
+
+def test_load_components():
+    # Given
+    mock_client = mock_sync_client()
+    mock_client.list_components.return_value = [COMPONENT_RECORD]
+
+    # When
+    discovery = load.load_discovery(mock_client)
+
+    # Then
+    assert discovery.components["test-component"] == COMPONENT_RECORD
+
+
+@pytest.mark.asyncio
+async def test_load_components_async():
+    # Given
+    mock_client = mock_async_client()
+    mock_client.list_components.return_value = asyncio.Future()
+    mock_client.list_components.return_value.set_result([COMPONENT_RECORD])
+
+    # When
+    discovery = await load.load_discovery_async(mock_client)
+
+    # Then
+    assert discovery.components["test-component"] == COMPONENT_RECORD
+
+
+def test_load_components_not_found_returns_empty_map():
+    # Given
+    not_found_exception = httpx.HTTPStatusError(
+        "Test Error", request=mock.Mock(), response=mock.Mock(status_code=404)
+    )
+    mock_client = mock_sync_client()
+    mock_client.list_components.side_effect = not_found_exception
+
+    # When
+    discovery = load.load_discovery(mock_client)
+
+    # Then
+    assert discovery.components == {}
+
+
+@pytest.mark.asyncio
+async def test_load_components_async_not_found_returns_empty_map():
+    # Given
+    not_found_exception = httpx.HTTPStatusError(
+        "Test Error", request=mock.Mock(), response=mock.Mock(status_code=404)
+    )
+    mock_client = mock_async_client()
+    mock_client.list_components.side_effect = not_found_exception
+
+    # When
+    discovery = await load.load_discovery_async(mock_client)
+
+    # Then
+    assert discovery.components == {}
