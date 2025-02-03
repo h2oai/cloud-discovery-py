@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/h2oai/cloud-discovery-py/compare/v3.0.0...v3.1.0) (2025-02-03)
+
+
+### Features
+
+* ✨ Discover registered components when available ([#119](https://github.com/h2oai/cloud-discovery-py/issues/119)) ([03aed56](https://github.com/h2oai/cloud-discovery-py/commit/03aed56bb1612a4ca3be4cd03f554654f95920ce))
+
 ## [3.0.0](https://github.com/h2oai/cloud-discovery-py/compare/v2.2.1...v3.0.0) (2025-01-22)
 
 
