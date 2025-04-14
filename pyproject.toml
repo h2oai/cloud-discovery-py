@@ -16,6 +16,7 @@ classifiers = [
 ]
 dependencies = [
   "httpx>=0.23",
+  "httpx>=0.25.1; python_version >= '3.14'",
   "tomli >= 1.1.0 ; python_version < '3.11'",
 ]
 description = 'H2O Cloud Discovery Python CLient'
@@ -39,7 +40,11 @@ packages = ["src/h2o_discovery"]
 
 [[tool.hatch.envs.test.matrix]]
 httpx = ["httpx0.23", "httpx0.24", "httpx0.25", "httpx0.26", "httpx0.27", "httpx0.28"]
-python = ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+python = ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+[[tool.hatch.envs.test.matrix]]
+httpx = ["httpx0.25", "httpx0.26", "httpx0.27", "httpx0.28"]
+python = ["3.14"]
 
 [tool.hatch.envs.test.overrides]
 matrix.httpx.dependencies = [
