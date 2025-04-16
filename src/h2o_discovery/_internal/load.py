@@ -5,13 +5,13 @@ import types
 from typing import Iterable
 from typing import List
 from typing import Mapping
-from typing import Optional
 
 import httpx
 
 from h2o_discovery import error
 from h2o_discovery import model
 from h2o_discovery._internal import client
+from h2o_discovery._internal import config
 
 
 def load_discovery(cl: client.Client) -> model.Discovery:
@@ -112,17 +112,20 @@ async def _list_components_async(cl: client.AsyncClient) -> List[model.Component
 
 
 def load_credentials(
-    clients: Mapping[str, model.Client], config_tokens: Optional[Mapping[str, str]]
+    discovery: model.Discovery, cfg: config.Config
 ) -> Mapping[str, model.Credentials]:
     """Loads client credentials from the environment or tokens loaded from the
     config.
     """
+    h2o_cloud_environment = discovery.environment.h2o_cloud_environment.rstrip("/")
+    config_matches = cfg.endpoint and h2o_cloud_environment == cfg.endpoint.rstrip("/")
     tokens: Mapping[str, str] = {}
-    if config_tokens is not None:
-        tokens = config_tokens
+    if config_matches and cfg.tokens is not None:
+        # Load tokens from the config only when the environments match.
+        tokens = cfg.tokens
 
     out = {}
-    for name, cl in clients.items():
+    for name, cl in discovery.clients.items():
         env_name = f"H2O_CLOUD_CLIENT_{name.upper()}_TOKEN"
         token = os.environ.get(env_name) or tokens.get(cl.oauth2_client_id)
         if token:

@@ -60,10 +60,7 @@ def discover(
     discovery = load.load_discovery(
         client.Client(uri=uri, timeout=http_timeout, ssl_context=ssl_context)
     )
-    credentials = load.load_credentials(
-        clients=discovery.clients, config_tokens=cfg.tokens
-    )
-
+    credentials = load.load_credentials(discovery=discovery, cfg=cfg)
     return dataclasses.replace(discovery, credentials=credentials)
 
 
@@ -110,10 +107,7 @@ async def discover_async(
     discovery = await load.load_discovery_async(
         client.AsyncClient(uri=uri, timeout=http_timeout, ssl_context=ssl_context)
     )
-    credentials = load.load_credentials(
-        clients=discovery.clients, config_tokens=cfg.tokens
-    )
-
+    credentials = load.load_credentials(discovery=discovery, cfg=cfg)
     return dataclasses.replace(discovery, credentials=credentials)
 
 
