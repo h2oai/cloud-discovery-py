@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/h2oai/cloud-discovery-py/compare/v3.1.0...v3.2.0) (2025-04-16)
+
+
+### Features
+
+* Improve compatibility with Python 3.14 ([#121](https://github.com/h2oai/cloud-discovery-py/issues/121)) ([aa7e702](https://github.com/h2oai/cloud-discovery-py/commit/aa7e7026c8c68f7ba16b8064effd4565764950ff))
+
 ## [3.1.0](https://github.com/h2oai/cloud-discovery-py/compare/v3.0.0...v3.1.0) (2025-02-03)
 
 
