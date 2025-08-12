@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.2.0](https://github.com/h2oai/cloud-discovery-py/compare/v3.1.0...v3.2.0) (2025-08-12)
+
+
+### Features
+
+* Improve compatibility with Python 3.14 ([#121](https://github.com/h2oai/cloud-discovery-py/issues/121)) ([aa7e702](https://github.com/h2oai/cloud-discovery-py/commit/aa7e7026c8c68f7ba16b8064effd4565764950ff))
+
+
+### Bug Fixes
+
+* 🐛 don't load credentials when config does not match the discovered environment ([#122](https://github.com/h2oai/cloud-discovery-py/issues/122)) ([2305d75](https://github.com/h2oai/cloud-discovery-py/commit/2305d752185d488871041de5544c268ec6aa6903))
+
 ## [3.1.0](https://github.com/h2oai/cloud-discovery-py/compare/v3.0.0...v3.1.0) (2025-02-03)
 
 
