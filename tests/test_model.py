@@ -85,7 +85,7 @@ def test_environment_from_json_dict_with_missing_version():
     )
 
 
-def test_link_from_json_dictt():
+def test_link_from_json_dict():
     # Given
     json = {
         "name": "links/test-link",
@@ -112,6 +112,44 @@ def test_link_from_json_dict_with_missing_text():
     # Then
     assert result == model.Link(
         name="links/test-link", uri="http://test-link.domain:1234", text=None
+    )
+
+
+def test_component_from_json_dict():
+    # Given
+    json = {
+        "name": "components/test-component",
+        "displayName": "Test Component",
+        "description": "Test Description",
+        "version": "1.0.0",
+    }
+
+    # When
+    result = model.Component.from_json_dict(json)
+
+    # Then
+    assert result == model.Component(
+        name="components/test-component",
+        display_name="Test Component",
+        description="Test Description",
+        version="1.0.0",
+    )
+
+
+def test_component_from_json_dict_with_missing_description():
+    # Given
+    json = {
+        "name": "components/test-component",
+        "displayName": "Test Component",
+        "version": "1.0.0",
+    }
+
+    # When
+    result = model.Component.from_json_dict(json)
+
+    # Then
+    assert result == model.Component(
+        name="components/test-component", display_name="Test Component", version="1.0.0"
     )
 
 

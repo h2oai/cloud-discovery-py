@@ -275,6 +275,72 @@ async def test_async_client_list_links_public():
 
 
 @respx.mock
+def test_client_list_components_internal():
+    # Given
+    route = respx.get("http://test.example.com:1234/v1/components")
+    route.side_effect = COMPONENTS_RESPONSES
+
+    cl = client.Client("http://test.example.com:1234")
+
+    # When
+    components = cl.list_components()
+
+    # Then
+    assert components == EXPECTED_COMPONENTS_RECORDS
+    _assert_pagination_api_calls(route)
+
+
+@respx.mock
+def test_client_list_components_public():
+    # Given
+    route = respx.get("https://test.example.com/.ai.h2o.cloud.discovery/v1/components")
+    route.side_effect = COMPONENTS_RESPONSES
+
+    cl = client.Client("https://test.example.com/.ai.h2o.cloud.discovery")
+
+    # When
+    components = cl.list_components()
+
+    # Then
+    assert components == EXPECTED_COMPONENTS_RECORDS
+    _assert_pagination_api_calls(route)
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_client_list_components_internal():
+    # Given
+    route = respx.get("https://test.example.com:1234/v1/components")
+    route.side_effect = COMPONENTS_RESPONSES
+
+    cl = client.AsyncClient("https://test.example.com:1234")
+
+    # When
+    components = await cl.list_components()
+
+    # Then
+    assert components == EXPECTED_COMPONENTS_RECORDS
+    _assert_pagination_api_calls(route)
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_client_list_components_public():
+    # Given
+    route = respx.get("https://test.example.com/.ai.h2o.cloud.discovery/v1/components")
+    route.side_effect = COMPONENTS_RESPONSES
+
+    cl = client.AsyncClient("https://test.example.com/.ai.h2o.cloud.discovery")
+
+    # When
+    components = await cl.list_components()
+
+    # Then
+    assert components == EXPECTED_COMPONENTS_RECORDS
+    _assert_pagination_api_calls(route)
+
+
+@respx.mock
 def test_client_list_services_can_handle_empty_response():
     # Given
     respx.get("https://test.example.com/v1/services").respond(json={})
@@ -577,5 +643,78 @@ EXPECTED_LINKS_RECORDS = [
     ),
     model.Link(
         name="links/test-link-4", uri="http://test-link-4.domain:1234", text=None
+    ),
+]
+
+COMPONENTS_RESPONSES = [
+    httpx.Response(
+        200,
+        json={
+            "components": [
+                {
+                    "name": "components/test-component-1",
+                    "displayName": "Test Component 1",
+                    "version": "1.0.0",
+                    "description": "Test Description 1",
+                },
+                {
+                    "name": "components/test-component-2",
+                    "displayName": "Test Component 2",
+                    "version": "2.0.0",
+                },
+            ],
+            "nextPageToken": "next-page-token-1",
+        },
+    ),
+    httpx.Response(
+        200,
+        json={
+            "components": [
+                {
+                    "name": "components/test-component-3",
+                    "displayName": "Test Component 3",
+                    "version": "3.0.0",
+                }
+            ],
+            "nextPageToken": "next-page-token-2",
+        },
+    ),
+    httpx.Response(
+        200,
+        json={
+            "components": [
+                {
+                    "name": "components/test-component-4",
+                    "displayName": "Test Component 4",
+                    "version": "4.0.0",
+                    "description": "Test Description 4",
+                }
+            ]
+        },
+    ),
+]
+
+EXPECTED_COMPONENTS_RECORDS = [
+    model.Component(
+        name="components/test-component-1",
+        display_name="Test Component 1",
+        description="Test Description 1",
+        version="1.0.0",
+    ),
+    model.Component(
+        name="components/test-component-2",
+        display_name="Test Component 2",
+        version="2.0.0",
+    ),
+    model.Component(
+        name="components/test-component-3",
+        display_name="Test Component 3",
+        version="3.0.0",
+    ),
+    model.Component(
+        name="components/test-component-4",
+        display_name="Test Component 4",
+        version="4.0.0",
+        description="Test Description 4",
     ),
 ]
