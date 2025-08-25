@@ -122,6 +122,7 @@ def test_component_from_json_dict():
         "displayName": "Test Component",
         "description": "Test Description",
         "version": "1.0.0",
+        "documentation_uri": "https://example.com/docs/test-component",
     }
 
     # When
@@ -136,7 +137,7 @@ def test_component_from_json_dict():
     )
 
 
-def test_component_from_json_dict_with_missing_description():
+def test_component_from_json_dict_with_missing_optional_fields():
     # Given
     json = {
         "name": "components/test-component",

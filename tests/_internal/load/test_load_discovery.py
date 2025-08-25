@@ -206,6 +206,7 @@ COMPONENT_RECORD = model.Component(
     display_name="Test Component",
     description="Test Description",
     version="1.0.0",
+    documentation_uri="http://test-docs.domain:1234",
 )
 
 

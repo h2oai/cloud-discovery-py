@@ -656,6 +656,7 @@ COMPONENTS_RESPONSES = [
                     "displayName": "Test Component 1",
                     "version": "1.0.0",
                     "description": "Test Description 1",
+                    "documentationUri": "https://example.com/docs/test-component-1",
                 },
                 {
                     "name": "components/test-component-2",
@@ -674,6 +675,7 @@ COMPONENTS_RESPONSES = [
                     "name": "components/test-component-3",
                     "displayName": "Test Component 3",
                     "version": "3.0.0",
+                    "documentationUri": "https://example.com/docs/test-component-3",
                 }
             ],
             "nextPageToken": "next-page-token-2",
@@ -700,6 +702,7 @@ EXPECTED_COMPONENTS_RECORDS = [
         display_name="Test Component 1",
         description="Test Description 1",
         version="1.0.0",
+        documentation_uri="https://example.com/docs/test-component-1",
     ),
     model.Component(
         name="components/test-component-2",
@@ -710,6 +713,7 @@ EXPECTED_COMPONENTS_RECORDS = [
         name="components/test-component-3",
         display_name="Test Component 3",
         version="3.0.0",
+        documentation_uri="https://example.com/docs/test-component-3",
     ),
     model.Component(
         name="components/test-component-4",
