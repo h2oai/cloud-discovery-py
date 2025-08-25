@@ -38,6 +38,9 @@ include = ["/src", "/tests", "CHANGELOG.md"]
 [tool.hatch.build.targets.wheel]
 packages = ["src/h2o_discovery"]
 
+[tool.hatch.envs.default]
+installer = "uv"
+
 [[tool.hatch.envs.test.matrix]]
 httpx = ["httpx0.23", "httpx0.24", "httpx0.25", "httpx0.26", "httpx0.27", "httpx0.28"]
 python = ["3.9", "3.10", "3.11", "3.12", "3.13"]
