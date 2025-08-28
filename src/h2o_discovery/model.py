@@ -150,6 +150,10 @@ class Component:
     #: in the environment.
     description: Optional[str] = None
 
+    #: Link to the documentation of the Component. This will be used on the front-end
+    #: (browser) as a link to the component's documentation.
+    documentation_uri: Optional[str] = None
+
     @classmethod
     def from_json_dict(cls, json: Mapping[str, str]) -> "Component":
         """Create a Component from a JSON dict returned by the server."""
@@ -158,6 +162,7 @@ class Component:
             display_name=json["displayName"],
             version=json["version"],
             description=json.get("description"),
+            documentation_uri=json.get("documentationUri"),
         )
 
 
