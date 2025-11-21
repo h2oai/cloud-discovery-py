@@ -12,6 +12,7 @@ jobs:
     name: Build and publish Python distributions packages to PyPI
     runs-on: ubuntu-latest
     needs: [test]
+    environment: pypi
 
     steps:
       - uses: actions/checkout@v6
@@ -37,7 +38,7 @@ jobs:
           print-hash: true
 
           # Attentions are disabled temporarily. They do seem to work with the
-          # reusable wokrflow.
+          # reusable workflow.
           # - https://github.com/pypa/gh-action-pypi-publish/issues/166
           # - https://github.com/pypa/gh-action-pypi-publish/issues/283
           attestations: false
