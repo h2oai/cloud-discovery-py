@@ -87,6 +87,8 @@ await home.list_objects()
 
 ## Development
 
+Please see [RELEASE.md](RELEASE.md) for the release process.
+
 Project is managed using [Hatch](https://hatch.pypa.io/latest/).
 
 ### Testing
