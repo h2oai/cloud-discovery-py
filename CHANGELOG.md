@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.1](https://github.com/h2oai/cloud-discovery-py/compare/v3.2.0...v3.2.1) (2026-01-19)
+
+
+### Documentation
+
+* 📝 describe the release proces ([#133](https://github.com/h2oai/cloud-discovery-py/issues/133)) ([9b6f1a8](https://github.com/h2oai/cloud-discovery-py/commit/9b6f1a8b58d3c0efba96b698f37e74e68a659677))
+
 ## [3.2.0](https://github.com/h2oai/cloud-discovery-py/compare/v3.1.0...v3.2.0) (2025-08-28)
 
 
