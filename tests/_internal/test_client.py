@@ -420,6 +420,49 @@ async def test_async_client_list_links_can_handle_empty_response():
     # Then
     assert links == []
 
+@respx.mock
+def test_follows_redirect():
+    respx.get("http://test.example.com/v1/environment").mock(
+        return_value=httpx.Response(
+            status_code=301,
+            headers={"Location": "https://test.example.com/v1/environment"},
+        )
+    )
+
+    respx.get("https://test.example.com/v1/environment").mock(
+        return_value=httpx.Response(
+            status_code=200,
+            json=ENVIRONMENT_JSON
+        )
+    )
+
+    client_test = client.Client("http://test.example.com", follow_redirects=True)
+    resp = client_test.get_environment()
+
+    assert resp.h2o_cloud_environment== ENVIRONMENT_JSON["environment"]["h2oCloudEnvironment"]
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_follows_redirect():
+    respx.get("http://test.example.com/v1/environment").mock(
+        return_value=httpx.Response(
+            status_code=301,
+            headers={"Location": "https://test.example.com/v1/environment"},
+        )
+    )
+
+    respx.get("https://test.example.com/v1/environment").mock(
+        return_value=httpx.Response(
+            status_code=200,
+            json=ENVIRONMENT_JSON
+        )
+    )
+
+    client_async_test = client.AsyncClient("http://test.example.com", follow_redirects=True)
+    resp = await client_async_test.get_environment()
+    assert resp.h2o_cloud_environment== ENVIRONMENT_JSON["environment"]["h2oCloudEnvironment"]
+
 
 def _assert_pagination_api_calls(route):
     assert route.call_count == 3
