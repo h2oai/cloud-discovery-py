@@ -86,7 +86,10 @@ class Client(_BaseClient):
 
     def _client(self) -> httpx.Client:
         return httpx.Client(
-            base_url=self._uri, timeout=self._timeout, verify=self._verify, follow_redirects=self.follow_redirects
+            base_url=self._uri,
+            timeout=self._timeout,
+            verify=self._verify,
+            follow_redirects=self.follow_redirects,
         )
 
 
@@ -163,7 +166,10 @@ class AsyncClient(_BaseClient):
 
     def _client(self) -> httpx.AsyncClient:
         return httpx.AsyncClient(
-            base_url=self._uri, timeout=self._timeout, verify=self._verify, follow_redirects=self.follow_redirects
+            base_url=self._uri,
+            timeout=self._timeout,
+            verify=self._verify,
+            follow_redirects=self.follow_redirects,
         )
 
 
