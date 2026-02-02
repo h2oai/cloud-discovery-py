@@ -467,6 +467,43 @@ async def test_async_follows_redirect():
     )
 
 
+@respx.mock
+def test_error_without_using_follow_redirects_true():
+    respx.get("http://test.example.com/v1/environment").mock(
+        return_value=httpx.Response(
+            status_code=301,
+            headers={"Location": "https://test.example.com/v1/environment"},
+        )
+    )
+    client_test = client.Client("http://test.example.com", follow_redirects=False)
+
+    with pytest.raises(httpx.HTTPStatusError) as exc:
+        resp = client_test.get_environment()
+        resp.raise_for_status()
+
+    assert exc.value.response.status_code == 301
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_error_without_using_follow_redirects_true():
+    respx.get("http://test.example.com/v1/environment").mock(
+        return_value=httpx.Response(
+            status_code=301,
+            headers={"Location": "https://test.example.com/v1/environment"},
+        )
+    )
+
+    client_async_test = client.AsyncClient(
+        "http://test.example.com", follow_redirects=False
+    )
+    with pytest.raises(httpx.HTTPStatusError) as exc:
+        resp = await client_async_test.get_environment()
+        resp.raise_for_status()
+
+    assert exc.value.response.status_code == 301
+
+
 def _assert_pagination_api_calls(route):
     assert route.call_count == 3
     assert not route.calls[0].request.url.query
