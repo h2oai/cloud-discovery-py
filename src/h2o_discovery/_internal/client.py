@@ -28,7 +28,7 @@ class _BaseClient:
     ):
         self._uri = uri
         self._verify = ssl_context or ssl.create_default_context()
-        self.follow_redirects = follow_redirects
+        self._follow_redirects = follow_redirects
         self._timeout = 5.0
         if timeout is not None:
             self._timeout = timeout.total_seconds()
@@ -89,7 +89,7 @@ class Client(_BaseClient):
             base_url=self._uri,
             timeout=self._timeout,
             verify=self._verify,
-            follow_redirects=self.follow_redirects,
+            follow_redirects=self._follow_redirects,
         )
 
 
@@ -169,7 +169,7 @@ class AsyncClient(_BaseClient):
             base_url=self._uri,
             timeout=self._timeout,
             verify=self._verify,
-            follow_redirects=self.follow_redirects,
+            follow_redirects=self._follow_redirects,
         )
 
 
