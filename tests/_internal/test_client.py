@@ -421,6 +421,92 @@ async def test_async_client_list_links_can_handle_empty_response():
     assert links == []
 
 
+@respx.mock
+def test_client_follows_redirect():
+    # Given
+    respx.get("http://test.example.com/v1/environment").respond(
+        status_code=301, headers={"Location": "https://test.example.com/v1/environment"}
+    )
+
+    respx.get("https://test.example.com/v1/environment").respond(
+        status_code=200, json=ENVIRONMENT_JSON
+    )
+    client_test = client.Client("http://test.example.com", follow_redirects=True)
+
+    # When
+    resp = client_test.get_environment()
+
+    # Then
+    assert (
+        resp.h2o_cloud_environment
+        == ENVIRONMENT_JSON["environment"]["h2oCloudEnvironment"]
+    )
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_client_follows_redirect():
+    # Given
+    respx.get("http://test.example.com/v1/environment").respond(
+        status_code=301, headers={"Location": "https://test.example.com/v1/environment"}
+    )
+
+    respx.get("https://test.example.com/v1/environment").respond(
+        status_code=200, json=ENVIRONMENT_JSON
+    )
+
+    client_async_test = client.AsyncClient(
+        "http://test.example.com", follow_redirects=True
+    )
+
+    # When
+    resp = await client_async_test.get_environment()
+
+    # Then
+    assert (
+        resp.h2o_cloud_environment
+        == ENVIRONMENT_JSON["environment"]["h2oCloudEnvironment"]
+    )
+
+
+@respx.mock
+def test_client_301_redirect_raises_when_follow_redirects_false():
+    # Given
+    respx.get("http://test.example.com/v1/environment").respond(
+        status_code=301, headers={"Location": "https://test.example.com/v1/environment"}
+    )
+    client_test = client.Client("http://test.example.com", follow_redirects=False)
+
+    # When
+    with pytest.raises(httpx.HTTPStatusError) as exc:
+        resp = client_test.get_environment()
+        resp.raise_for_status()
+
+    # Then
+    assert exc.value.response.status_code == 301
+
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_async_client_301_redirect_raises_when_follow_redirects_false():
+    # Given
+    respx.get("http://test.example.com/v1/environment").respond(
+        status_code=301, headers={"Location": "https://test.example.com/v1/environment"}
+    )
+
+    client_async_test = client.AsyncClient(
+        "http://test.example.com", follow_redirects=False
+    )
+
+    # When
+    with pytest.raises(httpx.HTTPStatusError) as exc:
+        resp = await client_async_test.get_environment()
+        resp.raise_for_status()
+
+    # Then
+    assert exc.value.response.status_code == 301
+
+
 def _assert_pagination_api_calls(route):
     assert route.call_count == 3
     assert not route.calls[0].request.url.query

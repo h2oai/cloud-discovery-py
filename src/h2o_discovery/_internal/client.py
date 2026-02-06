@@ -24,10 +24,11 @@ class _BaseClient:
         uri: str,
         timeout: Optional[datetime.timedelta] = None,
         ssl_context: Optional[ssl.SSLContext] = None,
+        follow_redirects: bool = True,
     ):
         self._uri = uri
         self._verify = ssl_context or ssl.create_default_context()
-
+        self._follow_redirects = follow_redirects
         self._timeout = 5.0
         if timeout is not None:
             self._timeout = timeout.total_seconds()
@@ -85,7 +86,10 @@ class Client(_BaseClient):
 
     def _client(self) -> httpx.Client:
         return httpx.Client(
-            base_url=self._uri, timeout=self._timeout, verify=self._verify
+            base_url=self._uri,
+            timeout=self._timeout,
+            verify=self._verify,
+            follow_redirects=self._follow_redirects,
         )
 
 
@@ -162,7 +166,10 @@ class AsyncClient(_BaseClient):
 
     def _client(self) -> httpx.AsyncClient:
         return httpx.AsyncClient(
-            base_url=self._uri, timeout=self._timeout, verify=self._verify
+            base_url=self._uri,
+            timeout=self._timeout,
+            verify=self._verify,
+            follow_redirects=self._follow_redirects,
         )
 
 
