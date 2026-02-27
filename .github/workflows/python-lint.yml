@@ -28,7 +28,7 @@ jobs:
 
       - name: Install Hatch
         run: |
-          pipx install hatch
+          uv tools install hatch
           hatch --version
 
 
