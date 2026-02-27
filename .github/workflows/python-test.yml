@@ -32,8 +32,10 @@ jobs:
             ${{ runner.os }}-pip
 
       - name: Install Hatch
+        # We inject virtualenv<21 as an temporary remedy for https://github.com/pypa/hatch/issues/2193.
         run: |
           pipx install hatch
+          pipx inject hatch "virtualenv<21" --force
           hatch --version
 
       - name: Run Tests in Python ${{ matrix.python-version }}
