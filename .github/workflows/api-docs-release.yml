@@ -8,6 +8,8 @@ on:
         description: 'The tag of the release where to upload the API docs'
         required: true
 
+permissions:
+  contents: write
 
 jobs:
   release-api-docs:
