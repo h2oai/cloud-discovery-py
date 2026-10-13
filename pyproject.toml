@@ -60,8 +60,8 @@ matrix.httpx.dependencies = [
 
 [tool.hatch.envs.test]
 dependencies = [
-  "pytest-asyncio==0.25.1",
-  "pytest==8.3",
+  "pytest-asyncio~=1.4",
+  "pytest~=9.1",
   "respx>=0.16",
 ]
 dev-mode = false
