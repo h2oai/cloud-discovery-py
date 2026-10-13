@@ -2,9 +2,6 @@ import dataclasses
 import datetime
 import os
 import ssl
-from typing import Optional
-from typing import Tuple
-from typing import Union
 
 from h2o_discovery import error
 from h2o_discovery import model
@@ -18,12 +15,12 @@ Discovery = model.Discovery
 
 
 def discover(
-    environment: Optional[str] = None,
-    discovery_address: Optional[str] = None,
-    config_path: Optional[Union[str, bytes, os.PathLike]] = None,
+    environment: str | None = None,
+    discovery_address: str | None = None,
+    config_path: str | bytes | os.PathLike | None = None,
     *,
-    http_timeout: Optional[datetime.timedelta] = None,
-    ssl_context: Optional[ssl.SSLContext] = None,
+    http_timeout: datetime.timedelta | None = None,
+    ssl_context: ssl.SSLContext | None = None,
 ) -> Discovery:
     """Obtains and returns a Discovery object from the discovery service.
 
@@ -65,12 +62,12 @@ def discover(
 
 
 async def discover_async(
-    environment: Optional[str] = None,
-    discovery_address: Optional[str] = None,
-    config_path: Optional[Union[str, bytes, os.PathLike]] = None,
+    environment: str | None = None,
+    discovery_address: str | None = None,
+    config_path: str | bytes | os.PathLike | None = None,
     *,
-    http_timeout: Optional[datetime.timedelta] = None,
-    ssl_context: Optional[ssl.SSLContext] = None,
+    http_timeout: datetime.timedelta | None = None,
+    ssl_context: ssl.SSLContext | None = None,
 ) -> Discovery:
     """Obtains and returns a Discovery object from the discovery service.
 
@@ -112,10 +109,10 @@ async def discover_async(
 
 
 def _lookup_and_load(
-    environment: Optional[str] = None,
-    discovery_address: Optional[str] = None,
-    config_path: Optional[Union[str, bytes, os.PathLike]] = None,
-) -> Tuple[str, config.Config]:
+    environment: str | None = None,
+    discovery_address: str | None = None,
+    config_path: str | bytes | os.PathLike | None = None,
+) -> tuple[str, config.Config]:
     cfg = config.load_config(lookup.determine_local_config_path(config_path))
 
     try:
