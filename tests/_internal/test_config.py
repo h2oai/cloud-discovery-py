@@ -47,7 +47,7 @@ def config_test_cases():
     )
 
 
-@pytest.mark.parametrize("config_content,expected_results", config_test_cases())
+@pytest.mark.parametrize("config_content,expected_results", list(config_test_cases()))
 def test_load_config(config_content, expected_results, tmp_path):
     # Given
     config_file = tmp_path / "config.toml"
