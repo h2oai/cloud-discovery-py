@@ -56,6 +56,7 @@ import sys
 # Load discovery for the current environment.
 
 import h2o_discovery
+
 discovery = h2o_discovery.discover()
 ```
 
@@ -63,6 +64,7 @@ discovery = h2o_discovery.discover()
 # Create a token provider using the credentials loaded from the environment.
 
 import h2o_authn.discovery
+
 token_provider = h2o_authn.discovery.create_async(discovery)
 ```
 
@@ -78,9 +80,9 @@ import sys
 # Connect to the H2O AI Drive and list home objects.
 
 import h2o_drive
+
 home = await h2o_drive.MyHome(
-    token=token_provider,
-    endpoint_url=discovery.services["drive"].uri,
+    token=token_provider, endpoint_url=discovery.services["drive"].uri
 )
 await home.list_objects()
 ```

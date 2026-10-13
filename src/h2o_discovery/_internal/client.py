@@ -1,8 +1,6 @@
+from collections.abc import Callable
 import datetime
 import ssl
-from typing import Callable
-from typing import List
-from typing import Optional
 from typing import TypeVar
 
 import httpx
@@ -22,8 +20,8 @@ class _BaseClient:
     def __init__(
         self,
         uri: str,
-        timeout: Optional[datetime.timedelta] = None,
-        ssl_context: Optional[ssl.SSLContext] = None,
+        timeout: datetime.timedelta | None = None,
+        ssl_context: ssl.SSLContext | None = None,
         follow_redirects: bool = True,
     ):
         self._uri = uri
@@ -49,25 +47,25 @@ class Client(_BaseClient):
             resp = _fetch(client, _ENVIRONMENT_ENDPOINT)
             return model.Environment.from_json_dict(resp.json()["environment"])
 
-    def list_services(self) -> List[model.Service]:
+    def list_services(self) -> list[model.Service]:
         """Returns the list of all registered services."""
         return self._get_all_entities(
             _SERVICES_ENDPOINT, "services", model.Service.from_json_dict
         )
 
-    def list_clients(self) -> List[model.Client]:
+    def list_clients(self) -> list[model.Client]:
         """Returns the list of all registered clients."""
         return self._get_all_entities(
             _CLIENTS_ENDPOINT, "clients", model.Client.from_json_dict
         )
 
-    def list_links(self) -> List[model.Link]:
+    def list_links(self) -> list[model.Link]:
         """Returns the list of all registered links."""
         return self._get_all_entities(
             _LINKS_ENDPOINT, "links", model.Link.from_json_dict
         )
 
-    def list_components(self) -> List[model.Component]:
+    def list_components(self) -> list[model.Component]:
         """Returns the list of all registered components."""
         return self._get_all_entities(
             _COMPONENTS_ENDPOINT, "components", model.Component.from_json_dict
@@ -75,9 +73,9 @@ class Client(_BaseClient):
 
     def _get_all_entities(
         self, endpoint: str, collection_key: str, factory: Callable[[dict], _T]
-    ) -> List[_T]:
+    ) -> list[_T]:
         with self._client() as client:
-            entities: List[_T] = []
+            entities: list[_T] = []
 
             pages = _get_all_pages(client, endpoint)
             for page in pages:
@@ -94,7 +92,7 @@ class Client(_BaseClient):
 
 
 def _fetch(
-    client: httpx.Client, uri: str, next_page_token: Optional[str] = None
+    client: httpx.Client, uri: str, next_page_token: str | None = None
 ) -> httpx.Response:
     params = None
     if next_page_token is not None:
@@ -104,9 +102,9 @@ def _fetch(
     return resp
 
 
-def _get_all_pages(client: httpx.Client, uri: str) -> List[dict]:
-    next_page_token: Optional[str] = None
-    all_pages: List[dict] = []
+def _get_all_pages(client: httpx.Client, uri: str) -> list[dict]:
+    next_page_token: str | None = None
+    all_pages: list[dict] = []
 
     while True:
         resp = _fetch(client, uri, next_page_token)
@@ -129,25 +127,25 @@ class AsyncClient(_BaseClient):
             resp = await _fetch_async(client, _ENVIRONMENT_ENDPOINT)
             return model.Environment.from_json_dict(resp.json()["environment"])
 
-    async def list_services(self) -> List[model.Service]:
+    async def list_services(self) -> list[model.Service]:
         """Returns the list of all registered services."""
         return await self._get_all_entities(
             _SERVICES_ENDPOINT, "services", model.Service.from_json_dict
         )
 
-    async def list_clients(self) -> List[model.Client]:
+    async def list_clients(self) -> list[model.Client]:
         """Returns the list of all registered clients."""
         return await self._get_all_entities(
             _CLIENTS_ENDPOINT, "clients", model.Client.from_json_dict
         )
 
-    async def list_links(self) -> List[model.Link]:
+    async def list_links(self) -> list[model.Link]:
         """Returns the list of all registered links."""
         return await self._get_all_entities(
             _LINKS_ENDPOINT, "links", model.Link.from_json_dict
         )
 
-    async def list_components(self) -> List[model.Component]:
+    async def list_components(self) -> list[model.Component]:
         """Returns the list of all registered components."""
         return await self._get_all_entities(
             _COMPONENTS_ENDPOINT, "components", model.Component.from_json_dict
@@ -155,9 +153,9 @@ class AsyncClient(_BaseClient):
 
     async def _get_all_entities(
         self, endpoint: str, collection_key: str, factory: Callable[[dict], _T]
-    ) -> List[_T]:
+    ) -> list[_T]:
         async with self._client() as client:
-            entities: List[_T] = []
+            entities: list[_T] = []
 
             pages = await _get_all_pages_async(client, endpoint)
             for page in pages:
@@ -174,7 +172,7 @@ class AsyncClient(_BaseClient):
 
 
 async def _fetch_async(
-    client: httpx.AsyncClient, uri: str, next_page_token: Optional[str] = None
+    client: httpx.AsyncClient, uri: str, next_page_token: str | None = None
 ) -> httpx.Response:
     params = None
     if next_page_token is not None:
@@ -184,9 +182,9 @@ async def _fetch_async(
     return resp
 
 
-async def _get_all_pages_async(client: httpx.AsyncClient, uri: str) -> List[dict]:
-    next_page_token: Optional[str] = None
-    all_pages: List[dict] = []
+async def _get_all_pages_async(client: httpx.AsyncClient, uri: str) -> list[dict]:
+    next_page_token: str | None = None
+    all_pages: list[dict] = []
 
     while True:
         resp = await _fetch_async(client, uri, next_page_token)

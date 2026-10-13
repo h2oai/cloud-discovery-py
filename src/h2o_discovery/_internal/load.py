@@ -1,10 +1,9 @@
 import asyncio
+from collections.abc import Iterable
+from collections.abc import Mapping
 import json
 import os
 import types
-from typing import Iterable
-from typing import List
-from typing import Mapping
 
 import httpx
 
@@ -67,7 +66,7 @@ async def _gather_discovery_async(cl: client.AsyncClient) -> model.Discovery:
     )
 
 
-def _list_links(cl: client.Client) -> List[model.Link]:
+def _list_links(cl: client.Client) -> list[model.Link]:
     try:
         return cl.list_links()
     except Exception as e:
@@ -78,7 +77,7 @@ def _list_links(cl: client.Client) -> List[model.Link]:
         raise
 
 
-async def _list_links_async(cl: client.AsyncClient) -> List[model.Link]:
+async def _list_links_async(cl: client.AsyncClient) -> list[model.Link]:
     try:
         return await cl.list_links()
     except Exception as e:
@@ -89,7 +88,7 @@ async def _list_links_async(cl: client.AsyncClient) -> List[model.Link]:
         raise
 
 
-def _list_components(cl: client.Client) -> List[model.Component]:
+def _list_components(cl: client.Client) -> list[model.Component]:
     try:
         return cl.list_components()
     except Exception as e:
@@ -100,7 +99,7 @@ def _list_components(cl: client.Client) -> List[model.Component]:
         raise
 
 
-async def _list_components_async(cl: client.AsyncClient) -> List[model.Component]:
+async def _list_components_async(cl: client.AsyncClient) -> list[model.Component]:
     try:
         return await cl.list_components()
     except Exception as e:
