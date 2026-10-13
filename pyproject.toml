@@ -47,7 +47,7 @@ python = ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
 [[tool.hatch.envs.test.matrix]]
 httpx = ["httpx0.25", "httpx0.26", "httpx0.27", "httpx0.28"]
-python = ["3.14"]
+python = ["3.14", "3.15"]
 
 [tool.hatch.envs.test.overrides]
 matrix.httpx.dependencies = [
