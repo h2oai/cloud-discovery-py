@@ -17,14 +17,13 @@ classifiers = [
 dependencies = [
   "httpx>=0.23",
   "httpx>=0.25.1; python_version >= '3.14'",
-  "tomli >= 1.1.0 ; python_version < '3.11'",
 ]
 description = 'H2O Cloud Discovery Python CLient'
 keywords = []
 license = "Apache-2.0"
 name = "h2o-cloud-discovery"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 version = "3.3.0"
 
 [project.urls]
@@ -43,7 +42,7 @@ installer = "uv"
 
 [[tool.hatch.envs.test.matrix]]
 httpx = ["httpx0.23", "httpx0.24", "httpx0.25", "httpx0.26", "httpx0.27", "httpx0.28"]
-python = ["3.9", "3.10", "3.11", "3.12", "3.13"]
+python = ["3.11", "3.12", "3.13"]
 
 [[tool.hatch.envs.test.matrix]]
 httpx = ["httpx0.25", "httpx0.26", "httpx0.27", "httpx0.28"]
