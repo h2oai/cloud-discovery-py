@@ -1,9 +1,7 @@
+from collections.abc import Mapping
 import dataclasses
-import types
-from typing import Mapping
-from typing import Optional
-
 import tomllib
+import types
 
 
 def _empty_tokens_factory() -> Mapping[str, str]:
@@ -15,14 +13,14 @@ class Config:
     """Internal representation of the H2O CLI Configuration."""
 
     #: Configured URI of environment.
-    endpoint: Optional[str] = None
+    endpoint: str | None = None
 
     #: Map of found tokens in the configuration file. in the `{"client-id": "token"}`
     #: format.
     tokens: Mapping[str, str] = dataclasses.field(default_factory=_empty_tokens_factory)
 
 
-def load_config(path: Optional[str] = None) -> Config:
+def load_config(path: str | None = None) -> Config:
     """Loads the H2O CLI config from the specified path.
 
     If no path is specified, an empty configuration is returned.
