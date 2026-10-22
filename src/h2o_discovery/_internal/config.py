@@ -3,7 +3,7 @@ import types
 from typing import Mapping
 from typing import Optional
 
-from h2o_discovery._internal.compat import tomllib
+import tomllib
 
 
 def _empty_tokens_factory() -> Mapping[str, str]:
