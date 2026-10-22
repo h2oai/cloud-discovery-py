@@ -65,7 +65,9 @@ def discovery_test_cases():
     )
 
 
-@pytest.mark.parametrize("environment_input,expected_uri", environment_test_cases())
+@pytest.mark.parametrize(
+    "environment_input,expected_uri", list(environment_test_cases())
+)
 def test_determine_uri_environment_param(environment_input, expected_uri):
     # When
     uri = lookup.determine_uri(environment=environment_input)
@@ -74,7 +76,9 @@ def test_determine_uri_environment_param(environment_input, expected_uri):
     assert uri == expected_uri
 
 
-@pytest.mark.parametrize("environment_input,expected_uri", environment_test_cases())
+@pytest.mark.parametrize(
+    "environment_input,expected_uri", list(environment_test_cases())
+)
 def test_determine_uri_environment_env_var(
     monkeypatch, environment_input, expected_uri
 ):
@@ -88,7 +92,7 @@ def test_determine_uri_environment_env_var(
     assert uri == expected_uri
 
 
-@pytest.mark.parametrize("discovery_input,expected_uri", discovery_test_cases())
+@pytest.mark.parametrize("discovery_input,expected_uri", list(discovery_test_cases()))
 def test_determine_uri_discovery_param(discovery_input, expected_uri):
     # When
     uri = lookup.determine_uri(discovery_address=discovery_input)
@@ -97,7 +101,7 @@ def test_determine_uri_discovery_param(discovery_input, expected_uri):
     assert uri == expected_uri
 
 
-@pytest.mark.parametrize("discovery_input,expected_uri", discovery_test_cases())
+@pytest.mark.parametrize("discovery_input,expected_uri", list(discovery_test_cases()))
 def test_determine_uri_discovery_env_var(monkeypatch, discovery_input, expected_uri):
     # Given
     monkeypatch.setenv("H2O_CLOUD_DISCOVERY", discovery_input)
