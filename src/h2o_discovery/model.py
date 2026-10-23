@@ -1,7 +1,6 @@
+from collections.abc import Mapping
 import dataclasses
 import types
-from typing import Mapping
-from typing import Optional
 
 
 @dataclasses.dataclass(frozen=True)
@@ -23,19 +22,19 @@ class Service:
     #: Can be the version of the API or the version of
     #: the service. Clients can utilize this information change their behavior
     #: in accessing the service or downloading the correct client version.
-    version: Optional[str] = None
+    version: str | None = None
 
     #: OAuth 2.0 Scope required to access the service.
     #: Clients request the access token with this scope in order to access the service.
     #: If the scope is not defined (or empty), clients should use
     #: h2o_cloud_platform_scope.
-    oauth2_scope: Optional[str] = None
+    oauth2_scope: str | None = None
 
     #: Requirement Specifier (PEP 508) for the Python client that can be used for
     #: accessing the service.
     #: Any string that can be `pip install`ed.
     #:     Example: my-client==0.1.0
-    python_client: Optional[str] = None
+    python_client: str | None = None
 
     @classmethod
     def from_json_dict(cls, json: Mapping[str, str]) -> "Service":
@@ -97,7 +96,7 @@ class Environment:
     #: In the XC YY.MM.V format for released versions (e.g. MC 23.04.01 for managed
     #: cloud or HC 23.01.1 for hybrid cloud). Can be arbitrary string for
     #: testing or special environments.
-    h2o_cloud_version: Optional[str] = None
+    h2o_cloud_version: str | None = None
 
     @classmethod
     def from_json_dict(cls, json: Mapping[str, str]) -> "Environment":
@@ -124,7 +123,7 @@ class Link:
     #: Preferred text to use as a link text. This usually make sense
     #: only as part of the navigation menus.
     #:     Example: <a href="{{ link.uri }}">{{ link.text }}</a>
-    text: Optional[str]
+    text: str | None
 
     @classmethod
     def from_json_dict(cls, json: Mapping[str, str]) -> "Link":
@@ -148,11 +147,11 @@ class Component:
     #: Description of the Component. This will be displayed on the front-end.
     #: This should explain what the component does and why it belongs
     #: in the environment.
-    description: Optional[str] = None
+    description: str | None = None
 
     #: Link to the documentation of the Component. This will be used on the front-end
     #: (browser) as a link to the component's documentation.
-    documentation_uri: Optional[str] = None
+    documentation_uri: str | None = None
 
     @classmethod
     def from_json_dict(cls, json: Mapping[str, str]) -> "Component":
