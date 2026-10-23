@@ -6,11 +6,10 @@
 - Commits to the default branch should follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) syntax.
 - If the default branch contains commits that lead to the increment of a version number Release Please
   will automatically create a PR that when merged will create a new release.
-- Release PR is created by the GitHub Action bot as a draft, which means that CI checks are not automatically triggered.
-- To activate the PR non-bot maintainer needs to contribute to the PR.
-  - This can usually be done by adding an empty commit and pushing it to the PR branch.
+- Release PR is created by the GitHub Action bot as a draft, which means that CI checks are not automatically triggered and commits are not signed.
+- To activate the PR non-bot maintainer needs re-sign the release commit.
 
      ```sh
-      git commit --allow-empty --message "Activate release PR"
-      git push
-     ```
+      git rebase --force-rebase --gpg-sign "origin/<target branch>"
+      git push --force-with-lease
+    ```
