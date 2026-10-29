@@ -4,6 +4,8 @@ on:
     branches:
       - main
 
+permissions: {}
+
 concurrency:
   group: release-please
 
@@ -16,8 +18,8 @@ jobs:
       tag_name: ${{ steps.release.outputs.tag_name }}
 
     permissions:
-      contents: write
-      pull-requests: write
+      contents: write # Pushes to the repo and creates release.
+      pull-requests: write # Opens PR.
 
     steps:
       - uses: googleapis/release-please-action@v5
@@ -31,7 +33,8 @@ jobs:
     needs: release-please
 
     permissions:
-      id-token: write
+      contents: read
+      id-token: write # Logs in to PyPI.
 
   release-api-docs:
     name: Attach API Docs to Release
@@ -41,7 +44,7 @@ jobs:
     needs: release-please
 
     permissions:
-      contents: write
+      contents: write # Uploads release assets.
 
     with:
       tag: ${{ needs.release-please.outputs.tag_name }}
