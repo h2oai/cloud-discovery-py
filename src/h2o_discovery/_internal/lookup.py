@@ -1,6 +1,4 @@
 import os
-from typing import Optional
-from typing import Union
 import urllib.parse
 
 _WELL_KNOWN_PATH = ".ai.h2o.cloud.discovery"
@@ -12,9 +10,9 @@ class DetermineURIError(LookupError):
 
 
 def determine_uri(
-    environment: Optional[str] = None,
-    discovery_address: Optional[str] = None,
-    config_endpoint: Optional[str] = None,
+    environment: str | None = None,
+    discovery_address: str | None = None,
+    config_endpoint: str | None = None,
 ) -> str:
     """Uses passed parameters and environment variables to get the uri of the discovery
     service.
@@ -47,8 +45,8 @@ def _discovery_uri_from_environment(environment: str):
 
 
 def determine_local_config_path(
-    config_path: Optional[Optional[Union[str, bytes, os.PathLike]]] = None,
-) -> Optional[str]:
+    config_path: None | str | bytes | os.PathLike = None,
+) -> str | None:
     """Uses passed parameter, environment variable and H2O CLI default to get the
     path to the local config file.
     """
