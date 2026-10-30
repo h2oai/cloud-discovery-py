@@ -7,18 +7,26 @@ on:
   pull_request:
   merge_group:
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   test:
     name: Test
     uses: ./.github/workflows/python-test.yml
 
+    permissions:
+      contents: read
+
   build:
     name: Build
     uses: ./.github/workflows/python-build.yml
 
+    permissions:
+      contents: read
+
   lint:
     name: Lint
     uses: ./.github/workflows/python-lint.yml
+
+    permissions:
+      contents: read
