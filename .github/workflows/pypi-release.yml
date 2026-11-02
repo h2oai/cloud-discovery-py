@@ -3,14 +3,15 @@ name: Release Python package to PyPI
 on:
   workflow_call:
 
-permissions:
-  contents: read
-  id-token: write
+permissions: {}
 
 jobs:
   test:
     name: Test
     uses: ./.github/workflows/python-test.yml
+
+    permissions:
+      contents: read
 
   build-n-publish:
     name: Build and publish Python distributions packages to PyPI
@@ -18,8 +19,14 @@ jobs:
     needs: [test]
     environment: pypi
 
+    permissions:
+      contents: read
+      id-token: write # Logs in to PyPI.
+
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v7
