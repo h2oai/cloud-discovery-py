@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0](https://github.com/h2oai/cloud-discovery-py/compare/v3.3.0...v4.0.0) (2026-11-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* Requires Python 3.11 or higher.
+
+### Miscellaneous Chores
+
+* Drop declared support for Python 3.9 and 3.10 ([016c5bb](https://github.com/h2oai/cloud-discovery-py/commit/016c5bb39552115b74a92e72b0eca07b873cfbf9))
+
 ## [3.3.0](https://github.com/h2oai/cloud-discovery-py/compare/v3.2.0...v3.3.0) (2026-02-06)
 
 
